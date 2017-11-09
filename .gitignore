@@ -1,0 +1,6 @@
+.idea/workspace.xml
+out
+test-output
+jflex.log
+*.zip
+src/schemely/conversion/JavaToScala.scala

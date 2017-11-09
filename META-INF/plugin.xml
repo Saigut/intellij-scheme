@@ -1,0 +1,168 @@
+<idea-plugin url="https://github.com/Saigut/intellij-scheme">
+  <name>Scheme</name>
+  <id>intellij-scheme</id>
+  <description>Plugin for Scheme language support</description>
+  <category>Custom Languages</category>
+  <version>0.1.0</version>
+  <vendor url="https://saigut.com">Tony Saigut</vendor>
+  <idea-version since-build="103.72"/>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
+    <fileTypeFactory implementation="schemely.file.SchemeFileTypeLoader"/>
+    <lang.braceMatcher language="Scheme"
+                       implementationClass="schemely.highlighter.SchemeBraceMatcher"/>
+    <syntaxHighlighter key="Scheme"
+                       implementationClass="schemely.highlighter.SchemeSyntaxHighlighter"/>
+    <colorSettingsPage implementation="schemely.highlighter.SchemeColorsAndFontsPage"/>
+    <lang.commenter language="Scheme"
+                    implementationClass="schemely.highlighter.SchemeCommenter"/>
+    <lang.parserDefinition language="Scheme"
+                           implementationClass="schemely.parser.SchemeParserDefinition"/>
+    <lang.foldingBuilder language="Scheme"
+                         implementationClass="schemely.SchemeFoldingBuilder"/>
+    <lang.psiStructureViewFactory language="Scheme"
+                                  implementationClass="schemely.structure.SchemeStructureViewBuilderFactory"/>
+    <lang.formatter language="Scheme"
+                    implementationClass="schemely.formatter.SchemeFormattingModelBuilder"/>
+    <codeStyleSettingsProvider
+      implementation="schemely.formatter.codeStyle.SchemeCodeStyleSettingsProvider"/>
+    <langCodeStyleSettingsProvider
+            implementation="schemely.formatter.codeStyle.SchemeLanguageCodeStyleSettingsProvider"/>
+    <lang.findUsagesProvider language="Scheme"
+                             implementationClass="schemely.findUsages.SchemeFindUsagesProvider"/>
+    <!--<referencesSearch implementation="schemely.findUsages.SchemeIdentifierSearch"/>-->
+
+    <lang.namesValidator language="Scheme"
+                         implementationClass="schemely.utils.SchemeNamesValidator"/>
+    <completion.contributor language="Scheme"
+                            implementationClass="schemely.completion.SchemeCompletionContributor"
+                            order="first"/>
+    <!--<compilerSettingsFactory implementation="schemely.compiler.SchemeCompilerSettingsFactory"/>-->
+    <fileTemplateGroup implementation="schemely.actions.SchemeTemplatesFactory"/>
+    <fileTypeIndentOptionsProvider
+      implementation="schemely.formatter.SchemeIndentOptionsProvider"/>
+    <quoteHandler fileType="Scheme" className="schemely.editor.SchemeQuoteHandler"/>
+    <annotator language="Scheme" implementationClass="schemely.annotator.SchemeAnnotator"/>
+
+    <gotoSymbolContributor implementation="schemely.gotoclass.SchemeGoToSymbolContributor"/>
+
+    <stubElementTypeHolder class="schemely.parser.AST"/>
+
+    <stubIndex implementation="schemely.psi.stubs.index.SchemeClassNameIndex"/>
+    <stubIndex implementation="schemely.psi.stubs.index.SchemeFullScriptNameIndex"/>
+
+    <extendWordSelectionHandler
+      implementation="schemely.editor.selection.SchemeListSelectioner"/>
+    <extendWordSelectionHandler
+      implementation="schemely.editor.selection.SchemeLiteralSelectioner"/>
+    <extendWordSelectionHandler
+      implementation="schemely.editor.selection.SchemeIdentifierSelectioner"/>
+    <basicWordSelectionFilter
+      implementation="schemely.editor.selection.SchemeIdentifierSelectioner$BasicWordRestriction"/>
+
+    <applicationService serviceInterface="schemely.settings.SchemeProjectSettings"
+                        serviceImplementation="schemely.settings.SchemeProjectSettings"/>
+
+    <projectService serviceInterface="schemely.psi.util.SchemePsiElementFactory"
+                    serviceImplementation="schemely.psi.util.SchemePsiElementFactoryImpl"/>
+
+    <projectService serviceInterface="schemely.settings.SchemeProjectSettings"
+                    serviceImplementation="schemely.settings.SchemeProjectSettings"/>
+
+    <toolWindow id="Scheme.REPL" secondary="true" icon="/resources/schemely/icons/lambda.png" anchor="right" factoryClass="schemely.repl.toolwindow.REPLToolWindowFactory"/>
+    <editorActionHandler action="EditorEnter" implementationClass="schemely.repl.toolwindow.actions.REPLEnterAction" order="FIRST"/>
+
+    <methodNavigationOffsetProvider implementation="schemely.navigation.SchemeNavigationOffsetProvider"/>
+  </extensions>
+
+  <!--<project-components>-->
+    <!--<component>-->
+      <!--<implementation-class>schemely.compiler.SchemeCompilerSettings</implementation-class>-->
+    <!--</component>-->
+    <!--<component>-->
+      <!--<implementation-class>schemely.compiler.CompilerProjectComponent</implementation-class>-->
+    <!--</component>-->
+  <!--</project-components>-->
+
+  <actions>
+    <!-- Create file actions -->
+    <!--<action id="Scheme.SchemeFile" class="schemely.actions.NewSchemeFileAction"-->
+            <!--text="Scheme File" description="Create new Scheme File">-->
+      <!--<add-to-group group-id="NewGroup" anchor="last"/>-->
+    <!--</action>-->
+
+    <!--<action id="Scheme.JavaToScheme" class="schemely.conversion.JavaToSchemeAction"-->
+            <!--text="Convert Java File To Scheme" description="Convert Java File To Scheme">-->
+      <!--<add-to-group group-id="RefactoringMenu" anchor="last"/>-->
+      <!--<add-to-group group-id="EditorTabPopupMenu" anchor="last"/>-->
+      <!--<keyboard-shortcut first-keystroke="control shift G" keymap="$default"/>-->
+    <!--</action>-->
+
+    <!-- REPL-related actions -->
+    <group id="Scheme.REPL.Group"
+           class="schemely.repl.actions.SchemeReplActionGroup"
+           text="Scheme REPL" description="Scheme" popup="true">
+
+      <action id="schemely.repl.actions.LoadSchemeFileInConsoleAction"
+              class="schemely.repl.actions.LoadSchemeFileInConsoleAction"
+              text="Load file in REPL">
+        <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift L"/>
+      </action>
+
+      <action id="schemely.repl.actions.RunSelectedTextAction"
+              class="schemely.repl.actions.RunSelectedTextAction"
+              text="Run selected text in REPL">
+        <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift J"/>
+      </action>
+
+      <action id="schemely.repl.actions.RunLastSExprAction"
+              class="schemely.repl.actions.RunLastSExprAction"
+              text="Execute last S-expression in REPL">
+        <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift H"/>
+      </action>
+
+      <action id="schemely.repl.actions.RunTopSExprAction"
+              class="schemely.repl.actions.RunTopSExprAction"
+              text="Run Top S-expression in REPL">
+        <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift G"/>
+      </action>
+
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+      <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+    </group>
+
+    <action id="schemely.repl.toolwindow.actions.NewInProcessConsoleAction"
+            class="schemely.repl.toolwindow.actions.NewInProcessConsoleAction" text="Start In-Process Scheme Console"
+            description="Runs Scheme REPL">
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift F10"/>
+    </action>
+
+    <action id="schemely.repl.toolwindow.actions.NewExternalConsoleAction"
+            class="schemely.repl.toolwindow.actions.NewExternalConsoleAction" text="Start External Scheme Console"
+            description="Runs Scheme REPL">
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+    </action>
+
+    <action id="Scheme.REPL.Execute.Immediately"
+            class="com.intellij.openapi.actionSystem.EmptyAction"
+            text="Execute Current Statement">
+      <keyboard-shortcut keymap="$default" first-keystroke="control ENTER"/>
+    </action>
+
+    <action id="Scheme.REPL.History.Previous"
+            class="com.intellij.openapi.actionSystem.EmptyAction"
+            text="Select Previous History Item">
+      <keyboard-shortcut keymap="$default" first-keystroke="control UP"/>
+    </action>
+
+    <action id="Scheme.REPL.History.Next"
+            class="com.intellij.openapi.actionSystem.EmptyAction"
+            text="Select Next History Item">
+      <keyboard-shortcut keymap="$default" first-keystroke="control DOWN"/>
+    </action>
+
+  </actions>
+
+</idea-plugin>
