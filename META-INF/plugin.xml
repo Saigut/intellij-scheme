@@ -72,7 +72,7 @@
     <projectService serviceInterface="schemely.settings.SchemeProjectSettings"
                     serviceImplementation="schemely.settings.SchemeProjectSettings"/>
 
-    <toolWindow id="Scheme.REPL" secondary="true" icon="/resources/schemely/icons/lambda.png" anchor="right" factoryClass="schemely.repl.toolwindow.REPLToolWindowFactory"/>
+    <toolWindow id="Scheme.REPL" secondary="true" icon="/schemely/icons/lambda.png" anchor="right" factoryClass="schemely.repl.toolwindow.REPLToolWindowFactory"/>
     <editorActionHandler action="EditorEnter" implementationClass="schemely.repl.toolwindow.actions.REPLEnterAction" order="FIRST"/>
 
     <methodNavigationOffsetProvider implementation="schemely.navigation.SchemeNavigationOffsetProvider"/>
