@@ -8,7 +8,6 @@ import org.jparsec.pattern.CharPredicates;
 import org.jparsec.pattern.Pattern;
 import org.jparsec.pattern.Patterns;
 
-import static org.jparsec.Scanners.lineComment;
 
 /**
  * @author Colin Fleming
@@ -31,7 +30,8 @@ public class SchemeLexer extends LexerBase
 
 
   enum Tag {
-    S_COMMENT,
+    S_LINE_COMMENT,
+    S_BLOCK_COMMENT,
     S_WHITE_SPACE,
     S_OPERATOR,
     S_NUMBER,
@@ -44,12 +44,32 @@ public class SchemeLexer extends LexerBase
   }
 
   /**
+   * Helpers
+   */
+  private static Pattern notChar2(final char c1, final char c2) {
+    return new Pattern() {
+      @Override public int match(CharSequence src, int begin, int end) {
+        if (begin == end - 1) return 1;
+        if (begin >= end) return MISMATCH;
+        if (src.charAt(begin) == c1 && src.charAt(begin + 1) == c2) return Pattern.MISMATCH;
+        return 1;
+      }
+    };
+  }
+
+  /**
    * Elements
    */
 
   // Blanks and Conments
-  Parser<?> s_line_comment = lineComment(";").source()
-          .map((a) -> (org.jparsec.Tokens.fragment(";", Tag.S_COMMENT)));
+  Parser<?> s_line_comment = Scanners.lineComment(";").source()
+          .map((a) -> (org.jparsec.Tokens.fragment(";", Tag.S_LINE_COMMENT)));
+  Parser<?> s_block_commented =
+          notChar2('|', '#').many().toScanner("commented block");
+  Parser<?> s_block_comment = Parsers.sequence(Scanners.string("#|"), s_block_commented, Scanners.string("|#")).source()
+          .map((a) -> (org.jparsec.Tokens.fragment(";", Tag.S_BLOCK_COMMENT)));
+  Parser<?> s_comment = Parsers.or(s_line_comment, s_block_comment);
+
   Parser<?> s_whitespace = Scanners.WHITESPACES
           .map((a) -> (org.jparsec.Tokens.fragment("WHITE_SPACE", Tag.S_WHITE_SPACE)));
 
@@ -99,7 +119,7 @@ public class SchemeLexer extends LexerBase
 
 
   // Bad char
-  Parser<?> s_element = Parsers.or(s_whitespace, s_line_comment,
+  Parser<?> s_element = Parsers.or(s_whitespace, s_comment,
           s_operators, s_numbers, s_keywords, s_literals);
 //  Parser<?> s_bad_element = s_element.not().source()
 //          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_BAD_ELEMENT)));
@@ -185,8 +205,12 @@ public class SchemeLexer extends LexerBase
 
     switch ((Tag)token_frag.tag()) {
 
-      case S_COMMENT:
-        type = Tokens.COMMENT;
+      case S_LINE_COMMENT:
+        type = Tokens.LINE_COMMENT;
+        break;
+
+      case S_BLOCK_COMMENT:
+        type = Tokens.BLOCK_COMMENT;
         break;
 
       case S_WHITE_SPACE:
@@ -354,7 +378,7 @@ public class SchemeLexer extends LexerBase
       cursor++;
       next = peek();
     }
-    type = Tokens.COMMENT;
+    type = Tokens.LINE_COMMENT;
   }
 
   private void readMultiLineComment()

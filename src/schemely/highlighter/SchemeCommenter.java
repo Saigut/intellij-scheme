@@ -39,7 +39,7 @@ public class SchemeCommenter implements CodeDocumentationAwareCommenter, Tokens
   @Nullable
   public IElementType getLineCommentTokenType()
   {
-    return COMMENT;
+    return LINE_COMMENT;
   }
 
   @Nullable

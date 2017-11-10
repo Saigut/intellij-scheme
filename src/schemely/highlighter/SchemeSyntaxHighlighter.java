@@ -1,7 +1,6 @@
 package schemely.highlighter;
 
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
@@ -141,7 +140,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements To
 
   static
   {
-    newFillMap(ATTRIBUTES, LINE_COMMENT_KEYS, Tokens.COMMENT);
+    newFillMap(ATTRIBUTES, LINE_COMMENT_KEYS, Tokens.LINE_COMMENT);
     newFillMap(ATTRIBUTES, BLOCK_COMMENT_KEYS, Tokens.BLOCK_COMMENT);
     newFillMap(ATTRIBUTES, NUMBER_KEYS, Tokens.NUMBER_LITERAL);
     newFillMap(ATTRIBUTES, STRING_KEYS, Tokens.STRING_LITERAL);

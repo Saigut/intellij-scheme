@@ -25,10 +25,10 @@ public interface Tokens
   IElementType COMMA_AT = new SchemeElementType(",@");
 
   // Comments
-  IElementType COMMENT = new SchemeElementType("comment");
+  IElementType LINE_COMMENT = new SchemeElementType("line comment");
   IElementType BLOCK_COMMENT = new SchemeElementType("block comment");
 
-  TokenSet COMMENTS = TokenSet.create(COMMENT, BLOCK_COMMENT);
+  TokenSet COMMENTS = TokenSet.create(LINE_COMMENT, BLOCK_COMMENT);
 
   // Literals
   IElementType STRING_LITERAL = new SchemeElementType("string literal");

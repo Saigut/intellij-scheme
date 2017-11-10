@@ -31,11 +31,11 @@ public class LexerTest extends LexerTestBase
                               testCase(",", COMMA),
                               testCase(",@", COMMA_AT),
 
-                              testCase(";", COMMENT),
-                              testCase("; comment", COMMENT),
-                              testCase("; comment\n", COMMENT, WHITESPACE),
-                              testCase("; comment\r\n", COMMENT, WHITESPACE),
-                              testCase("; comment\r", COMMENT, WHITESPACE),
+                              testCase(";", LINE_COMMENT),
+                              testCase("; comment", LINE_COMMENT),
+                              testCase("; comment\n", LINE_COMMENT, WHITESPACE),
+                              testCase("; comment\r\n", LINE_COMMENT, WHITESPACE),
+                              testCase("; comment\r", LINE_COMMENT, WHITESPACE),
 
                               testCase("#||#", BLOCK_COMMENT),
                               testCase("#| |#", BLOCK_COMMENT),
