@@ -36,7 +36,7 @@ public class SchemeLexer extends LexerBase
     S_OPERATOR,
     S_NUMBER,
     S_QUOTE_STRING,
-    S_QUOTE_CHAR,
+    S_CHAR,
     S_LITERAL,
     S_BAD_ELEMENT,
 
@@ -74,8 +74,9 @@ public class SchemeLexer extends LexerBase
           .map((a) -> (org.jparsec.Tokens.fragment("WHITE_SPACE", Tag.S_WHITE_SPACE)));
 
   // Operators
-  Pattern PT_OPERATORS = Patterns.among("()[]'`,#\\");
-  Parser<String> PS_OPERATORS = PT_OPERATORS.toScanner("operator").source();
+  Pattern PT_OPS = Patterns.among("()[]'`,");
+  Pattern PT_OP_SHARP = Patterns.isChar('#').next(Patterns.isChar('(').peek());
+  Parser<String> PS_OPERATORS = Patterns.or(PT_OPS, PT_OP_SHARP).toScanner("operator").source();
 
   Parser<?> s_operators = PS_OPERATORS
           .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_OPERATOR)));
@@ -92,19 +93,37 @@ public class SchemeLexer extends LexerBase
           .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_NUMBER)));
 
   // Literals
-  Pattern literal_valid = Patterns
+  Pattern PT_LITERAL_VALID = Patterns
           .or(Patterns.isChar(CharPredicates.IS_LETTER),
                   Patterns.isChar(CharPredicates.IS_DIGIT),
                   Patterns.among("!@$%^&*-+_=:|/?<>."));
-  Pattern P_LITERAL = literal_valid.many1();
-  Parser<String> LITERAL = P_LITERAL.toScanner("literal").source();
+  Pattern PT_LITERAL = PT_LITERAL_VALID.many1();
+  Parser<String> LITERAL = PT_LITERAL.toScanner("literal").source();
+
+  Parser<?> s_literal = LITERAL
+          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_LITERAL)));
+
+
+  Terminals CHAR_NAMES = Terminals
+          .operators("alarm", "backspace", "delete", "esc", "linefeed", "newline", "page", "return",
+                  "space", "tab", "vtab");
+  Pattern PT_SINGLE_CHAR = Patterns.ANY_CHAR.next(PT_LITERAL.not());
+  Pattern PT_HEX = Patterns.sequence(Patterns.among("xX"), Patterns.among("0123456789abcdefABCDEF").many1())
+          .next(PT_LITERAL.not());
+  Pattern PT_CHAR_PRE = Patterns.string("#\\");
+
+  Parser<?> s_char_pre = PT_CHAR_PRE.toScanner("char prefix");
+  Parser<?> s_char_names = CHAR_NAMES.tokenizer().next(LITERAL.not());
+
+  Parser<?> s_char_char = Patterns.sequence(PT_CHAR_PRE, PT_SINGLE_CHAR).toScanner("char char");
+  Parser<?> s_char_hex = Patterns.sequence(PT_CHAR_PRE, PT_HEX).toScanner("char hex");
+  Parser<?> s_char_name = Parsers.sequence(s_char_pre, s_char_names);
+  Parser<?> s_char = Parsers.or(s_char_char, s_char_name, s_char_hex).source()
+          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_CHAR)));
+
 
   Parser<?> s_string = Scanners.DOUBLE_QUOTE_STRING
           .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_QUOTE_STRING)));
-  Parser<?> s_char = Scanners.SINGLE_QUOTE_CHAR
-          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_QUOTE_CHAR)));
-  Parser<?> s_literal = LITERAL
-          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_LITERAL)));
 
   Parser<?> s_literals = Parsers.or(s_string, s_char, s_literal);
 
@@ -115,7 +134,6 @@ public class SchemeLexer extends LexerBase
                 "let", "let*", "set!", "do");
   Parser<?> s_keywords = KEYWORD_TERM.tokenizer().next(LITERAL.not()).source()
         .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_KEYWORD)));
-
 
 
   // Bad char
@@ -264,7 +282,7 @@ public class SchemeLexer extends LexerBase
         type = Tokens.STRING_LITERAL;
         break;
 
-      case S_QUOTE_CHAR:
+      case S_CHAR:
         type = Tokens.CHAR_LITERAL;
         break;
 
