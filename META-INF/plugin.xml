@@ -3,7 +3,7 @@
   <id>intellij-scheme</id>
   <description>Plugin for Scheme language support</description>
   <category>Custom Languages</category>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <vendor url="https://saigut.com">Tony Saigut</vendor>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.platform</depends>
