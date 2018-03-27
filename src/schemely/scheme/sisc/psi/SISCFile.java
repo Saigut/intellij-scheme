@@ -105,10 +105,7 @@ public class SISCFile extends SchemeFile
       }
       if (heapFile != null)
       {
-        if (!heapFile.processTopLevelDefinitions(processor, state, lastParent, place))
-        {
-          return false;
-        }
+	      return heapFile.processTopLevelDefinitions(processor, state, lastParent, place);
       }
     }
 

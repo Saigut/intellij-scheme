@@ -62,8 +62,8 @@ final public class ShuffleOperations {
 		Transition[][] transitions1 = Automaton.getSortedTransitions(a1.getStates());
 		Transition[][] transitions2 = Automaton.getSortedTransitions(a2.getStates());
 		Automaton c = new Automaton();
-		LinkedList<StatePair> worklist = new LinkedList<StatePair>();
-		HashMap<StatePair, StatePair> newstates = new HashMap<StatePair, StatePair>();
+		LinkedList<StatePair> worklist = new LinkedList<>();
+		HashMap<StatePair, StatePair> newstates = new HashMap<>();
 		State s = new State();
 		c.initial = s;
 		StatePair p = new StatePair(s, a1.initial, a2.initial);
@@ -136,8 +136,8 @@ final public class ShuffleOperations {
 		Transition[][] a_transitions = Automaton.getSortedTransitions(a.getStates());
 		TransitionComparator tc = new TransitionComparator(false);
 		ShuffleConfiguration init = new ShuffleConfiguration(ca, a);
-		LinkedList<ShuffleConfiguration> pending = new LinkedList<ShuffleConfiguration>();
-		Set<ShuffleConfiguration> visited = new HashSet<ShuffleConfiguration>();
+		LinkedList<ShuffleConfiguration> pending = new LinkedList<>();
+		Set<ShuffleConfiguration> visited = new HashSet<>();
 		pending.add(init);
 		visited.add(init);
 		while (!pending.isEmpty()) {
@@ -166,7 +166,7 @@ final public class ShuffleOperations {
 				if (c.shuffle_suspended)
 					i1 = c.suspended1;
 				loop: for (Transition t1 : ca_transitions[i1][c.ca_states[i1].number]) {
-					List<Transition> lt = new ArrayList<Transition>();
+					List<Transition> lt = new ArrayList<>();
 					int j = Arrays.binarySearch(ta2, t1, tc);
 					if (j < 0)
 						j = -j - 1;

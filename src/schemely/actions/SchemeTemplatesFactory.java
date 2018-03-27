@@ -7,7 +7,7 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import schemely.SchemeBundle;
-import schemely.SchemeIcons;
+import icons.SchemeIcons;
 
 import java.util.Properties;
 

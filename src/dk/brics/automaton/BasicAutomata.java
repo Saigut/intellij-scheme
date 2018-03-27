@@ -236,10 +236,10 @@ final public class BasicAutomata {
 			by.append('0');
 		by.append(y);
 		y = by.toString();
-		Collection<State> initials = new ArrayList<State>();
+		Collection<State> initials = new ArrayList<>();
 		a.initial = between(x, y, 0, initials, digits <= 0);
 		if (digits <= 0) {
-			ArrayList<StatePair> pairs = new ArrayList<StatePair>();
+			ArrayList<StatePair> pairs = new ArrayList<>();
 			for (State p : initials)
 				if (a.initial != p)
 					pairs.add(new StatePair(a.initial, p));
@@ -430,7 +430,7 @@ final public class BasicAutomata {
 		f.accept = true;
 		f.transitions.add(new Transition(Character.MIN_VALUE, Character.MAX_VALUE, f));
 		for (int i = 0; i < s.length(); i++) {
-			Set<Character> done = new HashSet<Character>();
+			Set<Character> done = new HashSet<>();
 			char c = s.charAt(i);
 			states[i].transitions.add(new Transition(c, states[i+1]));
 			done.add(c);

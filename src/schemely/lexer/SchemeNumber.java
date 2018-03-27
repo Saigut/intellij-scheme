@@ -13,10 +13,10 @@ import java.util.Map;
  */
 public class SchemeNumber
 {
-  static final Map<String, Automaton> decimalAutomata = new HashMap<String, Automaton>();
-  static final Map<String, Automaton> hexAutomata = new HashMap<String, Automaton>();
-  static final Map<String, Automaton> octalAutomata = new HashMap<String, Automaton>();
-  static final Map<String, Automaton> binaryAutomata = new HashMap<String, Automaton>();
+  static final Map<String, Automaton> decimalAutomata = new HashMap<>();
+  static final Map<String, Automaton> hexAutomata = new HashMap<>();
+  static final Map<String, Automaton> octalAutomata = new HashMap<>();
+  static final Map<String, Automaton> binaryAutomata = new HashMap<>();
 
   static
   {

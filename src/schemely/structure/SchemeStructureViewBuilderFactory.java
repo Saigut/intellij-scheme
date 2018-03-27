@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SchemeStructureViewBuilderFactory implements PsiStructureViewFactory
 {
-  public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile)
+  public StructureViewBuilder getStructureViewBuilder(@NotNull final PsiFile psiFile)
   {
     return new TreeBasedStructureViewBuilder()
     {

@@ -9,7 +9,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
-import schemely.SchemeIcons;
+import icons.SchemeIcons;
 import schemely.psi.impl.SchemeFile;
 
 public class LoadSchemeFileInConsoleAction extends RunActionBase

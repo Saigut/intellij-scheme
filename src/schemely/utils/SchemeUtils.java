@@ -11,12 +11,6 @@ public class SchemeUtils
 
   public static boolean isSuitableModule(Module module)
   {
-    if (module == null)
-    {
-      return false;
-    }
-//    ModuleType type = module.getModuleType();
-//    return type instanceof JavaModuleType || "PLUGIN_MODULE".equals(type.getId());
-      return true;
+	  return module != null;
   }
 }

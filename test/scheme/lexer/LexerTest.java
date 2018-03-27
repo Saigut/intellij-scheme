@@ -1,4 +1,4 @@
-package schemely.lexer;
+package scheme.lexer;
 
 //import org.testng.annotations.DataProvider;
 import schemely.TestUtil;

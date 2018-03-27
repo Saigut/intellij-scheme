@@ -38,14 +38,7 @@ public class KawaConfigUtil
   @NonNls
   public static final String KAWA_MAIN_CLASS_FILE = "kawa/repl.class";
 
-  static final Condition<Library> KAWA_LIB_CONDITION = new Condition<Library>()
-  {
-    @Override
-    public boolean value(Library library)
-    {
-      return (library != null) && SchemeConfigUtil.checkLibrary(library, KAWA_JAR_NAME_PREFIX, KAWA_MAIN_CLASS_FILE);
-    }
-  };
+  static final Condition<Library> KAWA_LIB_CONDITION = library -> (library != null) && SchemeConfigUtil.checkLibrary(library, KAWA_JAR_NAME_PREFIX, KAWA_MAIN_CLASS_FILE);
 
   public static final String KAWA_SDK = PathUtil.getJarPathForClass(repl.class);
 

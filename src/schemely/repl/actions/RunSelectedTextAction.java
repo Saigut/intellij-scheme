@@ -8,7 +8,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.TextRange;
 import schemely.SchemeBundle;
-import schemely.SchemeIcons;
+import icons.SchemeIcons;
 import schemely.psi.util.SchemePsiElementFactory;
 
 public class RunSelectedTextAction extends RunActionBase
@@ -38,7 +38,7 @@ public class RunSelectedTextAction extends RunActionBase
     {
       Messages.showErrorDialog(project,
                                SchemeBundle.message("evaluate.incorrect.form"),
-                               SchemeBundle.message("evaluate.incorrect.cannot.evaluate", new Object[0]));
+                               SchemeBundle.message("evaluate.incorrect.cannot.evaluate"));
 
       return;
     }

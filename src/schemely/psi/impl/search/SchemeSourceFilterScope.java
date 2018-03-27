@@ -20,7 +20,7 @@ public class SchemeSourceFilterScope extends GlobalSearchScope
     index = ProjectRootManager.getInstance(project).getFileIndex();
   }
 
-  public boolean contains(VirtualFile file)
+  public boolean contains(@NotNull VirtualFile file)
   {
     if (delegate != null && !delegate.contains(file))
     {
@@ -30,7 +30,7 @@ public class SchemeSourceFilterScope extends GlobalSearchScope
     return index.isInSourceContent(file) || index.isInLibraryClasses(file);
   }
 
-  public int compare(VirtualFile file1, VirtualFile file2)
+  public int compare(@NotNull VirtualFile file1, @NotNull VirtualFile file2)
   {
     return delegate != null ? delegate.compare(file1, file2) : 0;
   }

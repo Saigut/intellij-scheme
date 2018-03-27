@@ -20,7 +20,7 @@ public class ConsoleHistoryModel
   @GuardedBy("history")
   private int maxHistorySize = DEFAULT_MAX_SIZE;
   @GuardedBy("history")
-  private final LinkedList<String> history = new LinkedList<String>();
+  private final LinkedList<String> history = new LinkedList<>();
 
 
   public boolean isEditingCurrentItem()

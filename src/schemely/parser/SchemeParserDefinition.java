@@ -102,19 +102,13 @@ public class SchemeParserDefinition implements ParserDefinition
 
   private Scheme getScheme()
   {
-    if (scheme == null)
-    {
-      throw new IllegalStateException("Scheme implementation not initialised");
-    }
+    if (scheme == null) throw new IllegalStateException("Scheme implementation not initialised");
     return scheme;
   }
 
   private Scheme getScheme(Project project)
   {
-    if (scheme == null)
-    {
-      initScheme(project);
-    }
+    if (scheme == null) initScheme(project);
     return scheme;
   }
 

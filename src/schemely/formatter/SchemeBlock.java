@@ -99,7 +99,7 @@ public class SchemeBlock implements Block, AST
 
   protected List<Block> generateSubBlocks(ASTNode node, Wrap wrap, CodeStyleSettings settings)
   {
-    List<Block> subBlocks = new ArrayList<Block>();
+    List<Block> subBlocks = new ArrayList<>();
     for (ASTNode childNode : getChildren(node))
     {
       subBlocks.add(create(childNode, null, Indent.getNoneIndent(), wrap, settings));
@@ -109,7 +109,7 @@ public class SchemeBlock implements Block, AST
 
   protected static Collection<ASTNode> getChildren(ASTNode node)
   {
-    Collection<ASTNode> ret = new ArrayList<ASTNode>();
+    Collection<ASTNode> ret = new ArrayList<>();
     for (ASTNode astNode : node.getChildren(null))
     {
       if (nonEmptyBlock(astNode))
@@ -144,7 +144,7 @@ public class SchemeBlock implements Block, AST
     return alignment;
   }
 
-  public Spacing getSpacing(Block child1, Block child2)
+  public Spacing getSpacing(Block child1, @NotNull Block child2)
   {
     return SchemeSpacingProcessor.getSpacing(child1, child2);
   }

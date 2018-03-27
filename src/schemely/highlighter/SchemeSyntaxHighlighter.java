@@ -1,13 +1,14 @@
 package schemely.highlighter;
 
 import com.intellij.lexer.Lexer;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.HighlighterColors;
-import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import schemely.lexer.SchemeLexer;
@@ -19,9 +20,9 @@ import java.util.Map;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
-public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Tokens
+public class                  SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Tokens
 {
-  private static final Map<IElementType, TextAttributesKey[]> ATTRIBUTES = new HashMap<IElementType, TextAttributesKey[]>();
+  private static final Map<IElementType, TextAttributesKey[]> ATTRIBUTES = new HashMap<>();
 
   @NotNull
   public Lexer getHighlightingLexer()
@@ -33,12 +34,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements To
   public TextAttributesKey[] getTokenHighlights(IElementType tokenType)
   {
     TextAttributesKey[] Keys = ATTRIBUTES.get(tokenType);
-    if (null == Keys) {
-//      System.out.println("tokenType: " + tokenType.toString());
-      return EMPTY_KEYS;
-    } else {
-      return Keys;
-    }
+    return null == Keys ? EMPTY_KEYS : Keys;
   }
 
   @NonNls
@@ -82,23 +78,23 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements To
   // Registering TextAttributes
   static
   {
-    createTextAttributesKey(COMMENT_ID, defaultFor(SyntaxHighlighterColors.LINE_COMMENT));
-    createTextAttributesKey(BLOCK_COMMENT_ID, defaultFor(SyntaxHighlighterColors.JAVA_BLOCK_COMMENT));
-    createTextAttributesKey(IDENTIFIER_ID, defaultFor(SyntaxHighlighterColors.KEYWORD));
-    createTextAttributesKey(NUMBER_ID, defaultFor(SyntaxHighlighterColors.NUMBER));
-    createTextAttributesKey(STRING_ID, defaultFor(SyntaxHighlighterColors.STRING));
-    createTextAttributesKey(BRACES_ID, defaultFor(SyntaxHighlighterColors.BRACES));
-    createTextAttributesKey(PAREN_ID, defaultFor(SyntaxHighlighterColors.PARENTHS));
-    createTextAttributesKey(LITERAL_ID, defaultFor(SyntaxHighlighterColors.KEYWORD));
-    createTextAttributesKey(CHAR_ID, defaultFor(SyntaxHighlighterColors.STRING));
-    createTextAttributesKey(BAD_CHARACTER_ID, defaultFor(HighlighterColors.BAD_CHARACTER));
-    createTextAttributesKey(KEYWORD_ID, defaultFor(SyntaxHighlighterColors.KEYWORD));
-    createTextAttributesKey(SPECIAL_ID, defaultFor(SyntaxHighlighterColors.KEYWORD));
+    createTextAttributesKey(COMMENT_ID, DefaultLanguageHighlighterColors.LINE_COMMENT);
+    createTextAttributesKey(BLOCK_COMMENT_ID, DefaultLanguageHighlighterColors.BLOCK_COMMENT);
+    createTextAttributesKey(IDENTIFIER_ID, DefaultLanguageHighlighterColors.KEYWORD);
+    createTextAttributesKey(NUMBER_ID, DefaultLanguageHighlighterColors.NUMBER);
+    createTextAttributesKey(STRING_ID, DefaultLanguageHighlighterColors.STRING);
+    createTextAttributesKey(BRACES_ID, DefaultLanguageHighlighterColors.BRACES);
+    createTextAttributesKey(PAREN_ID, DefaultLanguageHighlighterColors.PARENTHESES);
+    createTextAttributesKey(LITERAL_ID, DefaultLanguageHighlighterColors.KEYWORD);
+    createTextAttributesKey(CHAR_ID, DefaultLanguageHighlighterColors.STRING);
+    createTextAttributesKey(BAD_CHARACTER_ID, HighlighterColors.BAD_CHARACTER);
+    createTextAttributesKey(KEYWORD_ID, DefaultLanguageHighlighterColors.KEYWORD);
+    createTextAttributesKey(SPECIAL_ID, DefaultLanguageHighlighterColors.KEYWORD);
     createTextAttributesKey(QUOTED_TEXT_ID, brighter(HighlighterColors.TEXT));
-    createTextAttributesKey(QUOTED_STRING_ID, brighter(SyntaxHighlighterColors.STRING));
-    createTextAttributesKey(QUOTED_NUMBER_ID, brighter(SyntaxHighlighterColors.NUMBER));
-    createTextAttributesKey(DOT_ID, brighter(SyntaxHighlighterColors.DOT));
-    createTextAttributesKey(COMMA_ID, brighter(SyntaxHighlighterColors.COMMA));
+    createTextAttributesKey(QUOTED_STRING_ID, brighter(DefaultLanguageHighlighterColors.STRING));
+    createTextAttributesKey(QUOTED_NUMBER_ID, brighter(DefaultLanguageHighlighterColors.NUMBER));
+    createTextAttributesKey(DOT_ID, brighter(DefaultLanguageHighlighterColors.DOT));
+    createTextAttributesKey(COMMA_ID, brighter(DefaultLanguageHighlighterColors.COMMA));
   }
 
   public static TextAttributesKey LINE_COMMENT = createTextAttributesKey(COMMENT_ID);
@@ -169,24 +165,12 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements To
     }
   }
 
-
-  private static TextAttributes defaultFor(TextAttributesKey key)
-  {
-    return key.getDefaultAttributes();
-  }
-
   private static TextAttributes brighter(TextAttributesKey key)
   {
     TextAttributes attributes = key.getDefaultAttributes().clone();
     Color foregroundColor = attributes.getForegroundColor();
-    if (foregroundColor != null)
-    {
-      attributes.setForegroundColor(foregroundColor.brighter());
-    }
-    else
-    {
-      attributes.setForegroundColor(Color.darkGray);
-    }
+    if (foregroundColor != null) attributes.setForegroundColor(foregroundColor.brighter());
+    else attributes.setForegroundColor(JBColor.DARK_GRAY);
     return attributes;
   }
 }

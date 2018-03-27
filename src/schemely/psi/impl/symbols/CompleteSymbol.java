@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
+import org.jetbrains.annotations.NotNull;
 import schemely.psi.resolve.SchemeResolveResult;
 import schemely.psi.resolve.completion.CompletionProcessor;
 import schemely.scheme.REPL;
@@ -37,7 +38,7 @@ public class CompleteSymbol
       return PsiNamedElement.EMPTY_ARRAY;
     }
 
-    Map<String, LookupElement> variants = new HashMap<String, LookupElement>();
+    Map<String, LookupElement> variants = new HashMap<>();
 
     for (SchemeResolveResult candidate : candidates)
     {
@@ -58,12 +59,10 @@ public class CompleteSymbol
     return variants.values().toArray(new Object[variants.size()]);
   }
 
-  private static LookupElement mapToLookupElement(PsiElement element)
+  @NotNull private static LookupElement mapToLookupElement(PsiElement element)
   {
-    if (element instanceof PsiNamedElement)
-    {
-      return LookupElementBuilder.create((PsiNamedElement) element);
-    }
-    return LookupElementBuilder.create(element, element.getText());
+    return element instanceof PsiNamedElement ?
+        LookupElementBuilder.create((PsiNamedElement) element) :
+        LookupElementBuilder.create(element, element.getText());
   }
 }

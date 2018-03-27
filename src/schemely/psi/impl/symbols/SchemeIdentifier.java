@@ -14,7 +14,7 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import schemely.SchemeIcons;
+import icons.SchemeIcons;
 import schemely.lexer.TokenSets;
 import schemely.lexer.Tokens;
 import schemely.psi.impl.SchemePsiElementBase;
@@ -164,7 +164,7 @@ public class SchemeIdentifier extends SchemePsiElementBase implements PsiReferen
     return object == null ? "null" : Integer.toString(System.identityHashCode(object));
   }
 
-  public String getCanonicalText()
+  @NotNull public String getCanonicalText()
   {
     return null;
   }
@@ -222,7 +222,7 @@ public class SchemeIdentifier extends SchemePsiElementBase implements PsiReferen
   public static class IdentifierResolver implements ResolveCache.Resolver
   {
     @Override
-    public PsiElement resolve(PsiReference psiReference, boolean incompleteCode)
+    public PsiElement resolve(@NotNull PsiReference psiReference, boolean incompleteCode)
     {
       SchemeIdentifier schemeIdentifier = (SchemeIdentifier) psiReference;
       if (ResolveUtil.getQuotingLevel(schemeIdentifier) != 0)

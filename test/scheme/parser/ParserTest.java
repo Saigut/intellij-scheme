@@ -1,4 +1,4 @@
-package schemely.parser;
+package scheme.parser;
 
 //import org.testng.annotations.DataProvider;
 import schemely.TestUtil;
