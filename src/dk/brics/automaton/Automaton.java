@@ -264,10 +264,10 @@ public class Automaton implements Serializable, Cloneable {
 		expandSingleton();
 		Set<State> visited;
 		if (isDebug())
-			visited = new LinkedHashSet<State>();
+			visited = new LinkedHashSet<>();
 		else
-			visited = new HashSet<State>();
-		LinkedList<State> worklist = new LinkedList<State>();
+			visited = new HashSet<>();
+		LinkedList<State> worklist = new LinkedList<>();
 		worklist.add(initial);
 		visited.add(initial);
 		while (worklist.size() > 0) {
@@ -292,9 +292,9 @@ public class Automaton implements Serializable, Cloneable {
 	 */
 	public Set<State> getAcceptStates() {
 		expandSingleton();
-		HashSet<State> accepts = new HashSet<State>();
-		HashSet<State> visited = new HashSet<State>();
-		LinkedList<State> worklist = new LinkedList<State>();
+		HashSet<State> accepts = new HashSet<>();
+		HashSet<State> visited = new HashSet<>();
+		LinkedList<State> worklist = new LinkedList<>();
 		worklist.add(initial);
 		visited.add(initial);
 		while (worklist.size() > 0) {
@@ -390,7 +390,7 @@ public class Automaton implements Serializable, Cloneable {
 	 * Returns sorted array of all interval start points. 
 	 */
 	char[] getStartPoints() {
-		Set<Character> pointset = new HashSet<Character>();
+		Set<Character> pointset = new HashSet<>();
 		for (State s : getStates()) {
 			pointset.add(Character.MIN_VALUE);
 			for (Transition t : s.transitions) {
@@ -417,14 +417,14 @@ public class Automaton implements Serializable, Cloneable {
 	}
 	
 	private Set<State> getLiveStates(Set<State> states) {
-		HashMap<State, Set<State>> map = new HashMap<State, Set<State>>();
+		HashMap<State, Set<State>> map = new HashMap<>();
 		for (State s : states)
-			map.put(s, new HashSet<State>());
+			map.put(s, new HashSet<>());
 		for (State s : states)
 			for (Transition t : s.transitions)
 				map.get(t.to).add(s);
-		Set<State> live = new HashSet<State>(getAcceptStates());
-		LinkedList<State> worklist = new LinkedList<State>(live);
+		Set<State> live = new HashSet<>(getAcceptStates());
+		LinkedList<State> worklist = new LinkedList<>(live);
 		while (worklist.size() > 0) {
 			State s = worklist.removeFirst();
 			for (State p : map.get(s))
@@ -620,7 +620,7 @@ public class Automaton implements Serializable, Cloneable {
 		try {
 			Automaton a = (Automaton)super.clone();
 			if (!isSingleton()) {
-				HashMap<State, State> m = new HashMap<State, State>();
+				HashMap<State, State> m = new HashMap<>();
 				Set<State> states = getStates();
 				for (State s : states)
 					m.put(s, new State());

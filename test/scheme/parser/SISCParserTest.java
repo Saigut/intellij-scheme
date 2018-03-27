@@ -35,7 +35,7 @@ public class SISCParserTest extends ParserTestBase
     VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
     VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
 
-    List<PsiFile> files = new ArrayList<PsiFile>();
+    List<PsiFile> files = new ArrayList<>();
     parseAll(jarFile, files);
 
     Object[][] ret = new Object[files.size()][];

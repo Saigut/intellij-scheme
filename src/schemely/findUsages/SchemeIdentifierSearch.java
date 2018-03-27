@@ -159,7 +159,7 @@ public class SchemeIdentifierSearch implements QueryExecutor<PsiReference, Refer
       final AtomicBoolean canceled = new AtomicBoolean(false);
       final AtomicBoolean pceThrown = new AtomicBoolean(false);
 
-      List<PsiFile> psiFiles = new ArrayList<PsiFile>(fileSet);
+      List<PsiFile> psiFiles = new ArrayList<>(fileSet);
       final int size = psiFiles.size();
       /*boolean completed = JobUtil.invokeConcurrentlyUnderProgress(psiFiles, new Processor<PsiFile>()
       {

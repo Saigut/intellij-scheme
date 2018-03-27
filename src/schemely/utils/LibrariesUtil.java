@@ -21,7 +21,7 @@ public class LibrariesUtil
     {
       return new Library[0];
     }
-    final ArrayList<Library> libraries = new ArrayList<Library>();
+    final ArrayList<Library> libraries = new ArrayList<>();
     ApplicationManager.getApplication().runReadAction(new Runnable()
     {
       public void run()

@@ -33,7 +33,7 @@ public class ListBlock extends SchemeBlock
   @Override
   protected List<Block> generateSubBlocks(ASTNode node, Wrap wrap, CodeStyleSettings settings)
   {
-    List<Block> subBlocks = new ArrayList<Block>();
+    List<Block> subBlocks = new ArrayList<>();
     for (ASTNode childNode : getChildren(node))
     {
       Indent indent;

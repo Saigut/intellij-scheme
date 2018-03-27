@@ -17,7 +17,7 @@ public class SchemeParser implements PsiParser, Tokens
   private Scheme scheme;
 
   @NotNull
-  public ASTNode parse(IElementType root, PsiBuilder builder)
+  public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder)
   {
     scheme = SchemeImplementation.from(builder.getProject());
 

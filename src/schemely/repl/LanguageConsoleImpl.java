@@ -121,7 +121,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider
     final EditorColorsScheme colorsScheme = myConsoleEditor.getColorsScheme();
     DelegateColorScheme scheme = new DelegateColorScheme(colorsScheme)
     {
-      @Override
+      @NotNull @Override
       public Color getDefaultBackground()
       {
         Color color = getColor(ConsoleViewContentType.CONSOLE_BACKGROUND_KEY);
@@ -314,7 +314,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider
       .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter()
       {
         @Override
-        public void fileOpened(FileEditorManager source, VirtualFile file)
+        public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file)
         {
           if (file != myFile.getVirtualFile())
           {
@@ -346,7 +346,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider
         }
 
         @Override
-        public void fileClosed(FileEditorManager source, VirtualFile file)
+        public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file)
         {
         }
       });

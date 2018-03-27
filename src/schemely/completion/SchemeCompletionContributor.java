@@ -37,10 +37,7 @@ public class SchemeCompletionContributor extends CompletionContributor
         PsiElement position = parameters.getPosition();
         for (Object item : CompleteSymbol.getVariants(position))
         {
-          if (item instanceof LookupElement)
-          {
-            result.addElement((LookupElement) item);
-          }
+          if (item instanceof LookupElement) result.addElement((LookupElement) item);
         }
       }
     });

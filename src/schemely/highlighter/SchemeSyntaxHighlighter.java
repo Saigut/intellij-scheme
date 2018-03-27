@@ -21,7 +21,7 @@ import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAtt
 
 public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Tokens
 {
-  private static final Map<IElementType, TextAttributesKey[]> ATTRIBUTES = new HashMap<IElementType, TextAttributesKey[]>();
+  private static final Map<IElementType, TextAttributesKey[]> ATTRIBUTES = new HashMap<>();
 
   @NotNull
   public Lexer getHighlightingLexer()
@@ -33,12 +33,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements To
   public TextAttributesKey[] getTokenHighlights(IElementType tokenType)
   {
     TextAttributesKey[] Keys = ATTRIBUTES.get(tokenType);
-    if (null == Keys) {
-//      System.out.println("tokenType: " + tokenType.toString());
-      return EMPTY_KEYS;
-    } else {
-      return Keys;
-    }
+    return null == Keys ? EMPTY_KEYS : Keys;
   }
 
   @NonNls

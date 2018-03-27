@@ -109,7 +109,7 @@ final public class MinimizationOperations {
 						m2 = t;
 					}
 					if (triggers.get(m1).get(m2) == null)
-						triggers.get(m1).set(m2, new HashSet<IntPair>());
+						triggers.get(m1).set(m2, new HashSet<>());
 					triggers.get(m1).get(m2).add(new IntPair(n1, n2));
 				}
 				if (t1[k1].max < t2[k2].max)
@@ -152,9 +152,9 @@ final public class MinimizationOperations {
 		Transition[][] transitions = new Transition[ss.size()][];
 		State[] states = ss.toArray(new State[ss.size()]);
 		boolean[][] mark = new boolean[states.length][states.length];
-		ArrayList<ArrayList<HashSet<IntPair>>> triggers = new ArrayList<ArrayList<HashSet<IntPair>>>();
+		ArrayList<ArrayList<HashSet<IntPair>>> triggers = new ArrayList<>();
 		for (int n1 = 0; n1 < states.length; n1++) {
-			ArrayList<HashSet<IntPair>> v = new ArrayList<HashSet<IntPair>>();
+			ArrayList<HashSet<IntPair>> v = new ArrayList<>();
 			initialize(v, states.length);
 			triggers.add(v);
 		}
@@ -240,31 +240,31 @@ final public class MinimizationOperations {
 		}
 		char[] sigma = a.getStartPoints();
 		// initialize data structures
-		ArrayList<ArrayList<LinkedList<State>>> reverse = new ArrayList<ArrayList<LinkedList<State>>>();
+		ArrayList<ArrayList<LinkedList<State>>> reverse = new ArrayList<>();
 		for (int q = 0; q < states.length; q++) {
-			ArrayList<LinkedList<State>> v = new ArrayList<LinkedList<State>>();
+			ArrayList<LinkedList<State>> v = new ArrayList<>();
 			initialize(v, sigma.length);
 			reverse.add(v);
 		}
 		boolean[][] reverse_nonempty = new boolean[states.length][sigma.length];
-		ArrayList<LinkedList<State>> partition = new ArrayList<LinkedList<State>>();
+		ArrayList<LinkedList<State>> partition = new ArrayList<>();
 		initialize(partition, states.length);
 		int[] block = new int[states.length];
 		StateList[][] active = new StateList[states.length][sigma.length];
 		StateListNode[][] active2 = new StateListNode[states.length][sigma.length];
-		LinkedList<IntPair> pending = new LinkedList<IntPair>();
+		LinkedList<IntPair> pending = new LinkedList<>();
 		boolean[][] pending2 = new boolean[sigma.length][states.length];
-		ArrayList<State> split = new ArrayList<State>();
+		ArrayList<State> split = new ArrayList<>();
 		boolean[] split2 = new boolean[states.length];
-		ArrayList<Integer> refine = new ArrayList<Integer>();
+		ArrayList<Integer> refine = new ArrayList<>();
 		boolean[] refine2 = new boolean[states.length];
-		ArrayList<ArrayList<State>> splitblock = new ArrayList<ArrayList<State>>();
+		ArrayList<ArrayList<State>> splitblock = new ArrayList<>();
 		initialize(splitblock, states.length);
 		for (int q = 0; q < states.length; q++) {
-			splitblock.set(q, new ArrayList<State>());
-			partition.set(q, new LinkedList<State>());
+			splitblock.set(q, new ArrayList<>());
+			partition.set(q, new LinkedList<>());
 			for (int x = 0; x < sigma.length; x++) {
-				reverse.get(q).set(x, new LinkedList<State>());
+				reverse.get(q).set(x, new LinkedList<>());
 				active[q][x] = new StateList();
 			}
 		}

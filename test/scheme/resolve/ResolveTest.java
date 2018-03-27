@@ -397,7 +397,7 @@ public class ResolveTest extends LightCodeInsightTestCase
 
   protected Collection<PsiElement> depthFirst(PsiElement element)
   {
-    Collection<PsiElement> ret = new ArrayList<PsiElement>();
+    Collection<PsiElement> ret = new ArrayList<>();
     doDepthFirst(element, ret);
     return ret;
   }

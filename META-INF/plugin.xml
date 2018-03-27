@@ -51,6 +51,7 @@
 		<gotoSymbolContributor implementation="schemely.gotoclass.SchemeGoToSymbolContributor"/>
 
 		<stubElementTypeHolder class="schemely.parser.AST"/>
+		<projectConfigurable groupId="language" instance="schemely.settings.SchemeConfigurable"/>
 
 		<stubIndex implementation="schemely.psi.stubs.index.SchemeClassNameIndex"/>
 		<stubIndex implementation="schemely.psi.stubs.index.SchemeFullScriptNameIndex"/>
@@ -170,9 +171,4 @@
 
 	</actions>
 
-	<project-components>
-		<component>
-			<implementation-class>schemely.settings.SchemeConfigurable</implementation-class>
-		</component>
-	</project-components>
 </idea-plugin>

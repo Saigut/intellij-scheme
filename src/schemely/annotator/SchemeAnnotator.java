@@ -19,75 +19,55 @@ import schemely.psi.util.SchemePsiUtil;
 import java.util.Arrays;
 import java.util.Set;
 
+public class SchemeAnnotator implements Annotator {
+	public static final Set<String> IMPLICIT_NAMES = new HashSet<>(Arrays.asList("define",
+			"quote",
+			"quasiquote",
+			"unquote",
+			"unquote-splicing",
+			"lambda",
+			"define",
+			"define-syntax",
+			"if",
+			"else",
+			"let",
+			"let*",
+			"letrec",
+			"set!",
+			"begin",
+			"cond",
+			"and",
+			"or",
+			"case",
+			"do",
+			"delay",
+			"let-syntax",
+			"letrec-syntax"));
 
-public class SchemeAnnotator implements Annotator
-{
-  public static final
-  Set<String>
-    IMPLICIT_NAMES =
-    new HashSet<String>(Arrays.asList("define",
-                                      "quote",
-                                      "quasiquote",
-                                      "unquote",
-                                      "unquote-splicing",
-                                      "lambda",
-                                      "define",
-                                      "define-syntax",
-                                      "if",
-                                      "else",
-                                      "let",
-                                      "let*",
-                                      "letrec",
-                                      "set!",
-                                      "begin",
-                                      "cond",
-                                      "and",
-                                      "or",
-                                      "case",
-                                      "do",
-                                      "delay",
-                                      "let-syntax",
-                                      "letrec-syntax"));
-
-  public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder)
-  {
-    if (ResolveUtil.getQuotingLevel(element) > 0)
-    {
-      if (element instanceof SchemeIdentifier)
-      {
-        Annotation annotation = holder.createInfoAnnotation(element, null);
-        annotation.setTextAttributes(SchemeSyntaxHighlighter.QUOTED_TEXT);
-      }
-      else if (element instanceof SchemeLiteral)
-      {
-        Annotation annotation = holder.createInfoAnnotation(element, null);
-        if (SchemePsiUtil.isStringLiteral(element))
-        {
-          annotation.setTextAttributes(SchemeSyntaxHighlighter.QUOTED_STRING);
-        }
-        else if (SchemePsiUtil.isNumberLiteral(element))
-        {
-          annotation.setTextAttributes(SchemeSyntaxHighlighter.QUOTED_NUMBER);
-        }
-        else
-        {
-          annotation.setTextAttributes(SchemeSyntaxHighlighter.QUOTED_TEXT);
-        }
-      }
-      else if (element instanceof SchemeList || element instanceof SchemeVector)
-      {
-        ASTNode node = element.getNode();
-        for (ASTNode child : node.getChildren(Tokens.BRACES))
-        {
-          Annotation annotation = holder.createInfoAnnotation(child, null);
-          annotation.setTextAttributes(SchemeSyntaxHighlighter.QUOTED_TEXT);
-        }
-      }
-    }
-    else if (element instanceof SchemeList)
-    {
-      annotateList((SchemeList) element, holder);
-    }
+	public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
+		if (ResolveUtil.getQuotingLevel(element) > 0) {
+			if (element instanceof SchemeIdentifier) {
+				Annotation annotation = holder.createInfoAnnotation(element, null);
+				annotation.setTextAttributes(SchemeSyntaxHighlighter.QUOTED_TEXT);
+			} else if (element instanceof SchemeLiteral) {
+				Annotation annotation = holder.createInfoAnnotation(element, null);
+				if (SchemePsiUtil.isStringLiteral(element)) {
+					annotation.setTextAttributes(SchemeSyntaxHighlighter.QUOTED_STRING);
+				} else if (SchemePsiUtil.isNumberLiteral(element)) {
+					annotation.setTextAttributes(SchemeSyntaxHighlighter.QUOTED_NUMBER);
+				} else {
+					annotation.setTextAttributes(SchemeSyntaxHighlighter.QUOTED_TEXT);
+				}
+			} else if (element instanceof SchemeList || element instanceof SchemeVector) {
+				ASTNode node = element.getNode();
+				for (ASTNode child : node.getChildren(Tokens.BRACES)) {
+					Annotation annotation = holder.createInfoAnnotation(child, null);
+					annotation.setTextAttributes(SchemeSyntaxHighlighter.QUOTED_TEXT);
+				}
+			}
+		} else if (element instanceof SchemeList) {
+			annotateList((SchemeList) element, holder);
+		}
 //    else if (element instanceof SchemeIdentifier)
 //    {
 //      SchemeIdentifier identifier = (SchemeIdentifier) element;
@@ -96,11 +76,10 @@ public class SchemeAnnotator implements Annotator
 //        holder.createWarningAnnotation(identifier, "Can't resolve");
 //      }
 //    }
-  }
+	}
 
-  private void annotateList(SchemeList list, AnnotationHolder holder)
-  {
-    SchemeIdentifier first = list.getFirstIdentifier();
+	private void annotateList(SchemeList list, AnnotationHolder holder) {
+		SchemeIdentifier first = list.getFirstIdentifier();
 
 //    PsiElement second = list.getSecondNonLeafElement();
 //    StringBuffer buffer = new StringBuffer();
@@ -109,10 +88,9 @@ public class SchemeAnnotator implements Annotator
 //    buffer.append(second == null ? "null" : '"' + second.getText() + '"');
 //    System.out.println(buffer.toString());
 
-    if ((first != null) && IMPLICIT_NAMES.contains(first.getReferenceName()))
-    {
-      Annotation annotation = holder.createInfoAnnotation(first, null);
-      annotation.setTextAttributes(SchemeSyntaxHighlighter.KEYWORD);
-    }
-  }
+		if ((first != null) && IMPLICIT_NAMES.contains(first.getReferenceName())) {
+			Annotation annotation = holder.createInfoAnnotation(first, null);
+			annotation.setTextAttributes(SchemeSyntaxHighlighter.KEYWORD);
+		}
+	}
 }

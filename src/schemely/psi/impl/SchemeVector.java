@@ -45,7 +45,7 @@ public class SchemeVector extends SchemePsiElementBase implements SchemeBraced
   public SchemeIdentifier[] getOddSymbols()
   {
     SchemePsiElementBase[] elems = findChildrenByClass(SchemePsiElementBase.class);
-    ArrayList<SchemeIdentifier> res = new ArrayList<SchemeIdentifier>();
+    ArrayList<SchemeIdentifier> res = new ArrayList<>();
     for (int i = 0; i < elems.length; i++)
     {
       SchemePsiElement elem = elems[i];

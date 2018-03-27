@@ -20,6 +20,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -48,12 +49,12 @@ public class LanguageConsoleViewImpl extends ConsoleViewImpl {
   protected void disposeEditor() {
   }
 
-  @Override
+  @NotNull @Override
   protected JComponent createCenterComponent() {
     return myConsole.getComponent();
   }
 
-  public JComponent getComponent() {
+  @NotNull public JComponent getComponent() {
     return super.getComponent();
   }
 

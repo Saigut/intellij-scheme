@@ -17,6 +17,7 @@ import com.intellij.openapi.vfs.encoding.EncodingManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiNamedElement;
+import org.jetbrains.annotations.NotNull;
 import schemely.repl.REPLProviderBase;
 import schemely.repl.SchemeConsoleElement;
 import schemely.repl.SchemeConsoleView;
@@ -247,12 +248,12 @@ public class SISCInProcessREPL extends REPLBase
 
   private URL[] getLibraryURLs() throws REPLException
   {
-    List<URL> urls = new ArrayList<URL>();
+    List<URL> urls = new ArrayList<>();
 
     Module module = findSuitableModule();
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
     OrderEntry[] entries = moduleRootManager.getOrderEntries();
-    Set<VirtualFile> virtualFiles = new HashSet<VirtualFile>();
+    Set<VirtualFile> virtualFiles = new HashSet<>();
     for (OrderEntry orderEntry : entries)
     {
       if (orderEntry instanceof ExportableOrderEntry)
@@ -349,7 +350,7 @@ public class SISCInProcessREPL extends REPLBase
 
   private static class GetCompletions implements SchemeCaller
   {
-    private final Collection<PsiNamedElement> completions = new ArrayList<PsiNamedElement>();
+    private final Collection<PsiNamedElement> completions = new ArrayList<>();
     private final PsiManager psiManager;
 
     public GetCompletions(PsiManager psiManager)
@@ -466,7 +467,7 @@ public class SISCInProcessREPL extends REPLBase
 
     public Collection<Symbol> sortSymbols(Collection<Symbol> unsorted)
     {
-      List<Symbol> symbols = new ArrayList<Symbol>(unsorted);
+      List<Symbol> symbols = new ArrayList<>(unsorted);
       Collections.sort(symbols, new Comparator<Symbol>()
       {
         @Override
@@ -510,7 +511,7 @@ public class SISCInProcessREPL extends REPLBase
 
   static class ToReplInputStream extends InputStream
   {
-    private final BlockingQueue<byte[]> queue = new LinkedBlockingQueue<byte[]>();
+    private final BlockingQueue<byte[]> queue = new LinkedBlockingQueue<>();
     private final Charset charset;
     private int cursor = 0;
     private byte[] current = null;
@@ -544,13 +545,13 @@ public class SISCInProcessREPL extends REPLBase
     }
 
     @Override
-    public int read(byte[] b) throws IOException
+    public int read(@NotNull byte[] b) throws IOException
     {
       return read(b, 0, b.length);
     }
 
     @Override
-    public synchronized int read(byte[] b, int off, int len) throws IOException
+    public synchronized int read(@NotNull byte[] b, int off, int len) throws IOException
     {
       ensureCurrent();
 
@@ -609,13 +610,13 @@ public class SISCInProcessREPL extends REPLBase
     }
 
     @Override
-    public void write(byte[] b) throws IOException
+    public void write(@NotNull byte[] b) throws IOException
     {
       write(b, 0, b.length);
     }
 
     @Override
-    public void write(byte[] b, int off, int len) throws IOException
+    public void write(@NotNull byte[] b, int off, int len) throws IOException
     {
       int cursor = off;
       while (cursor < (off + len))

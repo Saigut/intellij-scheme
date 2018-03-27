@@ -16,7 +16,6 @@ public class SchemeFileType extends LanguageFileType
   @NonNls
   public static final String SCHEME_EXTENSIONS = "scm;ss";
 
-
   public SchemeFileType()
   {
     super(SchemeLanguage.INSTANCE);
@@ -43,10 +42,5 @@ public class SchemeFileType extends LanguageFileType
   public Icon getIcon()
   {
     return SchemeIcons.SCHEME_ICON;
-  }
-
-  public boolean isJVMDebuggingSupported()
-  {
-    return true;
   }
 }

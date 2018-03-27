@@ -14,7 +14,7 @@ public class SchemeBraceMatcher implements PairedBraceMatcher {
 			new BracePair(Tokens.LEFT_CURLY, Tokens.RIGHT_CURLY, true),
 			new BracePair(Tokens.OPEN_VECTOR, Tokens.RIGHT_PAREN, true)};
 
-	public BracePair[] getPairs() {
+	public @NotNull BracePair[] getPairs() {
 		return PAIRS;
 	}
 

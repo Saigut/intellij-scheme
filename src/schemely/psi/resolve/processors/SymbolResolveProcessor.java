@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.NameHint;
+import org.jetbrains.annotations.NotNull;
 import schemely.psi.resolve.SchemeResolveResult;
 
 import java.util.HashSet;
@@ -13,14 +14,14 @@ import java.util.Set;
 
 public class SymbolResolveProcessor extends ResolveProcessor
 {
-  private final Set<PsiElement> processedElements = new HashSet<PsiElement>();
+  private final Set<PsiElement> processedElements = new HashSet<>();
 
   public SymbolResolveProcessor(String name)
   {
     super(name);
   }
 
-  public boolean execute(PsiElement element, ResolveState resolveState)
+  public boolean execute(@NotNull PsiElement element, @NotNull ResolveState resolveState)
   {
     if ((element instanceof PsiNamedElement) && !processedElements.contains(element))
     {
@@ -36,7 +37,7 @@ public class SymbolResolveProcessor extends ResolveProcessor
   }
 
   @Override
-  public <T> T getHint(Key<T> hintKey)
+  public <T> T getHint(@NotNull Key<T> hintKey)
   {
     if (hintKey.equals(NameHint.KEY))
     {
@@ -45,7 +46,7 @@ public class SymbolResolveProcessor extends ResolveProcessor
     return null;
   }
 
-  public String getName(ResolveState resolveState)
+  public String getName(@NotNull ResolveState resolveState)
   {
     return name;
   }

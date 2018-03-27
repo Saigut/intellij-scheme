@@ -3,6 +3,7 @@ package schemely.lexer;
 import com.intellij.lexer.LexerBase;
 import com.intellij.psi.tree.IElementType;
 import dk.brics.automaton.RunAutomaton;
+import org.jetbrains.annotations.NotNull;
 import org.jparsec.*;
 import org.jparsec.pattern.CharPredicates;
 import org.jparsec.pattern.Pattern;
@@ -175,7 +176,7 @@ public class SchemeLexer extends LexerBase
           }).atomic();
 
   @Override
-  public void start(CharSequence buffer, int startOffset, int endOffset, int initialState)
+  public void start(@NotNull CharSequence buffer, int startOffset, int endOffset, int initialState)
   {
 //    System.out.println("startOffset: " + startOffset + ", endOffset: " + endOffset
 //            + ". initialState: " + initialState);
@@ -518,7 +519,7 @@ public class SchemeLexer extends LexerBase
     return end;
   }
 
-  @Override
+  @NotNull @Override
   public CharSequence getBufferSequence()
   {
     return buffer;
