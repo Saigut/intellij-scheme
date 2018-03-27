@@ -44,8 +44,7 @@ public class NewSchemeFileAction extends NewSchemeActionBase
   }
 
   @NotNull
-  protected PsiElement[] doCreate(String newName, PsiDirectory directory) throws Exception
-  {
+  protected PsiElement[] doCreate(String newName, PsiDirectory directory) {
     PsiFile file = createFileFromTemplate(directory, newName, "SchemeFile.scm");
     PsiElement lastChild = file.getLastChild();
     Project project = directory.getProject();

@@ -311,23 +311,17 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider
   {
     myProject.getMessageBus()
       .connect(this)
-      .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter()
+      .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener()
       {
         @Override
         public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file)
         {
-          if (file != myFile.getVirtualFile())
-          {
-            return;
-          }
+          if (!file.equals(myFile.getVirtualFile())) return;
           if (myConsoleEditor != null)
           {
             for (FileEditor fileEditor : source.getAllEditors())
             {
-              if (!(fileEditor instanceof TextEditor))
-              {
-                continue;
-              }
+              if (!(fileEditor instanceof TextEditor)) continue;
               final Editor editor = ((TextEditor) fileEditor).getEditor();
               registerActionShortcuts(editor.getComponent());
               editor.getContentComponent().addFocusListener(new FocusListener()
@@ -390,8 +384,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider
     {
       throw new AssertionError("file=null, name=" + name + ", language=" + language.getDisplayName());
     }
-    PsiDocumentManagerImpl.cachePsi(myEditorDocument, myFile);
-    FileContentUtil.reparseFiles(myProject, Collections.<VirtualFile>singletonList(newVFile), false);
+    FileContentUtil.reparseFiles(myProject, Collections.singletonList(newVFile), false);
 
     if (prevFile != null)
     {

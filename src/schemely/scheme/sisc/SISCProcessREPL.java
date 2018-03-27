@@ -189,8 +189,7 @@ public class SISCProcessREPL extends REPLBase
     };
   }
 
-  protected Process createProcess(CommandLineArgumentsProvider provider) throws ExecutionException
-  {
+  protected Process createProcess(CommandLineArgumentsProvider provider) {
     Process process = null;
     try
     {

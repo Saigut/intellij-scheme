@@ -1,6 +1,7 @@
-package schemely.completion;
+package scheme.completion;
 
 import junit.framework.TestCase;
+import schemely.completion.SchemeIdentifierMatcher;
 
 /**
  * @author Colin Fleming

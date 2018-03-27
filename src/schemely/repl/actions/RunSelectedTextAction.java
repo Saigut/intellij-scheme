@@ -38,7 +38,7 @@ public class RunSelectedTextAction extends RunActionBase
     {
       Messages.showErrorDialog(project,
                                SchemeBundle.message("evaluate.incorrect.form"),
-                               SchemeBundle.message("evaluate.incorrect.cannot.evaluate", new Object[0]));
+                               SchemeBundle.message("evaluate.incorrect.cannot.evaluate"));
 
       return;
     }

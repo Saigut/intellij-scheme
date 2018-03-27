@@ -239,38 +239,42 @@ public class SchemeLexer extends LexerBase
       case S_OPERATOR:
 
         String opStr = token_frag.text();
-        if (opStr.equals("(")) {
-          type = Tokens.LEFT_PAREN;
+        switch (opStr) {
+          case "(":
+            type = Tokens.LEFT_PAREN;
 
-        } else if (opStr.equals(")")) {
-          type = Tokens.RIGHT_PAREN;
+            break;
+          case ")":
+            type = Tokens.RIGHT_PAREN;
 
-        } else if (opStr.equals("[")) {
-          type = Tokens.LEFT_SQUARE;
+            break;
+          case "[":
+            type = Tokens.LEFT_SQUARE;
 
-        } else if (opStr.equals("]")) {
-          type = Tokens.RIGHT_SQUARE;
+            break;
+          case "]":
+            type = Tokens.RIGHT_SQUARE;
 
-        } else if (opStr.equals("'")) {
-          type = Tokens.QUOTE_MARK;
+            break;
+          case "'":
+            type = Tokens.QUOTE_MARK;
 
-        } else if (opStr.equals("`")) {
-          type = Tokens.BACKQUOTE;
+            break;
+          case "`":
+            type = Tokens.BACKQUOTE;
 
-        } else if (opStr.equals(",")) {
-          type = Tokens.COMMA;
+            break;
+          case ",":
+            type = Tokens.COMMA;
 
-        } else if (opStr.equals("#")) {
-          type = Tokens.SHARP;
+            break;
+          case "#":
+            type = Tokens.SHARP;
 
-        } /*else if (opStr.equals(";")) {
-          type = Tokens.OP_SEMI;
-
-        } else if (opStr.equals("\\")) {
-          type = Tokens.OP_BACKSLASH;
-
-        }*/ else {
-          type = Tokens.SPECIAL;
+            break;
+          default:
+            type = Tokens.SPECIAL;
+            break;
         }
 
         break;

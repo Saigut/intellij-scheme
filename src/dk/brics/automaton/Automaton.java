@@ -658,8 +658,8 @@ public class Automaton implements Serializable, Cloneable {
 	 * @exception ClassCastException if the data is not a serialized <code>Automaton</code>
 	 * @exception ClassNotFoundException if the class of the serialized object cannot be found
 	 */
-	public static Automaton load(URL url) throws IOException, OptionalDataException, ClassCastException, 
-	                                             ClassNotFoundException, InvalidClassException {
+	public static Automaton load(URL url) throws IOException, ClassCastException,
+	                                             ClassNotFoundException {
 		return load(url.openStream());
 	}
 	
@@ -672,8 +672,8 @@ public class Automaton implements Serializable, Cloneable {
 	 * @exception ClassCastException if the data is not a serialized <code>Automaton</code>
 	 * @exception ClassNotFoundException if the class of the serialized object cannot be found
 	 */
-	public static Automaton load(InputStream stream) throws IOException, OptionalDataException, ClassCastException, 
-	                                                        ClassNotFoundException, InvalidClassException {
+	public static Automaton load(InputStream stream) throws IOException, ClassCastException,
+	                                                        ClassNotFoundException {
 		ObjectInputStream s = new ObjectInputStream(stream);
 		return (Automaton)s.readObject();
 	}

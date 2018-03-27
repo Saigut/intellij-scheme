@@ -34,15 +34,7 @@ public class SchemeParser implements PsiParser, Tokens
 
   // Helpers
   boolean isParen(IElementType type) {
-    if (LEFT_PAREN == type || RIGHT_PAREN == type ||
-        LEFT_SQUARE == type || RIGHT_SQUARE == type)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
+	  return LEFT_PAREN == type || RIGHT_PAREN == type || LEFT_SQUARE == type || RIGHT_SQUARE == type;
   }
 
   IElementType atomMarkType(IElementType type)

@@ -99,21 +99,17 @@ public class SchemeIdentifierSearch implements QueryExecutor<PsiReference, Refer
 
         for (final PsiElement scopeElement : scopeElements)
         {
-          return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>()
-          {
-            public Boolean compute()
-            {
-              StringSearcher searcher = new StringSearcher(name, caseSensitively, true);
+          return ApplicationManager.getApplication().runReadAction((Computable<Boolean>) () -> {
+            StringSearcher searcher = new StringSearcher(name, caseSensitively, true);
 
-              ProgressManager progressManager = ProgressManager.getInstance();
+            ProgressManager progressManager = ProgressManager.getInstance();
 
-              return LowLevelSearchUtil.processElementsContainingWordInElement(processor,
-                                                                               scopeElement,
-                                                                               searcher,
-                                                                               ignoreInjectedPsi,
-                                                                               progressManager.getProgressIndicator());
-            }
-          }).booleanValue();
+            return LowLevelSearchUtil.processElementsContainingWordInElement(processor,
+                scopeElement,
+                searcher,
+                ignoreInjectedPsi,
+                progressManager.getProgressIndicator());
+          });
         }
         return true;
       }

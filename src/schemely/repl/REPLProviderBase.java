@@ -174,8 +174,7 @@ public abstract class REPLProviderBase implements REPLProvider
         new WriteCommandAction(console.getProject(), console.getFile())
         {
           @Override
-          protected void run(@NotNull Result result) throws Throwable
-          {
+          protected void run(@NotNull Result result) {
             if (!previous && (text == null))
             {
               console.restoreCurrentREPLItem();

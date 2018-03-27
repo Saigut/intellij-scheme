@@ -1,4 +1,4 @@
-package schemely.resolve;
+package scheme.resolve;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiPolyVariantReference;
@@ -295,8 +295,7 @@ public class ResolveTest extends LightCodeInsightTestCase
     resolvesTo(second(myFile, "eternity"), first(myFile, "eternity"));
   }
 
-  private void parse(@Language("Scheme") String contents) throws IOException
-  {
+  private void parse(@Language("Scheme") String contents) {
     configureFromFileText("resolve-test.scm", contents);
   }
 

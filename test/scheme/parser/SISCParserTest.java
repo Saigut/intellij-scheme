@@ -1,4 +1,4 @@
-package schemely.parser;
+package scheme.parser;
 
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;

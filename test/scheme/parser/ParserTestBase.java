@@ -1,4 +1,4 @@
-package schemely.parser;
+package scheme.parser;
 
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;

@@ -95,13 +95,9 @@ public class SchemeStructureViewElement implements StructureViewTreeElement
       else if (parent.getParent() instanceof SchemeList)
       {
         SchemeList grandparent = (SchemeList) parent.getParent();
-        if (grandparent.isDefinition() &&
+        return grandparent.isDefinition() &&
             (grandparent.getSecondNonLeafElement() == parent) &&
-            (parent.getFirstIdentifier() == element))
-        {
-          // (define (x <formals>) <whatever>)
-          return true;
-        }
+            (parent.getFirstIdentifier() == element);
       }
     }
     return false;

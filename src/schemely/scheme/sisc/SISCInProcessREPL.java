@@ -359,8 +359,7 @@ public class SISCInProcessREPL extends REPLBase
     }
 
     @Override
-    public Object execute(Interpreter r) throws SchemeException
-    {
+    public Object execute(Interpreter r) {
       SymbolicEnvironment symbolicEnvironment = r.getContextEnv(Util.TOPLEVEL);
 
       SymbolicEnvironment syntaxEnvironment = symbolicEnvironment.getSidecarEnvironment(Util.EXPSC);
