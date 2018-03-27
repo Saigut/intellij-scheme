@@ -14,7 +14,7 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import schemely.SchemeIcons;
+import icons.SchemeIcons;
 import schemely.lexer.TokenSets;
 import schemely.lexer.Tokens;
 import schemely.psi.impl.SchemePsiElementBase;

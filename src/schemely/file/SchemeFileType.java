@@ -4,7 +4,7 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import schemely.SchemeIcons;
+import icons.SchemeIcons;
 import schemely.SchemeLanguage;
 
 import javax.swing.Icon;

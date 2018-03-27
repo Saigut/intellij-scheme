@@ -7,7 +7,7 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import schemely.SchemeBundle;
-import schemely.SchemeIcons;
+import icons.SchemeIcons;
 import schemely.file.SchemeFileType;
 import schemely.lexer.Tokens;
 

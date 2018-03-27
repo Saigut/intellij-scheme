@@ -8,7 +8,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.TextRange;
 import schemely.SchemeBundle;
-import schemely.SchemeIcons;
+import icons.SchemeIcons;
 import schemely.psi.util.SchemePsiElementFactory;
 
 public class RunSelectedTextAction extends RunActionBase
