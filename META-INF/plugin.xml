@@ -93,17 +93,17 @@
 
 	<actions>
 		<!-- Create file actions -->
-		<!--<action id="Scheme.SchemeFile" class="schemely.actions.NewSchemeFileAction"-->
-		<!--text="Scheme File" description="Create new Scheme File">-->
-		<!--<add-to-group group-id="NewGroup" anchor="last"/>-->
-		<!--</action>-->
+		<action id="Scheme.SchemeFile" class="schemely.actions.NewSchemeFileAction"
+		        text="Scheme File" description="Create new Scheme File">
+			<add-to-group group-id="NewGroup" anchor="last"/>
+		</action>
 
-		<!--<action id="Scheme.JavaToScheme" class="schemely.conversion.JavaToSchemeAction"-->
-		<!--text="Convert Java File To Scheme" description="Convert Java File To Scheme">-->
-		<!--<add-to-group group-id="RefactoringMenu" anchor="last"/>-->
-		<!--<add-to-group group-id="EditorTabPopupMenu" anchor="last"/>-->
-		<!--<keyboard-shortcut first-keystroke="control shift G" keymap="$default"/>-->
-		<!--</action>-->
+		<action id="Scheme.JavaToScheme" class="schemely.conversion.JavaToSchemeAction"
+		        text="Convert Java File To Scheme" description="Convert Java File To Scheme">
+			<add-to-group group-id="RefactoringMenu" anchor="last"/>
+			<add-to-group group-id="EditorTabPopupMenu" anchor="last"/>
+			<keyboard-shortcut first-keystroke="control shift G" keymap="$default"/>
+		</action>
 
 		<!-- REPL-related actions -->
 		<group id="Scheme.REPL.Group"
