@@ -5,9 +5,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiReference;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
@@ -153,10 +151,120 @@ public class SchemeIdentifier extends SchemePsiElementBase implements PsiReferen
     return getNameString();
   }
 
+  private PsiElement getNormalChildAt(PsiElement element, int offset)
+  {
+    if (null == element)
+    {
+      return null;
+    }
+
+    PsiElement child;
+    child = element.getFirstChild();
+    if (null == child)
+    {
+      return null;
+    }
+
+    IElementType eleType;
+    while (offset > 0)
+    {
+      child = child.getNextSibling();
+      if (null == child)
+      {
+        return null;
+      }
+      eleType = child.getNode().getElementType();
+      if (!Tokens.WHITESPACE_SET.contains(eleType) && !Tokens.COMMENTS.contains(eleType))
+      {
+        offset--;
+      }
+    }
+
+    return child;
+  }
+
+  private PsiElement getBigBrother(PsiElement element)
+  {
+    if (null == element)
+    {
+      return null;
+    }
+
+    PsiElement bigBrother;
+    bigBrother = element.getPrevSibling();
+    if (null != bigBrother)
+    {
+      return bigBrother;
+    }
+
+    PsiElement parent;
+    parent = element.getParent();
+    if (null == parent)
+    {
+      return null;
+    }
+    else
+    {
+      if(parent instanceof PsiFile)
+      {
+        return null;
+      }
+
+      bigBrother = parent.getPrevSibling();
+      if (null == bigBrother)
+      {
+        return null;
+      }
+      else
+      {
+        return bigBrother;
+      }
+    }
+  }
+
+  private boolean isItDeclaration(PsiElement element)
+  {
+    if (null == element)
+    {
+      return false;
+    }
+
+    PsiElement operator;
+    operator = getNormalChildAt(element, 1);
+    if (null == operator)
+    {
+      return false;
+    }
+    else
+    {
+      return operator.textMatches("define");
+    }
+  }
+
   public PsiElement resolve()
   {
-//    return getManager().getResolveCache().resolveWithCaching(this, RESOLVER, false, false);
-    return null;
+    PsiElement bigBrother = this;
+    PsiElement declaration;
+
+    while (true)
+    {
+      bigBrother = getBigBrother(bigBrother);
+      if (null == bigBrother)
+      {
+        return null;
+      }
+      if (isItDeclaration(bigBrother))
+      {
+        declaration = getNormalChildAt(bigBrother, 2);
+        if (null != declaration)
+        {
+          if (declaration.textMatches(this))
+          {
+            return declaration;
+          }
+        }
+      }
+    }
   }
 
   public static String id(Object object)

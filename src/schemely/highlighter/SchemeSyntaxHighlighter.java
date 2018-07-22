@@ -84,7 +84,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements To
   {
     createTextAttributesKey(COMMENT_ID, defaultFor(SyntaxHighlighterColors.LINE_COMMENT));
     createTextAttributesKey(BLOCK_COMMENT_ID, defaultFor(SyntaxHighlighterColors.JAVA_BLOCK_COMMENT));
-    createTextAttributesKey(IDENTIFIER_ID, defaultFor(SyntaxHighlighterColors.KEYWORD));
+    createTextAttributesKey(IDENTIFIER_ID, brighter(SyntaxHighlighterColors.KEYWORD));
     createTextAttributesKey(NUMBER_ID, defaultFor(SyntaxHighlighterColors.NUMBER));
     createTextAttributesKey(STRING_ID, defaultFor(SyntaxHighlighterColors.STRING));
     createTextAttributesKey(BRACES_ID, defaultFor(SyntaxHighlighterColors.BRACES));

@@ -48,7 +48,7 @@ public class SchemeParser implements PsiParser, Tokens
   IElementType atomMarkType(IElementType type)
   {
     if (LITERALS.contains(type)) {
-      return AST.LITERAL;
+      return AST.PLAIN_LITERAL;
     }
     else if (IDENTIFIER == type)
     {
@@ -59,7 +59,7 @@ public class SchemeParser implements PsiParser, Tokens
       return AST.KEYWORD;
     }
     else {
-      return AST.LITERAL;
+      return AST.OTHER_LITERAL;
     }
   }
 
@@ -270,7 +270,7 @@ public class SchemeParser implements PsiParser, Tokens
   {
     PsiBuilder.Marker marker = builder.mark();
     builder.advanceLexer();
-    marker.done(AST.LITERAL);
+    marker.done(AST.PLAIN_LITERAL);
   }
 
   /**

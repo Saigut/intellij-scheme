@@ -44,7 +44,12 @@ public class DefaultPsiCreator implements SchemePsiCreator
     {
       return new SchemeIdentifier(node);
     }
-    if (elementType == AST.LITERAL)
+    if (elementType == AST.PLAIN_LITERAL)
+    {
+//      return new SchemeLiteral(node);
+      return new SchemeIdentifier(node);
+    }
+    if (elementType == AST.OTHER_LITERAL)
     {
       return new SchemeLiteral(node);
     }
