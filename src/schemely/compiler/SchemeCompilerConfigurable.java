@@ -59,7 +59,8 @@ public class SchemeCompilerConfigurable implements Configurable
            (settings.warningsAsErrors != treatWarningsAsErrorsCheckBox.isSelected());
   }
 
-  public void apply() {
+  public void apply() throws ConfigurationException
+  {
     settings.prefix = classNamePrefixField.getText();
     settings.modulesDefaultToStatic = modulesDefaultToStaticCheckBox.isSelected();
     settings.warnUnknownMember = warnOnUnknownMembersCheckBox.isSelected();

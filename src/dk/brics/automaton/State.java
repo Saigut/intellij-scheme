@@ -29,8 +29,6 @@
 
 package dk.brics.automaton;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -71,7 +69,7 @@ public class State implements Serializable, Comparable<State> {
 	 * Resets transition set. 
 	 */
 	final void resetTransitions() {
-		transitions = new HashSet<>();
+		transitions = new HashSet<Transition>();
 	}
 	
 	/** 
@@ -177,7 +175,7 @@ public class State implements Serializable, Comparable<State> {
 	 * Compares this object with the specified object for order.
 	 * States are ordered by the time of construction.
 	 */
-	public int compareTo(@NotNull State s) {
+	public int compareTo(State s) {
 		return s.id - id;
 	}
 

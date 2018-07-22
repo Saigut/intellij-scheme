@@ -8,18 +8,18 @@ import schemely.psi.stubs.elements.SchemeStubFileElementType;
 
 public interface AST extends Tokens
 {
-  IStubFileElementType FILE = new SchemeStubFileElementType();
+  final IStubFileElementType FILE = new SchemeStubFileElementType();
 
-  IElementType LIST = new SchemeElementType("list");
-  IElementType VECTOR = new SchemeElementType("vector");
+  final IElementType LIST = new SchemeElementType("list");
+  final IElementType VECTOR = new SchemeElementType("vector");
 
-  IElementType LITERAL = new SchemeElementType("literal");
-  IElementType IDENTIFIER = new SchemeElementType("identifier");
-  IElementType KEYWORD = new SchemeElementType("keyword");
-  IElementType SPECIAL = new SchemeElementType("special");
+  final IElementType LITERAL = new SchemeElementType("literal");
+  final IElementType IDENTIFIER = new SchemeElementType("identifier");
+  final IElementType KEYWORD = new SchemeElementType("keyword");
+  final IElementType SPECIAL = new SchemeElementType("special");
 
-  IElementType QUOTED = new SchemeElementType("quoted");
-  IElementType BACKQUOTED = new SchemeElementType("backquoted");
+  final IElementType QUOTED = new SchemeElementType("quoted");
+  final IElementType BACKQUOTED = new SchemeElementType("backquoted");
 
   TokenSet LIST_LIKE_FORMS = TokenSet.create(LIST, VECTOR);
 

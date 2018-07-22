@@ -8,6 +8,6 @@ import schemely.parser.SchemeElementType;
  */
 public interface SISCAST
 {
-  IElementType PTR_DEF = new SchemeElementType("pointer def");
-  IElementType PTR_REF = new SchemeElementType("pointer ref");
+  final IElementType PTR_DEF = new SchemeElementType("pointer def");
+  final IElementType PTR_REF = new SchemeElementType("pointer ref");
 }

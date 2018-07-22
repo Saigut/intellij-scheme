@@ -7,7 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiElement;
 import schemely.SchemeBundle;
-import icons.SchemeIcons;
+import schemely.SchemeIcons;
 import schemely.psi.util.SchemePsiElementFactory;
 import schemely.psi.util.SchemePsiUtil;
 

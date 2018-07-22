@@ -17,7 +17,7 @@ public class SchemeParser implements PsiParser, Tokens
   private Scheme scheme;
 
   @NotNull
-  public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder)
+  public ASTNode parse(IElementType root, PsiBuilder builder)
   {
     scheme = SchemeImplementation.from(builder.getProject());
 
@@ -34,7 +34,15 @@ public class SchemeParser implements PsiParser, Tokens
 
   // Helpers
   boolean isParen(IElementType type) {
-	  return LEFT_PAREN == type || RIGHT_PAREN == type || LEFT_SQUARE == type || RIGHT_SQUARE == type;
+    if (LEFT_PAREN == type || RIGHT_PAREN == type ||
+        LEFT_SQUARE == type || RIGHT_SQUARE == type)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
 
   IElementType atomMarkType(IElementType type)

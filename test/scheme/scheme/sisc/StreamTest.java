@@ -1,4 +1,4 @@
-package scheme.scheme.sisc;
+package schemely.scheme.sisc;
 
 import junit.framework.TestCase;
 

@@ -151,7 +151,7 @@ public class SchemeFile extends PsiFileBase implements PsiFile, PsiFileWithStubS
 
   private Collection<PsiElement> getCompletionItems(SchemeFile schemeFile)
   {
-    Collection<PsiElement> ret = new ArrayList<>();
+    Collection<PsiElement> ret = new ArrayList<PsiElement>();
     for (SchemeList item : getSchemeCompleteItems(schemeFile))
     {
       SchemeIdentifier identifier = item.findFirstChildByClass(SchemeIdentifier.class);
@@ -165,7 +165,7 @@ public class SchemeFile extends PsiFileBase implements PsiFile, PsiFileWithStubS
 
   private Collection<SchemeList> getSchemeCompleteItems(SchemeFile schemeFile)
   {
-    Collection<SchemeList> ret = new ArrayList<>();
+    Collection<SchemeList> ret = new ArrayList<SchemeList>();
 
     PsiElement child = schemeFile.getFirstChild();
     while ((child != null) && SchemePsiElementBase.isWrongElement(child))

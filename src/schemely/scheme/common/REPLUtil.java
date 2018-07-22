@@ -30,7 +30,7 @@ public class REPLUtil
 {
   public static void addSourcesToClasspath(Module module, JavaParameters params)
   {
-    Collection<VirtualFile> virtualFiles = new HashSet<>();
+    Collection<VirtualFile> virtualFiles = new HashSet<VirtualFile>();
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
     OrderEntry[] entries = moduleRootManager.getOrderEntries();
     for (OrderEntry orderEntry : entries)
@@ -59,7 +59,7 @@ public class REPLUtil
 
     String executablePath = sdk.getHomePath() + "/bin";
 
-    List<String> cmd = new ArrayList<>();
+    List<String> cmd = new ArrayList<String>();
     cmd.add(executablePath);
     cmd.addAll(line.getParametersList().getList());
     return cmd;

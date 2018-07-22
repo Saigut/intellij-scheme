@@ -49,11 +49,11 @@ final public class SpecialOperations {
 	 */
 	static Set<State> reverse(Automaton a) {
 		// reverse all edges
-		HashMap<State, HashSet<Transition>> m = new HashMap<>();
+		HashMap<State, HashSet<Transition>> m = new HashMap<State, HashSet<Transition>>();
 		Set<State> states = a.getStates();
 		Set<State> accept = a.getAcceptStates();
 		for (State r : states) {
-			m.put(r, new HashSet<>());
+			m.put(r, new HashSet<Transition>());
 			r.accept = false;
 		}
 		for (State r : states)
@@ -202,7 +202,7 @@ final public class SpecialOperations {
 	public static Automaton subst(Automaton a, Map<Character, Set<Character>> map) {
 		if (map.isEmpty())
 			return a.cloneIfRequired();
-		Set<Character> ckeys = new TreeSet<>(map.keySet());
+		Set<Character> ckeys = new TreeSet<Character>(map.keySet());
 		char[] keys = new char[ckeys.size()];
 		int j = 0;
 		for (Character c : ckeys)
@@ -279,7 +279,7 @@ final public class SpecialOperations {
 	 */
 	public static Automaton subst(Automaton a, char c, String s) {
 		a = a.cloneExpandedIfRequired();
-		Set<StatePair> epsilons = new HashSet<>();
+		Set<StatePair> epsilons = new HashSet<StatePair>();
 		for (State p : a.getStates()) {
 			Set<Transition> st = p.transitions;
 			p.resetTransitions();
@@ -380,10 +380,10 @@ final public class SpecialOperations {
 			}
 			return a.cloneIfRequired();
 		} else {
-			HashSet<StatePair> epsilons = new HashSet<>();
+			HashSet<StatePair> epsilons = new HashSet<StatePair>();
 			a = a.cloneExpandedIfRequired();
 			for (State s : a.getStates()) {
-				HashSet<Transition> new_transitions = new HashSet<>();
+				HashSet<Transition> new_transitions = new HashSet<Transition>();
 				for (Transition t : s.transitions) {
 					boolean addepsilon = false;
 					if (t.min < '\uf900' && t.max > '\udfff') {
@@ -429,7 +429,7 @@ final public class SpecialOperations {
 	public static boolean isFinite(Automaton a) {
 		if (a.isSingleton())
 			return true;
-		return isFinite(a.initial, new HashSet<>());
+		return isFinite(a.initial, new HashSet<State>());
 	}
 	
 	/** 
@@ -449,7 +449,7 @@ final public class SpecialOperations {
 	 * Returns the set of accepted strings of the given length.
 	 */
 	public static Set<String> getStrings(Automaton a, int length) {
-		HashSet<String> strings = new HashSet<>();
+		HashSet<String> strings = new HashSet<String>();
 		if (a.isSingleton() && a.singleton.length() == length)
 			strings.add(a.singleton);
 		else if (length >= 0)
@@ -475,10 +475,10 @@ final public class SpecialOperations {
 	 * language. If the language is not finite, null is returned.
 	 */
 	public static Set<String> getFiniteStrings(Automaton a) {
-		HashSet<String> strings = new HashSet<>();
+		HashSet<String> strings = new HashSet<String>();
 		if (a.isSingleton())
 			strings.add(a.singleton);
-		else if (!getFiniteStrings(a.initial, new HashSet<>(), strings, new StringBuilder(), -1))
+		else if (!getFiniteStrings(a.initial, new HashSet<State>(), strings, new StringBuilder(), -1))
 			return null;
 		return strings;
 	}
@@ -490,13 +490,13 @@ final public class SpecialOperations {
 	 * methods works like {@link #getFiniteStrings(Automaton)}.
 	 */
 	public static Set<String> getFiniteStrings(Automaton a, int limit) {
-		HashSet<String> strings = new HashSet<>();
+		HashSet<String> strings = new HashSet<String>();
 		if (a.isSingleton()) {
 			if (limit > 0)
 				strings.add(a.singleton);
 			else
 				return null;
-		} else if (!getFiniteStrings(a.initial, new HashSet<>(), strings, new StringBuilder(), limit))
+		} else if (!getFiniteStrings(a.initial, new HashSet<State>(), strings, new StringBuilder(), limit))
 			return null;
 		return strings;
 	}
@@ -535,7 +535,7 @@ final public class SpecialOperations {
 		if (a.isSingleton())
 			return a.singleton;
 		StringBuilder b = new StringBuilder();
-		HashSet<State> visited = new HashSet<>();
+		HashSet<State> visited = new HashSet<State>();
 		State s = a.initial;
 		boolean done;
 		do {
@@ -570,9 +570,9 @@ final public class SpecialOperations {
 	 * @return automaton
 	 */
 	public static Automaton hexCases(Automaton a) {
-		Map<Character,Set<Character>> map = new HashMap<>();
+		Map<Character,Set<Character>> map = new HashMap<Character,Set<Character>>();
 		for (char c1 = 'a', c2 = 'A'; c1 <= 'f'; c1++, c2++) {
-			Set<Character> ws = new HashSet<>();
+			Set<Character> ws = new HashSet<Character>();
 			ws.add(c1);
 			ws.add(c2);
 			map.put(c1, ws);
@@ -589,8 +589,8 @@ final public class SpecialOperations {
 	 * @return automaton
 	 */
 	public static Automaton replaceWhitespace(Automaton a) {
-		Map<Character,Set<Character>> map = new HashMap<>();
-		Set<Character> ws = new HashSet<>();
+		Map<Character,Set<Character>> map = new HashMap<Character,Set<Character>>();
+		Set<Character> ws = new HashSet<Character>();
 		ws.add(' ');
 		ws.add('\t');
 		ws.add('\n');

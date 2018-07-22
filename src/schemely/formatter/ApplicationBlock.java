@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class ApplicationBlock extends ListBlock
 {
-  private static final Map<String, Integer> schemeFormIndent = new HashMap<>();
+  private static final Map<String, Integer> schemeFormIndent = new HashMap<String, Integer>();
 
   static
   {
@@ -110,7 +110,7 @@ public class ApplicationBlock extends ListBlock
   @Override
   protected List<Block> generateSubBlocks(ASTNode node, Wrap wrap, CodeStyleSettings settings)
   {
-    List<Block> subBlocks = new ArrayList<>();
+    List<Block> subBlocks = new ArrayList<Block>();
 
     int childIndex = 0;
     for (ASTNode childNode : getChildren(node))

@@ -39,22 +39,24 @@ public class SISCLexer extends SchemeLexer
         {
           cursor++;
         }
-        switch (peek()) {
-          case '=':
-            cursor++;
-            type = SISCTokens.PTR_DEF;
-            break;
-          case '#':
-            cursor++;
-            type = SISCTokens.PTR_REF;
-            break;
-          case '(':
-            cursor++;
-            type = Tokens.OPEN_VECTOR;
-            break;
-          default:
-            bad();
-            break;
+        if (peek() == '=')
+        {
+          cursor++;
+          type = SISCTokens.PTR_DEF;
+        }
+        else if (peek() == '#')
+        {
+          cursor++;
+          type = SISCTokens.PTR_REF;
+        }
+        else if (peek() == '(')
+        {
+          cursor++;
+          type = Tokens.OPEN_VECTOR;
+        }
+        else
+        {
+          bad();
         }
         return true;
       }

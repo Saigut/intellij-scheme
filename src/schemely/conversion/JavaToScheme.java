@@ -1,16 +1,14 @@
 package schemely.conversion;
 
 
-import com.intellij.lang.Language;
 import com.intellij.lang.StdLanguages;
-import com.intellij.lang.java.JavaLanguage;
 import com.intellij.psi.*;
 
 import java.util.*;
 
 class JavaToScheme
 {
-  private final Map<String, String> imports = new HashMap<>();
+  private final Map<String, String> imports = new HashMap<String, String>();
 
   String escapeKeyword(String name)
   {
@@ -20,22 +18,36 @@ class JavaToScheme
 
   String convertPsiToText(PsiElement element)
   {
-    if (element == null) return "";
-    if (element.getLanguage() != Language.findLanguageByID("JAVA")) return "";
+    if (element == null)
+    {
+      return "";
+    }
+    if (element.getLanguage() != StdLanguages.JAVA)
+    {
+      return "";
+    }
     StringBuilder res = new StringBuilder("");
     if (element instanceof PsiDocCommentOwner)
     {
       PsiDocCommentOwner owner = (PsiDocCommentOwner) element;
-      if (owner.getDocComment() != null) res.append(owner.getDocComment().getText()).append("\n");
+      if (owner.getDocComment() != null)
+      {
+        res.append(owner.getDocComment().getText()).append("\n");
+      }
     }
 
     if (element instanceof PsiFile)
     {
       PsiFile f = (PsiFile) element;
       for (PsiElement child : f.getChildren())
+      {
         res.append(convertPsiToText(child)).append("\n");
+      }
     }
-    else if (element instanceof PsiWhiteSpace) res.append(element.getText());
+    else if (element instanceof PsiWhiteSpace)
+    {
+      res.append(element.getText());
+    }
     else if (element instanceof PsiImportStatement)
     {
       PsiImportStatement i = (PsiImportStatement) element;
@@ -124,7 +136,7 @@ class JavaToScheme
     {
       PsiModifierList m = (PsiModifierList) element;
       //todo: synchronized, native, abstract, annotations, enum?
-      List<String> accessModifiers = new ArrayList<>();
+      List<String> accessModifiers = new ArrayList<String>();
       if (m.hasModifierProperty("protected"))
       {
         accessModifiers.add("protected");
@@ -317,7 +329,7 @@ class JavaToScheme
         else
         {
           res.append("; Referent non-static expression ");
-          res.append(referent.getClass().getSimpleName());
+          res.append(referent == null ? "null" : referent.getClass().getSimpleName());
           res.append(" not supported\n");
         }
       }

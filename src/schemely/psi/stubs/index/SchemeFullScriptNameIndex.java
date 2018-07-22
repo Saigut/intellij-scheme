@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.IntStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
-import org.jetbrains.annotations.NotNull;
 import schemely.psi.impl.SchemeFile;
 import schemely.psi.impl.search.SchemeSourceFilterScope;
 
@@ -22,12 +21,12 @@ public class SchemeFullScriptNameIndex extends IntStubIndexExtension<SchemeFile>
     return ourInstance;
   }
 
-  @NotNull public StubIndexKey<Integer, SchemeFile> getKey()
+  public StubIndexKey<Integer, SchemeFile> getKey()
   {
     return KEY;
   }
 
-  public Collection<SchemeFile> get(@NotNull Integer integer, @NotNull Project project, @NotNull GlobalSearchScope scope)
+  public Collection<SchemeFile> get(Integer integer, Project project, GlobalSearchScope scope)
   {
     return super.get(integer, project, new SchemeSourceFilterScope(scope, project));
   }

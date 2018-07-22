@@ -1,4 +1,4 @@
-package scheme.formatter;
+package schemely.formatter;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;

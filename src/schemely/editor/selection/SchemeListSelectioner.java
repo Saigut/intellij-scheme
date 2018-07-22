@@ -22,7 +22,7 @@ public class SchemeListSelectioner implements ExtendWordSelectionHandler
   @Override
   public List<TextRange> select(PsiElement element, CharSequence editorText, int cursorOffset, Editor editor)
   {
-    List<TextRange> result = new ArrayList<>();
+    List<TextRange> result = new ArrayList<TextRange>();
     if (element instanceof SchemeBraced)
     {
       SchemeBraced list = (SchemeBraced) element;

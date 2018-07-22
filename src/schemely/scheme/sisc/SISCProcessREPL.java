@@ -18,7 +18,6 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiNamedElement;
-import org.jetbrains.annotations.NotNull;
 import schemely.SchemeBundle;
 import schemely.repl.REPLProviderBase;
 import schemely.repl.SchemeConsoleView;
@@ -76,7 +75,7 @@ public class SISCProcessREPL extends REPLBase
     processHandler.addProcessListener(new ProcessAdapter()
     {
       @Override
-      public void processTerminated(@NotNull ProcessEvent event)
+      public void processTerminated(ProcessEvent event)
       {
         consoleView.getConsole().getConsoleEditor().setRendererMode(true);
         hideEditor();
@@ -169,7 +168,7 @@ public class SISCProcessREPL extends REPLBase
     final List<String> args = createRuntimeArgs(module, workingDir);
     return new CommandLineArgumentsProvider()
     {
-      @NotNull @Override
+      @Override
       public String[] getArguments()
       {
         return args.toArray(new String[args.size()]);
@@ -184,12 +183,13 @@ public class SISCProcessREPL extends REPLBase
       @Override
       public Map<String, String> getAdditionalEnvs()
       {
-        return new HashMap<>();
+        return new HashMap<String, String>();
       }
     };
   }
 
-  protected Process createProcess(CommandLineArgumentsProvider provider) {
+  protected Process createProcess(CommandLineArgumentsProvider provider) throws ExecutionException
+  {
     Process process = null;
     try
     {

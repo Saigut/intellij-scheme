@@ -4,7 +4,6 @@ import com.intellij.psi.StubBuilder;
 import com.intellij.psi.stubs.*;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.io.StringRef;
-import org.jetbrains.annotations.NotNull;
 import schemely.file.SchemeFileType;
 import schemely.psi.stubs.SchemeFileStubBuilder;
 import schemely.psi.stubs.api.SchemeFileStub;
@@ -35,27 +34,27 @@ public class SchemeStubFileElementType extends IStubFileElementType<SchemeFileSt
     return super.getStubVersion() + CACHES_VERSION;
   }
 
-  @NotNull public String getExternalId()
+  public String getExternalId()
   {
     return "scheme.FILE";
   }
 
   @Override
-  public void indexStub(@NotNull PsiFileStub stub, @NotNull IndexSink sink)
+  public void indexStub(PsiFileStub stub, IndexSink sink)
   {
     super.indexStub(stub, sink);
   }
 
   @Override
-  public void serialize(@NotNull SchemeFileStub stub, @NotNull StubOutputStream dataStream) throws IOException
+  public void serialize(SchemeFileStub stub, StubOutputStream dataStream) throws IOException
   {
     dataStream.writeName(stub.getPackageName().toString());
     dataStream.writeName(stub.getName().toString());
     dataStream.writeBoolean(stub.isClassDefinition());
   }
 
-  @NotNull @Override
-  public SchemeFileStub deserialize(@NotNull StubInputStream dataStream, StubElement parentStub) throws IOException
+  @Override
+  public SchemeFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException
   {
     StringRef packName = dataStream.readName();
     StringRef name = dataStream.readName();
@@ -63,7 +62,7 @@ public class SchemeStubFileElementType extends IStubFileElementType<SchemeFileSt
     return new SchemeFileStubImpl(packName, name, isScript);
   }
 
-  public void indexStub(@NotNull SchemeFileStub stub, @NotNull IndexSink sink)
+  public void indexStub(SchemeFileStub stub, IndexSink sink)
   {
     String name = stub.getName().toString();
     if (stub.isClassDefinition() && name != null)

@@ -3,7 +3,6 @@ package schemely.psi.stubs.impl;
 import com.intellij.psi.stubs.PsiFileStubImpl;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.io.StringRef;
-import org.jetbrains.annotations.NotNull;
 import schemely.parser.AST;
 import schemely.psi.impl.SchemeFile;
 import schemely.psi.stubs.api.SchemeFileStub;
@@ -31,7 +30,7 @@ public class SchemeFileStubImpl extends PsiFileStubImpl<SchemeFile> implements S
     this.isClassDefinition = isScript;
   }
 
-  @NotNull public IStubFileElementType getType()
+  public IStubFileElementType getType()
   {
     return AST.FILE;
   }

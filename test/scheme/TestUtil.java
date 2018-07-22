@@ -1,4 +1,4 @@
-package scheme;
+package schemely;
 
 /**
  * @author Colin Fleming

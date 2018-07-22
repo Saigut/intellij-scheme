@@ -2,9 +2,11 @@ package schemely.formatter.codeStyle;
 
 import com.intellij.application.options.CodeStyleAbstractConfigurable;
 import com.intellij.application.options.CodeStyleAbstractPanel;
+import com.intellij.application.options.TabbedLanguageCodeStylePanel;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import schemely.SchemeBundle;
-import icons.SchemeIcons;
+import schemely.SchemeIcons;
+import schemely.SchemeLanguage;
 
 import javax.swing.*;
 

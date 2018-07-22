@@ -99,17 +99,21 @@ public class SchemeIdentifierSearch implements QueryExecutor<PsiReference, Refer
 
         for (final PsiElement scopeElement : scopeElements)
         {
-          return ApplicationManager.getApplication().runReadAction((Computable<Boolean>) () -> {
-            StringSearcher searcher = new StringSearcher(name, caseSensitively, true);
+          return ApplicationManager.getApplication().runReadAction(new Computable<Boolean>()
+          {
+            public Boolean compute()
+            {
+              StringSearcher searcher = new StringSearcher(name, caseSensitively, true);
 
-            ProgressManager progressManager = ProgressManager.getInstance();
+              ProgressManager progressManager = ProgressManager.getInstance();
 
-            return LowLevelSearchUtil.processElementsContainingWordInElement(processor,
-                scopeElement,
-                searcher,
-                ignoreInjectedPsi,
-                progressManager.getProgressIndicator());
-          });
+              return LowLevelSearchUtil.processElementsContainingWordInElement(processor,
+                                                                               scopeElement,
+                                                                               searcher,
+                                                                               ignoreInjectedPsi,
+                                                                               progressManager.getProgressIndicator());
+            }
+          }).booleanValue();
         }
         return true;
       }
@@ -155,7 +159,7 @@ public class SchemeIdentifierSearch implements QueryExecutor<PsiReference, Refer
       final AtomicBoolean canceled = new AtomicBoolean(false);
       final AtomicBoolean pceThrown = new AtomicBoolean(false);
 
-      List<PsiFile> psiFiles = new ArrayList<>(fileSet);
+      List<PsiFile> psiFiles = new ArrayList<PsiFile>(fileSet);
       final int size = psiFiles.size();
       /*boolean completed = JobUtil.invokeConcurrentlyUnderProgress(psiFiles, new Processor<PsiFile>()
       {

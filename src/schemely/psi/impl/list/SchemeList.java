@@ -135,7 +135,10 @@ public class SchemeList extends SchemeListBase implements SchemeBraced
         }
       }
 
-	    return ResolveUtil.processElement(scopeProcessor, (PsiNamedElement) formals);
+      if (!ResolveUtil.processElement(scopeProcessor, (PsiNamedElement) formals))
+      {
+        return false;
+      }
     }
     else if (formals instanceof SchemeList)
     {
@@ -179,7 +182,10 @@ public class SchemeList extends SchemeListBase implements SchemeBraced
     {
       // (define x 3)
       SchemeIdentifier identifier = (SchemeIdentifier) formals;
-	    return ResolveUtil.processElement(scopeProcessor, identifier);
+      if (!ResolveUtil.processElement(scopeProcessor, identifier))
+      {
+        return false;
+      }
     }
     else if (formals instanceof SchemeList)
     {
@@ -200,7 +206,10 @@ public class SchemeList extends SchemeListBase implements SchemeBraced
       else
       {
         // Function name is visible everywhere
-	      return ResolveUtil.processElement(scopeProcessor, args.getFirstIdentifier());
+        if (!ResolveUtil.processElement(scopeProcessor, args.getFirstIdentifier()))
+        {
+          return false;
+        }
       }
     }
 
@@ -227,7 +236,10 @@ public class SchemeList extends SchemeListBase implements SchemeBraced
     {
       // (define-syntax x <whatever>)
       SchemeIdentifier identifier = (SchemeIdentifier) formals;
-	    return ResolveUtil.processElement(scopeProcessor, identifier);
+      if (!ResolveUtil.processElement(scopeProcessor, identifier))
+      {
+        return false;
+      }
     }
 
     return true;
@@ -354,7 +366,10 @@ public class SchemeList extends SchemeListBase implements SchemeBraced
         }
       }
 
-	    return ResolveUtil.processElement(scopeProcessor, namedLetName);
+      if (!ResolveUtil.processElement(scopeProcessor, namedLetName))
+      {
+        return false;
+      }
     }
 
     return true;

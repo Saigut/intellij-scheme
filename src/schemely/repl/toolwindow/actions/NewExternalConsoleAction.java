@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import icons.SchemeIcons;
+import schemely.SchemeIcons;
 import schemely.repl.REPLProvider;
 import schemely.scheme.Scheme;
 import schemely.scheme.SchemeImplementation;

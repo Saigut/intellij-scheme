@@ -8,7 +8,6 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNamedElement;
-import org.jetbrains.annotations.NotNull;
 import schemely.psi.impl.SchemePsiElementBase;
 import schemely.psi.impl.list.SchemeList;
 import schemely.psi.impl.symbols.SchemeIdentifier;
@@ -47,9 +46,9 @@ public class SchemeStructureViewElement implements StructureViewTreeElement
     return ((NavigationItem) element).canNavigateToSource();
   }
 
-  @NotNull public StructureViewTreeElement[] getChildren()
+  public StructureViewTreeElement[] getChildren()
   {
-    final List<SchemePsiElementBase> childrenElements = new ArrayList<>();
+    final List<SchemePsiElementBase> childrenElements = new ArrayList<SchemePsiElementBase>();
     element.acceptChildren(new PsiElementVisitor()
     {
       public void visitElement(PsiElement element)
@@ -95,15 +94,19 @@ public class SchemeStructureViewElement implements StructureViewTreeElement
       else if (parent.getParent() instanceof SchemeList)
       {
         SchemeList grandparent = (SchemeList) parent.getParent();
-        return grandparent.isDefinition() &&
+        if (grandparent.isDefinition() &&
             (grandparent.getSecondNonLeafElement() == parent) &&
-            (parent.getFirstIdentifier() == element);
+            (parent.getFirstIdentifier() == element))
+        {
+          // (define (x <formals>) <whatever>)
+          return true;
+        }
       }
     }
     return false;
   }
 
-  @NotNull public ItemPresentation getPresentation()
+  public ItemPresentation getPresentation()
   {
     return new ItemPresentation()
     {

@@ -3,7 +3,6 @@ package schemely.completion;
 import com.intellij.codeInsight.completion.PrefixMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.util.containers.hash.LinkedHashMap;
-import com.intellij.util.text.Matcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import net.jcip.annotations.GuardedBy;
@@ -24,17 +23,17 @@ public class SchemeIdentifierMatcher extends PrefixMatcher
   private static final int MAX_LENGTH = 40;
 
   @GuardedBy("patternCache")
-  private static final Map<String, Matcher> patternCache = new LinkedHashMap<String, Matcher>()
+  private static final Map<String, NameUtil.Matcher> patternCache = new LinkedHashMap<String, NameUtil.Matcher>()
   {
     @Override
-    protected boolean removeEldestEntry(Map.Entry<String, Matcher> eldest)
+    protected boolean removeEldestEntry(Map.Entry<String, NameUtil.Matcher> eldest)
     {
       return size() > 10;
     }
   };
 
   private final boolean caseSensitive;
-  private Matcher matcher;
+  private NameUtil.Matcher matcher;
 
   public SchemeIdentifierMatcher(String prefix)
   {
@@ -55,7 +54,7 @@ public class SchemeIdentifierMatcher extends PrefixMatcher
     {
       if (matcher == null)
       {
-        Matcher pattern = patternCache.get(myPrefix);
+        NameUtil.Matcher pattern = patternCache.get(myPrefix);
         if (pattern == null)
         {
           pattern = createMatcher();
@@ -67,7 +66,7 @@ public class SchemeIdentifierMatcher extends PrefixMatcher
     }
   }
 
-  private Matcher createMatcher()
+  private NameUtil.Matcher createMatcher()
   {
     String pattern = myPrefix;
     int eol = pattern.indexOf('\n');
@@ -126,7 +125,15 @@ public class SchemeIdentifierMatcher extends PrefixMatcher
 
     regexp.append(SCHEME_SUBSEQUENT + '*');
 
-    return new RunAutomaton(new RegExp(regexp.toString(), RegExp.NONE).toAutomaton())::run;
+    final RunAutomaton automaton = new RunAutomaton(new RegExp(regexp.toString(), RegExp.NONE).toAutomaton());
+    return new NameUtil.Matcher()
+    {
+      @Override
+      public boolean matches(String name)
+      {
+        return automaton.run(name);
+      }
+    };
   }
 
   @NotNull

@@ -3,7 +3,6 @@ package schemely.utils;
 import com.intellij.lang.refactoring.NamesValidator;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
 import schemely.lexer.Tokens;
 import schemely.parser.SchemeElementType;
 
@@ -16,20 +15,20 @@ import java.util.Set;
  */
 public class SchemeNamesValidator implements NamesValidator
 {
-  private static final Set<String> specialIdentifiers = new HashSet<>();
+  private static final Set<String> specialIdentifiers = new HashSet<String>();
 
   static
   {
     specialIdentifiers.addAll(Arrays.asList("+", "-", "..."));
   }
 
-  public boolean isKeyword(@NotNull String s, Project project)
+  public boolean isKeyword(String s, Project project)
   {
     // We have no keywords
     return false;
   }
 
-  public boolean isIdentifier(@NotNull String s, Project project)
+  public boolean isIdentifier(String s, Project project)
   {
     if (specialIdentifiers.contains(s))
     {

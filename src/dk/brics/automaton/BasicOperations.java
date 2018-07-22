@@ -96,7 +96,7 @@ final public class BasicOperations {
 			for (Automaton a : l)
 				if (a.isEmpty())
 					return BasicAutomata.makeEmpty();
-			Set<Integer> ids = new HashSet<>();
+			Set<Integer> ids = new HashSet<Integer>();
 			for (Automaton a : l)
 				ids.add(System.identityHashCode(a));
 			boolean has_aliases = ids.size() != l.size();
@@ -182,7 +182,7 @@ final public class BasicOperations {
 	static public Automaton repeat(Automaton a, int min) {
 		if (min == 0)
 			return repeat(a);
-		List<Automaton> as = new ArrayList<>();
+		List<Automaton> as = new ArrayList<Automaton>();
 		while (min-- > 0)
 			as.add(a);
 		as.add(repeat(a));
@@ -208,7 +208,7 @@ final public class BasicOperations {
 		else if (min == 1)
 			b = a.clone();
 		else {
-			List<Automaton> as = new ArrayList<>();
+			List<Automaton> as = new ArrayList<Automaton>();
 			while (min-- > 0)
 				as.add(a);
 			b = concatenate(as);
@@ -293,8 +293,8 @@ final public class BasicOperations {
 		Transition[][] transitions1 = Automaton.getSortedTransitions(a1.getStates());
 		Transition[][] transitions2 = Automaton.getSortedTransitions(a2.getStates());
 		Automaton c = new Automaton();
-		LinkedList<StatePair> worklist = new LinkedList<>();
-		HashMap<StatePair, StatePair> newstates = new HashMap<>();
+		LinkedList<StatePair> worklist = new LinkedList<StatePair>();
+		HashMap<StatePair, StatePair> newstates = new HashMap<StatePair, StatePair>();
 		StatePair p = new StatePair(c.initial, a1.initial, a2.initial);
 		worklist.add(p);
 		newstates.put(p, p);
@@ -347,8 +347,8 @@ final public class BasicOperations {
 		a2.determinize();
 		Transition[][] transitions1 = Automaton.getSortedTransitions(a1.getStates());
 		Transition[][] transitions2 = Automaton.getSortedTransitions(a2.getStates());
-		LinkedList<StatePair> worklist = new LinkedList<>();
-		HashSet<StatePair> visited = new HashSet<>();
+		LinkedList<StatePair> worklist = new LinkedList<StatePair>();
+		HashSet<StatePair> visited = new HashSet<StatePair>();
 		StatePair p = new StatePair(a1.initial, a2.initial);
 		worklist.add(p);
 		visited.add(p);
@@ -415,7 +415,7 @@ final public class BasicOperations {
 	 * Complexity: linear in number of states.
 	 */
 	public static Automaton union(Collection<Automaton> l) {
-		Set<Integer> ids = new HashSet<>();
+		Set<Integer> ids = new HashSet<Integer>();
 		for (Automaton a : l)
 			ids.add(System.identityHashCode(a));
 		boolean has_aliases = ids.size() != l.size();
@@ -446,7 +446,7 @@ final public class BasicOperations {
 	public static void determinize(Automaton a) {
 		if (a.deterministic || a.isSingleton())
 			return;
-		Set<State> initialset = new HashSet<>();
+		Set<State> initialset = new HashSet<State>();
 		initialset.add(a.initial);
 		determinize(a, initialset);
 	}
@@ -457,9 +457,9 @@ final public class BasicOperations {
 	static void determinize(Automaton a, Set<State> initialset) {
 		char[] points = a.getStartPoints();
 		// subset construction
-		Map<Set<State>, Set<State>> sets = new HashMap<>();
-		LinkedList<Set<State>> worklist = new LinkedList<>();
-		Map<Set<State>, State> newstate = new HashMap<>();
+		Map<Set<State>, Set<State>> sets = new HashMap<Set<State>, Set<State>>();
+		LinkedList<Set<State>> worklist = new LinkedList<Set<State>>();
+		Map<Set<State>, State> newstate = new HashMap<Set<State>, State>();
 		sets.put(initialset, initialset);
 		worklist.add(initialset);
 		a.initial = new State();
@@ -473,7 +473,7 @@ final public class BasicOperations {
 					break;
 				}
 			for (int n = 0; n < points.length; n++) {
-				Set<State> p = new HashSet<>();
+				Set<State> p = new HashSet<State>();
 				for (State q : s)
 					for (Transition t : q.transitions)
 						if (t.min <= points[n] && points[n] <= t.max)
@@ -506,25 +506,25 @@ final public class BasicOperations {
 	 */
 	public static void addEpsilons(Automaton a, Collection<StatePair> pairs) {
 		a.expandSingleton();
-		HashMap<State, HashSet<State>> forward = new HashMap<>();
-		HashMap<State, HashSet<State>> back = new HashMap<>();
+		HashMap<State, HashSet<State>> forward = new HashMap<State, HashSet<State>>();
+		HashMap<State, HashSet<State>> back = new HashMap<State, HashSet<State>>();
 		for (StatePair p : pairs) {
 			HashSet<State> to = forward.get(p.s1);
 			if (to == null) {
-				to = new HashSet<>();
+				to = new HashSet<State>();
 				forward.put(p.s1, to);
 			}
 			to.add(p.s2);
 			HashSet<State> from = back.get(p.s2);
 			if (from == null) {
-				from = new HashSet<>();
+				from = new HashSet<State>();
 				back.put(p.s2, from);
 			}
 			from.add(p.s1);
 		}
 		// calculate epsilon closure
-		LinkedList<StatePair> worklist = new LinkedList<>(pairs);
-		HashSet<StatePair> workset = new HashSet<>(pairs);
+		LinkedList<StatePair> worklist = new LinkedList<StatePair>(pairs);
+		HashSet<StatePair> workset = new HashSet<StatePair>(pairs);
 		while (!worklist.isEmpty()) {
 			StatePair p = worklist.removeFirst();
 			workset.remove(p);
@@ -612,8 +612,8 @@ final public class BasicOperations {
 	}
 
 	static String getShortestExample(State s, boolean accepted) {
-		Map<State,String> path = new HashMap<>();
-		LinkedList<State> queue = new LinkedList<>();
+		Map<State,String> path = new HashMap<State,String>();
+		LinkedList<State> queue = new LinkedList<State>();
 		path.put(s, "");
 		queue.add(s);
 		String best = null;
@@ -659,12 +659,12 @@ final public class BasicOperations {
 		} else {
 			Set<State> states = a.getStates();
 			Automaton.setStateNumbers(states);
-			LinkedList<State> pp = new LinkedList<>();
-			LinkedList<State> pp_other = new LinkedList<>();
+			LinkedList<State> pp = new LinkedList<State>();
+			LinkedList<State> pp_other = new LinkedList<State>();
 			BitSet bb = new BitSet(states.size());
 			BitSet bb_other = new BitSet(states.size());
 			pp.add(a.initial);
-			ArrayList<State> dest = new ArrayList<>();
+			ArrayList<State> dest = new ArrayList<State>();
 			boolean accept = a.initial.accept;
 			for (int i = 0; i < s.length(); i++) {
 				char c = s.charAt(i);

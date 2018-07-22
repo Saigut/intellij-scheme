@@ -20,7 +20,7 @@ public class SchemeLiteralSelectioner implements ExtendWordSelectionHandler
 
   public List<TextRange> select(PsiElement e, CharSequence editorText, int cursorOffset, Editor editor)
   {
-    List<TextRange> result = new ArrayList<>();
+    List<TextRange> result = new ArrayList<TextRange>();
 
     TextRange range = e.getTextRange();
     if (range.getLength() <= 2)

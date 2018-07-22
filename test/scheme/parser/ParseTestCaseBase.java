@@ -1,4 +1,4 @@
-package scheme.parser;
+package schemely.parser;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;

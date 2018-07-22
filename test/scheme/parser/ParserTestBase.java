@@ -1,4 +1,4 @@
-package scheme.parser;
+package schemely.parser;
 
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
@@ -183,7 +183,7 @@ public class ParserTestBase
 
   protected Collection<PsiElement> depthFirst(PsiElement element)
   {
-    Collection<PsiElement> ret = new ArrayList<>();
+    Collection<PsiElement> ret = new ArrayList<PsiElement>();
     doDepthFirst(element, ret);
     return ret;
   }

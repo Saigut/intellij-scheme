@@ -1,4 +1,4 @@
-package scheme.lexer;
+package schemely.lexer;
 
 import com.intellij.psi.tree.IElementType;
 //import org.testng.annotations.Test;

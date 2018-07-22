@@ -20,7 +20,6 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
-import org.jetbrains.annotations.NotNull;
 import schemely.repl.toolwindow.REPLToolWindowFactory;
 import schemely.scheme.REPL;
 import schemely.scheme.REPLException;
@@ -129,7 +128,7 @@ public abstract class REPLProviderBase implements REPLProvider
 
   private AnAction[] getToolbarActions(REPL repl) throws REPLException
   {
-    java.util.List<AnAction> actions = new ArrayList<>();
+    java.util.List<AnAction> actions = new ArrayList<AnAction>();
     actions.addAll(Arrays.asList(repl.getToolbarActions()));
 
     SchemeConsole console = repl.getConsoleView().getConsole();
@@ -174,7 +173,8 @@ public abstract class REPLProviderBase implements REPLProvider
         new WriteCommandAction(console.getProject(), console.getFile())
         {
           @Override
-          protected void run(@NotNull Result result) {
+          protected void run(Result result) throws Throwable
+          {
             if (!previous && (text == null))
             {
               console.restoreCurrentREPLItem();

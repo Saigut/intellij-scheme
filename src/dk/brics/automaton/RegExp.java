@@ -281,14 +281,14 @@ public class RegExp {
 		Automaton a = null;
 		switch (kind) {
 		case REGEXP_UNION:
-			list = new ArrayList<>();
+			list = new ArrayList<Automaton>();
 			findLeaves(exp1, Kind.REGEXP_UNION, list, automata, automaton_provider);
 			findLeaves(exp2, Kind.REGEXP_UNION, list, automata, automaton_provider);
 			a = BasicOperations.union(list);
 			a.minimize();
 			break;
 		case REGEXP_CONCATENATION:
-			list = new ArrayList<>();
+			list = new ArrayList<Automaton>();
 			findLeaves(exp1, Kind.REGEXP_CONCATENATION, list, automata, automaton_provider);
 			findLeaves(exp2, Kind.REGEXP_CONCATENATION, list, automata, automaton_provider);
 			a = BasicOperations.concatenate(list);
@@ -460,7 +460,7 @@ public class RegExp {
 	 * Returns set of automaton identifiers that occur in this regular expression. 
 	 */
 	public Set<String> getIdentifiers() {
-		HashSet<String> set = new HashSet<>();
+		HashSet<String> set = new HashSet<String>();
 		getIdentifiers(set);
 		return set;
 	}

@@ -7,7 +7,7 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import schemely.SchemeBundle;
-import icons.SchemeIcons;
+import schemely.SchemeIcons;
 import schemely.file.SchemeFileType;
 import schemely.lexer.Tokens;
 
@@ -44,7 +44,8 @@ public class NewSchemeFileAction extends NewSchemeActionBase
   }
 
   @NotNull
-  protected PsiElement[] doCreate(String newName, PsiDirectory directory) {
+  protected PsiElement[] doCreate(String newName, PsiDirectory directory) throws Exception
+  {
     PsiFile file = createFileFromTemplate(directory, newName, "SchemeFile.scm");
     PsiElement lastChild = file.getLastChild();
     Project project = directory.getProject();

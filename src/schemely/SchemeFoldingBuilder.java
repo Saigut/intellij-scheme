@@ -6,7 +6,6 @@ import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import org.jetbrains.annotations.NotNull;
 import schemely.parser.AST;
 import static schemely.parser.AST.LIST;
 import schemely.psi.impl.SchemeFile;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class SchemeFoldingBuilder implements FoldingBuilder
 {
-  public String getPlaceholderText(@NotNull ASTNode node)
+  public String getPlaceholderText(ASTNode node)
   {
     IElementType type = node.getElementType();
     PsiElement psi = node.getPsi();
@@ -29,15 +28,15 @@ public class SchemeFoldingBuilder implements FoldingBuilder
     throw new Error("Unexpected node: " + type + "-->" + node.getText());
   }
 
-  public boolean isCollapsedByDefault(@NotNull ASTNode node)
+  public boolean isCollapsedByDefault(ASTNode node)
   {
     return false;
   }
 
-  @NotNull public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document)
+  public FoldingDescriptor[] buildFoldRegions(ASTNode node, Document document)
   {
     touchTree(node);
-    List<FoldingDescriptor> descriptors = new ArrayList<>();
+    List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
     appendDescriptors(node, descriptors);
     return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
   }
@@ -74,10 +73,14 @@ public class SchemeFoldingBuilder implements FoldingBuilder
   {
     PsiElement element = node.getPsi();
     IElementType type = node.getElementType();
-    return type == LIST &&
+    if (type == LIST &&
         element.getParent() instanceof SchemeFile &&
         node.getText().contains("\n") &&
-        element instanceof SchemeList;
+        element instanceof SchemeList)
+    {
+      return true;
+    }
 
+    return false; // (type == IDENTIFIER || type == DEFMETHOD) && node.getText().contains("\n");
   }
 }

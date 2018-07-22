@@ -1,4 +1,4 @@
-package scheme.parser;
+package schemely.parser;
 
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -35,7 +35,7 @@ public class SISCParserTest extends ParserTestBase
     VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
     VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
 
-    List<PsiFile> files = new ArrayList<>();
+    List<PsiFile> files = new ArrayList<PsiFile>();
     parseAll(jarFile, files);
 
     Object[][] ret = new Object[files.size()][];

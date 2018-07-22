@@ -20,7 +20,7 @@ public class SchemeNavigationOffsetProvider implements MethodNavigationOffsetPro
   {
     if (file instanceof SchemeFile)
     {
-      List<PsiElement> array = new ArrayList<>();
+      List<PsiElement> array = new ArrayList<PsiElement>();
       for (PsiElement element : file.getChildren())
       {
         if (element instanceof SchemeList)
