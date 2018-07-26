@@ -86,23 +86,26 @@ public class SchemeStructureViewElement implements StructureViewTreeElement
       }
 
       SchemeList parent = (SchemeList) parentElement;
-      if (parent.isDefinition() && (parent.getSecondNonLeafElement() == element))
+      PsiElement tmpEle;
+      tmpEle = parent.getNormalChildAt(1);
+      if (null == tmpEle)
       {
-        // (define x <whatever>)
-        return true;
+        return false;
       }
-      else if (parent.getParent() instanceof SchemeList)
+      if (!tmpEle.textMatches("define"))
       {
-        SchemeList grandparent = (SchemeList) parent.getParent();
-        if (grandparent.isDefinition() &&
-            (grandparent.getSecondNonLeafElement() == parent) &&
-            (parent.getFirstIdentifier() == element))
-        {
-          // (define (x <formals>) <whatever>)
-          return true;
-        }
+        return false;
       }
+
+      tmpEle = parent.getNormalChildAt(2);
+      if (null == tmpEle)
+      {
+        return false;
+      }
+
+      return tmpEle.textMatches(element);
     }
+
     return false;
   }
 

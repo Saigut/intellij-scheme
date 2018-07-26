@@ -3,6 +3,7 @@ package schemely.psi.impl.list;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
+import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import schemely.lexer.Tokens;
@@ -68,6 +69,35 @@ public abstract class SchemeListBase extends SchemePsiElementBase
       return (SchemeIdentifier) child;
     }
     return null;
+  }
+
+  public PsiElement getNormalChildAt(int offset)
+  {
+    PsiElement element = this;
+
+    PsiElement child;
+    child = element.getFirstChild();
+    if (null == child)
+    {
+      return null;
+    }
+
+    IElementType eleType;
+    while (offset > 0)
+    {
+      child = child.getNextSibling();
+      if (null == child)
+      {
+        return null;
+      }
+      eleType = child.getNode().getElementType();
+      if (!Tokens.WHITESPACE_SET.contains(eleType) && !Tokens.COMMENTS.contains(eleType))
+      {
+        offset--;
+      }
+    }
+
+    return child;
   }
 
   public PsiElement getSecondNonLeafElement()
