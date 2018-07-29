@@ -11,6 +11,7 @@ import com.intellij.psi.PsiNamedElement;
 import schemely.psi.impl.SchemePsiElementBase;
 import schemely.psi.impl.list.SchemeList;
 import schemely.psi.impl.symbols.SchemeIdentifier;
+import schemely.psi.util.SchemePsiUtil;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class SchemeStructureViewElement implements StructureViewTreeElement
 
       SchemeList parent = (SchemeList) parentElement;
       PsiElement tmpEle;
-      tmpEle = parent.getNormalChildAt(1);
+      tmpEle = SchemePsiUtil.getNormalChildAt(parent, 0);
       if (null == tmpEle)
       {
         return false;
@@ -97,7 +98,7 @@ public class SchemeStructureViewElement implements StructureViewTreeElement
         return false;
       }
 
-      tmpEle = parent.getNormalChildAt(2);
+      tmpEle = SchemePsiUtil.getNormalChildAt(parent, 1);
       if (null == tmpEle)
       {
         return false;

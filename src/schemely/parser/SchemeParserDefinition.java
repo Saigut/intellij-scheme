@@ -11,7 +11,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
-import schemely.lexer.SchemeLexer;
 import schemely.lexer.Tokens;
 import schemely.scheme.Scheme;
 import schemely.scheme.SchemeImplementation;
@@ -36,7 +35,7 @@ public class SchemeParserDefinition implements ParserDefinition
 
   public IFileElementType getFileNodeType()
   {
-    return AST.FILE;
+    return AST.AST_FILE;
   }
 
   @NotNull

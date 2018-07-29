@@ -32,7 +32,7 @@ public class SchemeFileStubImpl extends PsiFileStubImpl<SchemeFile> implements S
 
   public IStubFileElementType getType()
   {
-    return AST.FILE;
+    return AST.AST_FILE;
   }
 
   public StringRef getPackageName()

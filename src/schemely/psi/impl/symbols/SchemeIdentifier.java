@@ -21,6 +21,7 @@ import schemely.psi.resolve.SchemeResolveResult;
 import schemely.psi.resolve.processors.ResolveProcessor;
 import schemely.psi.resolve.processors.SymbolResolveProcessor;
 import schemely.psi.util.SchemePsiElementFactory;
+import schemely.psi.util.SchemePsiUtil;
 
 import javax.swing.*;
 
@@ -151,77 +152,6 @@ public class SchemeIdentifier extends SchemePsiElementBase implements PsiReferen
     return getNameString();
   }
 
-  private PsiElement getNormalChildAt(PsiElement element, int offset)
-  {
-    if (null == element)
-    {
-      return null;
-    }
-
-    PsiElement child;
-    child = element.getFirstChild();
-    if (null == child)
-    {
-      return null;
-    }
-
-    IElementType eleType;
-    while (offset > 0)
-    {
-      child = child.getNextSibling();
-      if (null == child)
-      {
-        return null;
-      }
-      eleType = child.getNode().getElementType();
-      if (!Tokens.WHITESPACE_SET.contains(eleType) && !Tokens.COMMENTS.contains(eleType))
-      {
-        offset--;
-      }
-    }
-
-    return child;
-  }
-
-  private PsiElement getBigBrother(PsiElement element)
-  {
-    if (null == element)
-    {
-      return null;
-    }
-
-    PsiElement bigBrother;
-    bigBrother = element.getPrevSibling();
-    if (null != bigBrother)
-    {
-      return bigBrother;
-    }
-
-    PsiElement parent;
-    parent = element.getParent();
-    if (null == parent)
-    {
-      return null;
-    }
-    else
-    {
-      if(parent instanceof PsiFile)
-      {
-        return null;
-      }
-
-      bigBrother = parent.getPrevSibling();
-      if (null == bigBrother)
-      {
-        return null;
-      }
-      else
-      {
-        return bigBrother;
-      }
-    }
-  }
-
   private boolean isItDeclaration(PsiElement element)
   {
     if (null == element)
@@ -230,7 +160,7 @@ public class SchemeIdentifier extends SchemePsiElementBase implements PsiReferen
     }
 
     PsiElement operator;
-    operator = getNormalChildAt(element, 1);
+    operator = SchemePsiUtil.getNormalChildAt(element, 0);
     if (null == operator)
     {
       return false;
@@ -248,14 +178,14 @@ public class SchemeIdentifier extends SchemePsiElementBase implements PsiReferen
 
     while (true)
     {
-      bigBrother = getBigBrother(bigBrother);
+      bigBrother = SchemePsiUtil.getBigBrother(bigBrother);
       if (null == bigBrother)
       {
         return null;
       }
       if (isItDeclaration(bigBrother))
       {
-        declaration = getNormalChildAt(bigBrother, 2);
+        declaration = SchemePsiUtil.getNormalChildAt(bigBrother, 1);
         if (null != declaration)
         {
           if (declaration.textMatches(this))

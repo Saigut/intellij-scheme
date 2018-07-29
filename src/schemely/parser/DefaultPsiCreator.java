@@ -19,37 +19,41 @@ public class DefaultPsiCreator implements SchemePsiCreator
   {
     IElementType elementType = node.getElementType();
 
-    if (elementType == AST.LIST)
+    if (elementType == AST.AST_LIST)
     {
       return new SchemeList(node);
     }
-    if (elementType == AST.VECTOR)
+    if (elementType == AST.AST_VECTOR)
     {
       return new SchemeVector(node);
     }
-    if (elementType == AST.QUOTED)
+    if (elementType == AST.AST_QUOTED)
     {
       return new SchemeQuoted(node);
     }
-    if (elementType == AST.IDENTIFIER)
+    if (elementType == AST.AST_BACKQUOTED)
+    {
+      return new SchemeQuoted(node);
+    }
+    if (elementType == AST.AST_IDENTIFIER)
     {
       return new SchemeIdentifier(node);
     }
-    if (elementType == AST.KEYWORD)
+    if (elementType == AST.AST_KEYWORD)
     {
       /// fixme   SchemeIdentifier() has low efficiency
       return new SchemeLiteral(node);
     }
-    if (elementType == AST.SPECIAL)
+    if (elementType == AST.AST_SPECIAL)
     {
       return new SchemeIdentifier(node);
     }
-    if (elementType == AST.PLAIN_LITERAL)
+    if (elementType == AST.AST_PLAIN_LITERAL)
     {
 //      return new SchemeLiteral(node);
       return new SchemeIdentifier(node);
     }
-    if (elementType == AST.OTHER_LITERAL)
+    if (elementType == AST.AST_OTHER_LITERAL)
     {
       return new SchemeLiteral(node);
     }

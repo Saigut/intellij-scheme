@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import schemely.parser.AST;
-import static schemely.parser.AST.LIST;
+import static schemely.parser.AST.AST_LIST;
 import schemely.psi.impl.SchemeFile;
 import schemely.psi.impl.list.SchemeList;
 
@@ -48,7 +48,7 @@ public class SchemeFoldingBuilder implements FoldingBuilder
    */
   private void touchTree(ASTNode node)
   {
-    if (node.getElementType() == AST.FILE)
+    if (node.getElementType() == AST.AST_FILE)
     {
       node.getPsi().getFirstChild();
     }
@@ -73,7 +73,7 @@ public class SchemeFoldingBuilder implements FoldingBuilder
   {
     PsiElement element = node.getPsi();
     IElementType type = node.getElementType();
-    if (type == LIST &&
+    if (type == AST_LIST &&
         element.getParent() instanceof SchemeFile &&
         node.getText().contains("\n") &&
         element instanceof SchemeList)
@@ -81,6 +81,6 @@ public class SchemeFoldingBuilder implements FoldingBuilder
       return true;
     }
 
-    return false; // (type == IDENTIFIER || type == DEFMETHOD) && node.getText().contains("\n");
+    return false; // (type == AST_IDENTIFIER || type == DEFMETHOD) && node.getText().contains("\n");
   }
 }

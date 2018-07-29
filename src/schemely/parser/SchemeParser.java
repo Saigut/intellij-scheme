@@ -16,9 +16,32 @@ public class SchemeParser implements PsiParser, Tokens
 {
   private Scheme scheme;
 
+//  private void printAstTree(@NotNull ASTNode astNode)
+//  {
+//    ASTNode tmpNode;
+//    tmpNode = astNode.getFirstChildNode();
+//    if (null != tmpNode)
+//    {
+//      System.out.println("> Child tree");
+//      System.out.println("ele type: " + tmpNode.getElementType().toString()
+//              + ", ele text: " + tmpNode.getText());
+//      printAstTree(tmpNode);
+//    }
+//
+//    tmpNode = astNode.getTreeNext();
+//    if (null != tmpNode)
+//    {
+//      System.out.println("Next tree");
+//      System.out.println("ele type: " + tmpNode.getElementType().toString()
+//              + ", ele text: " + tmpNode.getText());
+//      printAstTree(tmpNode);
+//    }
+//  }
+
   @NotNull
   public ASTNode parse(IElementType root, PsiBuilder builder)
   {
+    ASTNode theAst;
     scheme = SchemeImplementation.from(builder.getProject());
 
     builder.setDebugMode(true);
@@ -27,8 +50,13 @@ public class SchemeParser implements PsiParser, Tokens
     {
       parseSexp(token, builder);
     }
-    marker.done(AST.FILE);
-    return builder.getTreeBuilt();
+    marker.done(AST.AST_FILE);
+
+    theAst = builder.getTreeBuilt();
+
+//    printAstTree(theAst);
+
+    return theAst;
   }
 
 
@@ -48,18 +76,18 @@ public class SchemeParser implements PsiParser, Tokens
   IElementType atomMarkType(IElementType type)
   {
     if (LITERALS.contains(type)) {
-      return AST.PLAIN_LITERAL;
+      return AST.AST_PLAIN_LITERAL;
     }
     else if (IDENTIFIER == type)
     {
-      return AST.IDENTIFIER;
+      return AST.AST_IDENTIFIER;
     }
     else if (KEYWORD == type)
     {
-      return AST.KEYWORD;
+      return AST.AST_KEYWORD;
     }
     else {
-      return AST.OTHER_LITERAL;
+      return AST.AST_OTHER_LITERAL;
     }
   }
 
@@ -89,20 +117,20 @@ public class SchemeParser implements PsiParser, Tokens
       parseSexp(childType, builder);
       if (QUOTE_MARK == type)
       {
-        marker.done(AST.QUOTED);
+        marker.done(AST.AST_QUOTED);
       }
       else if (BACKQUOTE == type)
       {
-        marker.done(AST.BACKQUOTED);
+        marker.done(AST.AST_BACKQUOTED);
       }
       else if (SHARP == type)
       {
         if (isParen(childType)) {
-          marker.done(AST.VECTOR);
+          marker.done(AST.AST_VECTOR);
         }
         else
         {
-          marker.done(AST.SPECIAL);
+          marker.done(AST.AST_SPECIAL);
         }
       }
       else
@@ -270,7 +298,7 @@ public class SchemeParser implements PsiParser, Tokens
   {
     PsiBuilder.Marker marker = builder.mark();
     builder.advanceLexer();
-    marker.done(AST.PLAIN_LITERAL);
+    marker.done(AST.AST_PLAIN_LITERAL);
   }
 
   /**
@@ -282,18 +310,18 @@ public class SchemeParser implements PsiParser, Tokens
   private void parseIdentifier(PsiBuilder builder)
   {
     PsiBuilder.Marker marker = builder.mark();
-    //    ParserUtils.getToken(builder, IDENTIFIER, "Expected identifier");
+    //    ParserUtils.getToken(builder, AST_IDENTIFIER, "Expected identifier");
     // Currently using this for keywords too
     // TODO fix this
     builder.advanceLexer();
-    marker.done(AST.IDENTIFIER);
+    marker.done(AST.AST_IDENTIFIER);
   }
 
   private void parseKeyword(PsiBuilder builder)
   {
     PsiBuilder.Marker marker = builder.mark();
     builder.advanceLexer();
-    marker.done(AST.KEYWORD);
+    marker.done(AST.AST_KEYWORD);
   }
 
   /**
@@ -306,7 +334,7 @@ public class SchemeParser implements PsiParser, Tokens
   {
     PsiBuilder.Marker marker = builder.mark();
     builder.advanceLexer();
-    marker.done(AST.SPECIAL);
+    marker.done(AST.AST_SPECIAL);
   }
 
   /**
@@ -318,7 +346,7 @@ public class SchemeParser implements PsiParser, Tokens
     PsiBuilder.Marker marker = builder.mark();
     builder.advanceLexer();
     parseDatum(builder);
-    marker.done(AST.QUOTED);
+    marker.done(AST.AST_QUOTED);
   }
 
   /**
@@ -359,7 +387,7 @@ public class SchemeParser implements PsiParser, Tokens
     {
       builder.advanceLexer();
     }
-    marker.done(AST.LIST);
+    marker.done(AST.AST_LIST);
   }
 
   /**
@@ -370,7 +398,7 @@ public class SchemeParser implements PsiParser, Tokens
   {
     PsiBuilder.Marker marker = markAndAdvance(builder);
     parseExpressions(RIGHT_PAREN, builder);
-    marker.done(AST.VECTOR);
+    marker.done(AST.AST_VECTOR);
   }
 
   protected TokenSet getPrefixes()

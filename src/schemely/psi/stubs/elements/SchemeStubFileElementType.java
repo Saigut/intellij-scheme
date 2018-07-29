@@ -36,7 +36,7 @@ public class SchemeStubFileElementType extends IStubFileElementType<SchemeFileSt
 
   public String getExternalId()
   {
-    return "scheme.FILE";
+    return "scheme.AST_FILE";
   }
 
   @Override

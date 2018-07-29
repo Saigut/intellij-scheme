@@ -146,7 +146,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements To
     newFillMap(ATTRIBUTES, STRING_KEYS, Tokens.STRING_LITERAL);
     newFillMap(ATTRIBUTES, BRACE_KEYS, Tokens.LEFT_SQUARE, Tokens.RIGHT_SQUARE, Tokens.LEFT_CURLY, Tokens.RIGHT_CURLY);
     newFillMap(ATTRIBUTES, PAREN_KEYS, Tokens.LEFT_PAREN, Tokens.RIGHT_PAREN);
-//    newFillMap(ATTRIBUTES, LITERAL_KEYS, PLAIN_LITERAL, Tokens.BOOLEAN_LITERAL);
+//    newFillMap(ATTRIBUTES, LITERAL_KEYS, AST_PLAIN_LITERAL, Tokens.BOOLEAN_LITERAL);
     newFillMap(ATTRIBUTES, CHAR_KEYS, Tokens.CHAR_LITERAL);
     newFillMap(ATTRIBUTES, SPECIAL_KEYS, Tokens.SPECIAL);
     newFillMap(ATTRIBUTES, IDENTIFIER_KEYS, Tokens.IDENTIFIERS);

@@ -71,35 +71,6 @@ public abstract class SchemeListBase extends SchemePsiElementBase
     return null;
   }
 
-  public PsiElement getNormalChildAt(int offset)
-  {
-    PsiElement element = this;
-
-    PsiElement child;
-    child = element.getFirstChild();
-    if (null == child)
-    {
-      return null;
-    }
-
-    IElementType eleType;
-    while (offset > 0)
-    {
-      child = child.getNextSibling();
-      if (null == child)
-      {
-        return null;
-      }
-      eleType = child.getNode().getElementType();
-      if (!Tokens.WHITESPACE_SET.contains(eleType) && !Tokens.COMMENTS.contains(eleType))
-      {
-        offset--;
-      }
-    }
-
-    return child;
-  }
-
   public PsiElement getSecondNonLeafElement()
   {
     PsiElement first = getFirstChild();

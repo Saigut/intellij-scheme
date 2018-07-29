@@ -39,7 +39,7 @@ public class SchemeSpacingProcessor implements AST
       return NO_SPACING;
     }
 
-    if (BRACES.contains(type1) || BRACES.contains(type2))
+    if (AST_BRACES.contains(type1) || AST_BRACES.contains(type2))
     {
       return NO_SPACING_WITH_NEWLINE;
     }

@@ -26,7 +26,7 @@ public class SISCPsiCreator implements SchemePsiCreator
   {
     IElementType elementType = node.getElementType();
 
-    if (elementType == AST.LIST)
+    if (elementType == AST.AST_LIST)
     {
       return new SISCList(node);
     }
