@@ -36,6 +36,7 @@ public class REPLEnterAction extends EditorWriteActionHandler implements DumbAwa
   @Override
   public boolean isEnabled(Editor editor, DataContext dataContext)
   {
-    return originalHandler.isEnabled(editor, dataContext);
+//    return originalHandler.isEnabled(editor, dataContext);
+    return false;
   }
 }
