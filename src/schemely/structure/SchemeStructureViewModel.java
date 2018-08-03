@@ -23,6 +23,7 @@ public class SchemeStructureViewModel extends TextEditorBasedStructureViewModel
   @NotNull
   public StructureViewTreeElement getRoot()
   {
+    this.fireModelUpdate();
     return new SchemeStructureViewElement(file);
   }
 
