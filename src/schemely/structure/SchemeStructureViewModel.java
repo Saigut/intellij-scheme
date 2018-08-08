@@ -5,6 +5,12 @@ import com.intellij.ide.structureView.TextEditorBasedStructureViewModel;
 import com.intellij.ide.util.treeView.smartTree.Filter;
 import com.intellij.ide.util.treeView.smartTree.Grouper;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import schemely.psi.impl.symbols.SchemeIdentifier;
@@ -12,19 +18,57 @@ import schemely.psi.impl.symbols.SchemeIdentifier;
 
 public class SchemeStructureViewModel extends TextEditorBasedStructureViewModel
 {
-  private PsiFile file;
+  private StructureViewTreeElement myRoot;
+  private PsiFile myFile;
+  private Editor myEditor;
+  private DocumentListener myDocumentListener;
+  private Disposable myEditorDocumentListenerDisposable;
 
-  public SchemeStructureViewModel(PsiFile file)
+  public SchemeStructureViewModel(Editor editor, PsiFile file)
   {
-    super(file);
-    this.file = file;
+    super(editor, file);
+    myFile = file;
+    myEditor = editor;
+
+    myRoot = new SchemeStructureViewElement(file);
+
+    myDocumentListener = new DocumentListener()
+    {
+      @Override
+      public void documentChanged(DocumentEvent event)
+      {
+        if (event.getDocument().equals(myEditor.getDocument())) {
+          fireModelUpdate();
+        }
+      }
+    };
+
+    if (null != myEditor)
+    {
+      myEditorDocumentListenerDisposable = Disposer.newDisposable();
+      EditorFactory.getInstance().getEventMulticaster().addDocumentListener(myDocumentListener, myEditorDocumentListenerDisposable);
+    }
+  }
+
+  @Override
+  public void dispose() {
+
+    if (null != myEditorDocumentListenerDisposable)
+    {
+      Disposer.dispose(myEditorDocumentListenerDisposable);
+      myEditorDocumentListenerDisposable = null;
+    }
+
+    super.dispose();
+    if (myEditorDocumentListenerDisposable != null) {
+      Disposer.dispose(myEditorDocumentListenerDisposable);
+    }
   }
 
   @NotNull
   public StructureViewTreeElement getRoot()
   {
-    this.fireModelUpdate();
-    return new SchemeStructureViewElement(file);
+    return myRoot;
   }
 
   @NotNull
@@ -47,7 +91,7 @@ public class SchemeStructureViewModel extends TextEditorBasedStructureViewModel
 
   protected PsiFile getPsiFile()
   {
-    return file;
+    return myFile;
   }
 
   @NotNull

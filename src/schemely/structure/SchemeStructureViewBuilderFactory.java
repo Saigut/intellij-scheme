@@ -18,7 +18,7 @@ public class SchemeStructureViewBuilderFactory implements PsiStructureViewFactor
       @NotNull
       public StructureViewModel createStructureViewModel(Editor editor)
       {
-        return new SchemeStructureViewModel(psiFile);
+        return new SchemeStructureViewModel(editor, psiFile);
       }
 
       public boolean isRootNodeShown()
