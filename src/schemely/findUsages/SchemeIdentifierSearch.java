@@ -37,8 +37,9 @@ public class SchemeIdentifierSearch implements QueryExecutor<PsiReference, Refer
     Project project = DataKeys.PROJECT.getData(dataContext);
   }
 
+  @Override
   public boolean execute(@NotNull final ReferencesSearch.SearchParameters queryParameters,
-                         @NotNull final Processor<PsiReference> consumer)
+                         @NotNull final Processor<? super PsiReference> consumer)
   {
     final PsiElement refElement = queryParameters.getElementToSearch();
     Project project = refElement.getProject();
