@@ -10,7 +10,6 @@
   <idea-version since-build="103.72"/>
 
   <extensions defaultExtensionNs="com.intellij">
-    <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
     <fileTypeFactory implementation="schemely.file.SchemeFileTypeLoader"/>
     <lang.braceMatcher language="Scheme"
                        implementationClass="schemely.highlighter.SchemeBraceMatcher"/>

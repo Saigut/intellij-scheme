@@ -295,7 +295,7 @@ public class SchemeLexer extends LexerBase
         break;
 
       case S_BAD_ELEMENT:
-        type = Tokens.PLAIN_LITERAL;
+        type = Tokens.BAD_CHARACTER;
         break;
 
       default:

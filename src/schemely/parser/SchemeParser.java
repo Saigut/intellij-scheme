@@ -87,7 +87,7 @@ public class SchemeParser implements PsiParser, Tokens
       return AST.AST_KEYWORD;
     }
     else {
-      return AST.AST_OTHER_LITERAL;
+      return AST.AST_SPECIAL_LITERAL;
     }
   }
 

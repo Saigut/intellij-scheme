@@ -5,10 +5,7 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
-import schemely.psi.impl.SchemeFile;
-import schemely.psi.impl.SchemeLiteral;
-import schemely.psi.impl.SchemeQuoted;
-import schemely.psi.impl.SchemeVector;
+import schemely.psi.impl.*;
 import schemely.psi.impl.list.SchemeList;
 import schemely.psi.impl.symbols.SchemeIdentifier;
 
@@ -23,42 +20,44 @@ public class DefaultPsiCreator implements SchemePsiCreator
     {
       return new SchemeList(node);
     }
-    if (elementType == AST.AST_VECTOR)
+    else if (elementType == AST.AST_VECTOR)
     {
       return new SchemeVector(node);
     }
-    if (elementType == AST.AST_QUOTED)
+    else if (elementType == AST.AST_QUOTED)
     {
       return new SchemeQuoted(node);
     }
-    if (elementType == AST.AST_BACKQUOTED)
+    else if (elementType == AST.AST_BACKQUOTED)
     {
       return new SchemeQuoted(node);
     }
-    if (elementType == AST.AST_IDENTIFIER)
+    else if (elementType == AST.AST_IDENTIFIER)
     {
       return new SchemeIdentifier(node);
     }
-    if (elementType == AST.AST_KEYWORD)
+    else if (elementType == AST.AST_KEYWORD)
     {
-      /// fixme   SchemeIdentifier() has low efficiency
-      return new SchemeLiteral(node);
+      return new SchemeSpecialLiteral(node);
     }
-    if (elementType == AST.AST_SPECIAL)
+    else if (elementType == AST.AST_SPECIAL)
+    {
+      return new SchemeSpecialLiteral(node);
+    }
+    else if (elementType == AST.AST_PLAIN_LITERAL)
     {
       return new SchemeIdentifier(node);
     }
-    if (elementType == AST.AST_PLAIN_LITERAL)
+    else if (elementType == AST.AST_SPECIAL_LITERAL)
     {
-//      return new SchemeLiteral(node);
-      return new SchemeIdentifier(node);
+      return new SchemeSpecialLiteral(node);
     }
-    if (elementType == AST.AST_OTHER_LITERAL)
+    else
     {
-      return new SchemeLiteral(node);
+      return new SchemeSpecialLiteral(node);
     }
 
-    throw new Error("Unexpected ASTNode: " + node.getElementType());
+//    throw new Error("Unexpected ASTNode: " + node.getElementType());
   }
 
   @Override
