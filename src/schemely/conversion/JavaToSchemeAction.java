@@ -16,6 +16,7 @@ class JavaToSchemeAction extends AnAction
   @Override
   public void update(AnActionEvent e)
   {
+    /*
     Presentation presentation = e.getPresentation();
 
     try
@@ -43,11 +44,13 @@ class JavaToSchemeAction extends AnAction
       presentation.setEnabled(false);
       presentation.setVisible(false);
     }
+    */
   }
 
   @Override
   public void actionPerformed(AnActionEvent e)
   {
+    /*
     Object data = e.getDataContext().getData(DataConstants.PSI_FILE);
     if (data instanceof PsiJavaFile)
     {
@@ -83,5 +86,6 @@ class JavaToSchemeAction extends AnAction
         }
       });
     }
+    */
   }
 }

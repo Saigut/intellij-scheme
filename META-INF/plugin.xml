@@ -1,9 +1,9 @@
 <idea-plugin url="https://github.com/Saigut/intellij-scheme">
   <name>Scheme</name>
   <id>intellij-scheme</id>
-  <description>Plugin for Scheme language support</description>
+  <description>Plugin for supporting Scheme programming language</description>
   <category>Custom Languages</category>
-  <version>0.1.3</version>
+  <version>0.1.4</version>
   <vendor url="https://saigut.com">Tony Saigut</vendor>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.platform</depends>

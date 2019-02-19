@@ -20,7 +20,6 @@ import com.intellij.psi.impl.search.LowLevelSearchUtil;
 import com.intellij.psi.search.*;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.Processor;
-import com.intellij.util.QueryExecutor;
 import com.intellij.util.text.StringSearcher;
 import org.jetbrains.annotations.NotNull;
 import schemely.psi.impl.symbols.SchemeIdentifier;
@@ -29,7 +28,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SchemeIdentifierSearch implements QueryExecutor<PsiReference, ReferencesSearch.SearchParameters>
+public class SchemeIdentifierSearch
 {
   public SchemeIdentifierSearch()
   {

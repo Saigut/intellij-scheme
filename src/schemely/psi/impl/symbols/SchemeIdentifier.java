@@ -27,8 +27,6 @@ import javax.swing.*;
 
 public class SchemeIdentifier extends SchemePsiElementBase implements PsiReference, PsiNamedElement
 {
-  private static final IdentifierResolver RESOLVER = new IdentifierResolver();
-
   public SchemeIdentifier(ASTNode node)
   {
     super(node, "Identifier");

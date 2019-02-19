@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 @State(
   name = "SchemeCompilerSettings",
   storages = {
-    @Storage(id = "default", file = "$PROJECT_FILE$")
-   ,@Storage(id = "dir", file = "$PROJECT_CONFIG_DIR$/scheme_compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)
+    @Storage(file = "$PROJECT_FILE$")
+   ,@Storage(file = "$PROJECT_CONFIG_DIR$/scheme_compiler.xml", scheme = StorageScheme.DIRECTORY_BASED)
     }
 )
 public class SchemeCompilerSettings implements PersistentStateComponent<SchemeCompilerSettings>, ProjectComponent
