@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import schemely.parser.AST;
-import static schemely.parser.AST.AST_LIST;
+import static schemely.parser.AST.AST_TEMP_LIST;
 import schemely.psi.impl.SchemeFile;
 import schemely.psi.impl.list.SchemeList;
 
@@ -73,7 +73,7 @@ public class SchemeFoldingBuilder implements FoldingBuilder
   {
     PsiElement element = node.getPsi();
     IElementType type = node.getElementType();
-    if (type == AST_LIST &&
+    if (type == AST_TEMP_LIST &&
         element.getParent() instanceof SchemeFile &&
         node.getText().contains("\n") &&
         element instanceof SchemeList)

@@ -62,7 +62,8 @@ public class SchemeLexer extends LexerBase
    */
 
   // Blanks and Conments
-  Parser<?> s_line_comment = Scanners.lineComment(";").source()
+  Parser<?> P_LINE_COMMENT = Patterns.lineComment(";").next(Patterns.isChar('\n')).toScanner(";");
+  Parser<?> s_line_comment = P_LINE_COMMENT.source()
           .map((a) -> (org.jparsec.Tokens.fragment(";", Tag.S_LINE_COMMENT)));
   Parser<?> s_block_commented =
           notChar2('|', '#').many().toScanner("commented block");
@@ -130,8 +131,8 @@ public class SchemeLexer extends LexerBase
 
   // Keyword
   Terminals KEYWORD_TERM = Terminals
-        .operators("define", "cond", "else", "if", "lambda", "car", "cdr", "cons",
-                "let", "let*", "set!", "do");
+        .operators("and", "begin", "car", "cdr", "cond", "cons", "define", "define-syntax","do", "else", "if",
+                "lambda", "let", "let*", "library", "list", "not", "or", "set!", "unless", "when");
   Parser<?> s_keywords = KEYWORD_TERM.tokenizer().next(LITERAL.not()).source()
         .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_KEYWORD)));
 
