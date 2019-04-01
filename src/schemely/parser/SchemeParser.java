@@ -59,8 +59,8 @@ public class SchemeParser implements PsiParser, Tokens
     PsiBuilder.Marker marker = builder.mark();
     for (IElementType token = builder.getTokenType(); token != null; token = builder.getTokenType())
     {
-      System.out.println("token type: " + token.toString() + ", token text: "
-              + builder.getTokenText() + ", index: " + builder.getCurrentOffset());
+//      System.out.println("token type: " + token.toString() + ", token text: "
+//              + builder.getTokenText() + ", index: " + builder.getCurrentOffset());
       parseTopSexp(token, builder);
     }
     marker.done(AST.AST_FILE);

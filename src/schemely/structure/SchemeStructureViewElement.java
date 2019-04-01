@@ -1,19 +1,16 @@
 package schemely.structure;
 
 import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.util.treeView.smartTree.SortableTreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.Iconable;
-import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNamedElement;
 import org.jetbrains.annotations.NotNull;
+import schemely.psi.impl.SchemeFormDefine;
 import schemely.psi.impl.SchemePsiElementBase;
-import schemely.psi.impl.list.SchemeList;
-import schemely.psi.impl.symbols.SchemeIdentifier;
+import schemely.psi.impl.SchemeSymbol;
 import schemely.psi.util.SchemePsiUtil;
 
 import javax.swing.*;
@@ -80,28 +77,18 @@ public class SchemeStructureViewElement implements StructureViewTreeElement, Ite
 
   private boolean isBrowsableElement(PsiElement element)
   {
-    if (element instanceof SchemeIdentifier)
+    if (element instanceof SchemeSymbol)
     {
-      SchemeIdentifier identifier = (SchemeIdentifier) element;
+      SchemeSymbol symbol = (SchemeSymbol) element;
 
-      PsiElement parentElement = identifier.getParent();
-      if (!(parentElement instanceof SchemeList))
+      PsiElement parentElement = symbol.getParent();
+      if (!(parentElement instanceof SchemeFormDefine))
       {
         return false;
       }
 
-      SchemeList parent = (SchemeList) parentElement;
+      SchemeFormDefine parent = (SchemeFormDefine) parentElement;
       PsiElement tmpEle;
-      tmpEle = SchemePsiUtil.getNormalChildAt(parent, 0);
-      if (null == tmpEle)
-      {
-        return false;
-      }
-      if (!tmpEle.textMatches("define"))
-      {
-        return false;
-      }
-
       tmpEle = SchemePsiUtil.getNormalChildAt(parent, 1);
       if (null == tmpEle)
       {

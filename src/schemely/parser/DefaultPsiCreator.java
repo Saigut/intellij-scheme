@@ -67,6 +67,7 @@ public class DefaultPsiCreator implements SchemePsiCreator
     {
       return new SchemeFormCons(node);
     }
+    // (define ...)
     else if (elementType == AST.AST_FORM_DEFINE)
     {
       return new SchemeFormDefine(node);

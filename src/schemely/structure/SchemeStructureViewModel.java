@@ -13,7 +13,7 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
-import schemely.psi.impl.symbols.SchemeIdentifier;
+import schemely.psi.impl.SchemeSymbol;
 
 
 public class SchemeStructureViewModel extends TextEditorBasedStructureViewModel
@@ -97,6 +97,6 @@ public class SchemeStructureViewModel extends TextEditorBasedStructureViewModel
   @NotNull
   protected Class[] getSuitableClasses()
   {
-    return new Class[] { SchemeIdentifier.class };
+    return new Class[] { SchemeSymbol.class };
   }
 }
