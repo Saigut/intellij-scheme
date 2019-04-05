@@ -121,9 +121,11 @@ public class SchemeParser implements PsiParser, Tokens
     else if (STRING_LITERAL == type) {
       return AST.AST_BASIC_ELE_STR;
     }
+    else if (KEYWORD == type) {
+      return AST.AST_BASIC_ELE_KEYWORD;
+    }
     else if (PLAIN_LITERAL == type
-             || IDENTIFIER == type
-             || KEYWORD == type) {
+             || IDENTIFIER == type) {
       return AST.AST_BASIC_ELE_SYMBOL;
     }
     else
@@ -347,8 +349,8 @@ public class SchemeParser implements PsiParser, Tokens
     PsiBuilder.Marker marker = markAndAdvance(builder);
 
     IElementType token_type = builder.getTokenType();
-    String toekn_text = builder.getTokenText();
-    if (toekn_text == null) {
+    String token_text = builder.getTokenText();
+    if (token_text == null) {
       internalError("token is null, something is wrong");
     }
     IElementType exp_type = null;
@@ -361,16 +363,16 @@ public class SchemeParser implements PsiParser, Tokens
     {
       internalError("parse sexp failed");
     }
-    else if (exp_type != AST.AST_BASIC_ELE_SYMBOL)
+    else if (exp_type != AST.AST_BASIC_ELE_KEYWORD)
     {
       mark_type = eatRemainList(builder, close, AST.AST_BAD_ELEMENT);
     }
     else
     {
-      mark_type = parseTopOnlyForm(builder, close, toekn_text);
+      mark_type = parseTopOnlyForm(builder, close, token_text);
       if (mark_type == null)
       {
-        mark_type = parseTopAndLocalForm(builder, close, toekn_text);
+        mark_type = parseTopAndLocalForm(builder, close, token_text);
         if (mark_type == null)
         {
           mark_type = eatRemainList(builder, close, AST.AST_FORM_CALL_PROCEDURE);

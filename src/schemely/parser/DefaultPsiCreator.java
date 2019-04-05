@@ -39,6 +39,10 @@ public class DefaultPsiCreator implements SchemePsiCreator
     {
       return new SchemeSpecialLiteral(node);
     }
+    else if (elementType == AST.AST_BASIC_ELE_KEYWORD)
+    {
+      return new SchemeKeyword(node);
+    }
     else if (elementType == AST.AST_BASIC_ELE_SYMBOL)
     {
       return new SchemeSymbol(node);
