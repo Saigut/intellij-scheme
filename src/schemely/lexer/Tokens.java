@@ -27,6 +27,8 @@ public interface Tokens
   // Comments
   IElementType LINE_COMMENT = new SchemeElementType("line comment");
   IElementType BLOCK_COMMENT = new SchemeElementType("block comment");
+  IElementType DATUM_COMMENT_PRE = new SchemeElementType("datum comment prefix");
+  IElementType COMMENTED_DATUM = new SchemeElementType("commented datum");
 
   TokenSet COMMENTS = TokenSet.create(LINE_COMMENT, BLOCK_COMMENT);
 

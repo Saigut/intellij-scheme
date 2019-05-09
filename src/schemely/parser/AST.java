@@ -23,6 +23,7 @@ public interface AST
 
   // Other element
   IElementType AST_ELE_VECTOR = new SchemeElementType("ast vector");
+  IElementType AST_ELE_DATUM_COMMENT = new SchemeElementType("ast datum comment");
 
   // Forms
   IElementType AST_FORM_DEFINE = new SchemeElementType("ast define");

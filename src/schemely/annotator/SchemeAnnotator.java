@@ -9,6 +9,7 @@ import com.intellij.util.containers.HashSet;
 import org.jetbrains.annotations.NotNull;
 import schemely.highlighter.SchemeSyntaxHighlighter;
 import schemely.lexer.Tokens;
+import schemely.psi.impl.SchemeEleDatumComment;
 import schemely.psi.impl.SchemeLiteral;
 import schemely.psi.impl.SchemeVector;
 import schemely.psi.impl.list.SchemeList;
@@ -51,6 +52,11 @@ public class SchemeAnnotator implements Annotator
 
   public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder)
   {
+    if (element instanceof SchemeEleDatumComment) {
+      Annotation annotation = holder.createInfoAnnotation(element, null);
+      annotation.setTextAttributes(SchemeSyntaxHighlighter.LINE_COMMENT);
+      return;
+    }
     if (ResolveUtil.getQuotingLevel(element) > 0)
     {
       if (element instanceof SchemeIdentifier)

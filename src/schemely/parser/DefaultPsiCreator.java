@@ -24,6 +24,10 @@ public class DefaultPsiCreator implements SchemePsiCreator
     {
       return new SchemeVector(node);
     }
+    else if (elementType == AST.AST_ELE_DATUM_COMMENT)
+    {
+      return new SchemeEleDatumComment(node);
+    }
     else if (elementType == AST.AST_FORM_QUOTE)
     {
       return new SchemeQuoted(node);

@@ -351,7 +351,10 @@ public class SchemeParser implements PsiParser, Tokens
     IElementType token_type = builder.getTokenType();
     String token_text = builder.getTokenText();
     if (token_text == null) {
-      internalError("token is null, something is wrong");
+//      internalError("token is null, something is wrong");
+      builder.error("token is null, something is wrong");
+      marker.drop();
+      return null;
     }
     IElementType exp_type = null;
     if (token_type != close && token_type != null)
@@ -361,7 +364,10 @@ public class SchemeParser implements PsiParser, Tokens
 
     if (exp_type == null)
     {
-      internalError("parse sexp failed");
+//      internalError("parse sexp failed");
+      builder.error("parse sexp failed");
+      marker.drop();
+      return null;
     }
     else if (exp_type != AST.AST_BASIC_ELE_KEYWORD)
     {
@@ -397,8 +403,7 @@ public class SchemeParser implements PsiParser, Tokens
     }
     else if (RIGHT_PAREN == type)
     {
-      System.out.println(">>> parseTopParen " + SchemeBundle.message("expected.lparen"));
-      internalError(SchemeBundle.message("expected.lparen"));
+      syntaxError(builder, SchemeBundle.message("expected.lparen"));
     }
     else if (RIGHT_SQUARE == type)
     {
@@ -445,6 +450,15 @@ public class SchemeParser implements PsiParser, Tokens
     else
     {
       IElementType mark_type = null;
+      if (DATUM_COMMENT_PRE == type) {
+        PsiBuilder.Marker marker_datum = builder.mark();
+        parseSexp(childType, builder);
+        marker_datum.collapse(Tokens.COMMENTED_DATUM);
+
+        mark_type = AST.AST_ELE_DATUM_COMMENT;
+        marker.done(mark_type);
+        return mark_type;
+      }
       parseSexp(childType, builder);
       if (QUOTE_MARK == type)
       {
@@ -481,7 +495,8 @@ public class SchemeParser implements PsiParser, Tokens
     // it is just leaf, mark it's type
     if (QUOTE_MARK == type
         || BACKQUOTE == type
-        || SHARP == type) {
+        || SHARP == type
+        || DATUM_COMMENT_PRE == type) {
       return parseSinglePrefix(type, builder);
     }
     else
@@ -502,8 +517,7 @@ public class SchemeParser implements PsiParser, Tokens
     }
     else if (RIGHT_PAREN == type)
     {
-      System.out.println(">>> parseParen " + SchemeBundle.message("expected.lparen"));
-      internalError(SchemeBundle.message("expected.lparen"));
+      syntaxError(builder, SchemeBundle.message("expected.lparen"));
       return null;
     }
     else if (RIGHT_SQUARE == type)

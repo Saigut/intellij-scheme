@@ -32,6 +32,7 @@ public class SchemeLexer extends LexerBase
   enum Tag {
     S_LINE_COMMENT,
     S_BLOCK_COMMENT,
+    S_DATUM_COMMENT_PRE,
     S_WHITE_SPACE,
     S_OPERATOR,
     S_NUMBER,
@@ -62,14 +63,19 @@ public class SchemeLexer extends LexerBase
    */
 
   // Blanks and Conments
-  Parser<?> P_LINE_COMMENT = Patterns.lineComment(";").next(Patterns.isChar('\n')).toScanner(";");
+  Pattern PT_DATUM_COMMENT_PRE = Patterns.string("#;");
+  Parser<?> P_DATUM_COMMENT_PRE = PT_DATUM_COMMENT_PRE.toScanner("datum comment prefix");
+  Parser<?> s_datum_comment_pre = P_DATUM_COMMENT_PRE.source()
+          .map((a) -> (org.jparsec.Tokens.fragment("#;", Tag.S_DATUM_COMMENT_PRE)));
+
+  Parser<?> P_LINE_COMMENT = Patterns.lineComment(";").toScanner(";");
   Parser<?> s_line_comment = P_LINE_COMMENT.source()
           .map((a) -> (org.jparsec.Tokens.fragment(";", Tag.S_LINE_COMMENT)));
   Parser<?> s_block_commented =
           notChar2('|', '#').many().toScanner("commented block");
   Parser<?> s_block_comment = Parsers.sequence(Scanners.string("#|"), s_block_commented, Scanners.string("|#")).source()
-          .map((a) -> (org.jparsec.Tokens.fragment(";", Tag.S_BLOCK_COMMENT)));
-  Parser<?> s_comment = Parsers.or(s_line_comment, s_block_comment);
+          .map((a) -> (org.jparsec.Tokens.fragment("#||#", Tag.S_BLOCK_COMMENT)));
+  Parser<?> s_comment = Parsers.or(s_datum_comment_pre, s_line_comment, s_block_comment);
 
   Parser<?> s_whitespace = Scanners.WHITESPACES
           .map((a) -> (org.jparsec.Tokens.fragment("WHITE_SPACE", Tag.S_WHITE_SPACE)));
@@ -230,6 +236,10 @@ public class SchemeLexer extends LexerBase
 
       case S_BLOCK_COMMENT:
         type = Tokens.BLOCK_COMMENT;
+        break;
+
+      case S_DATUM_COMMENT_PRE:
+        type = Tokens.DATUM_COMMENT_PRE;
         break;
 
       case S_WHITE_SPACE:
