@@ -11,11 +11,9 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import schemely.formatter.processors.SchemeSpacingProcessor;
+import schemely.lexer.Tokens;
 import schemely.parser.AST;
 import schemely.psi.impl.SchemeFile;
-import schemely.psi.impl.SchemeVector;
-import schemely.psi.impl.list.SchemeList;
-import schemely.psi.impl.symbols.SchemeIdentifier;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,30 +47,10 @@ public class SchemeBlock implements Block, AST
                                    Alignment align,
                                    Indent indent,
                                    Wrap wrap,
-                                   CodeStyleSettings settings)
+                                   CodeStyleSettings settings,
+                                   @Nullable ASTNode parentNode)
   {
-    PsiElement blockPsi = childNode.getPsi();
-    if (blockPsi instanceof SchemeList)
-    {
-      SchemeList list = (SchemeList) blockPsi;
-      PsiElement first = list.getFirstNonLeafElement();
-      if (first instanceof SchemeIdentifier)
-      {
-        return new ApplicationBlock(childNode, align, indent, wrap, settings);
-      }
-      else
-      {
-        return new ListBlock(childNode, align, indent, wrap, settings);
-      }
-    }
-    else if (blockPsi instanceof SchemeVector)
-    {
-      return new ListBlock(childNode, align, indent, wrap, settings);
-    }
-    else
-    {
-      return new SchemeBlock(childNode, align, indent, wrap, settings);
-    }
+    return new ListBlock(childNode, align, indent, wrap, settings, parentNode);
   }
 
   @NotNull
@@ -102,7 +80,7 @@ public class SchemeBlock implements Block, AST
     List<Block> subBlocks = new ArrayList<Block>();
     for (ASTNode childNode : getChildren(node))
     {
-      subBlocks.add(create(childNode, null, Indent.getNoneIndent(), wrap, settings));
+      subBlocks.add(create(childNode, null, Indent.getNoneIndent(), wrap, settings, node));
     }
     return subBlocks;
   }
@@ -188,6 +166,14 @@ public class SchemeBlock implements Block, AST
 
   public boolean isLeaf()
   {
-    return node.getFirstChildNode() == null;
+    if (LEAF_ELEMENTS.contains(node.getElementType()) || Tokens.BRACES.contains(node.getElementType())) {
+      return true;
+    } else {
+      if (node.getFirstChildNode() == null) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 }

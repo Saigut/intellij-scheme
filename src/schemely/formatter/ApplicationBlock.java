@@ -81,7 +81,7 @@ public class ApplicationBlock extends ListBlock
                           @Nullable Wrap wrap,
                           CodeStyleSettings settings)
   {
-    super(node, alignment, indent, wrap, settings);
+    super(node, alignment, indent, wrap, settings, null);
 
     int parameters = 0;
 
@@ -144,7 +144,7 @@ public class ApplicationBlock extends ListBlock
           childIndex++;
         }
       }
-      subBlocks.add(SchemeBlock.create(childNode, align, indent, wrap, settings));
+      subBlocks.add(SchemeBlock.create(childNode, align, indent, wrap, settings, node));
     }
     return subBlocks;
   }

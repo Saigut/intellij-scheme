@@ -7,7 +7,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import schemely.psi.impl.*;
 import schemely.psi.impl.list.SchemeList;
-import schemely.psi.impl.symbols.SchemeIdentifier;
 
 
 public class DefaultPsiCreator implements SchemePsiCreator
@@ -124,9 +123,17 @@ public class DefaultPsiCreator implements SchemePsiCreator
     {
       return new SchemeFormWhen(node);
     }
+    else if (elementType == AST.AST_BAD_CHARACTER)
+    {
+      return new SchemeBadCharacter(node);
+    }
+    else if (elementType == AST.AST_UNRECOGNIZED_FORM)
+    {
+      return new SchemeUnrecognizedForm(node);
+    }
     else if (elementType == AST.AST_BAD_ELEMENT)
     {
-      return new SchemeBadForm(node);
+      return new SchemeBadElement(node);
     }
     else if (elementType == AST.AST_FORM_CALL_PROCEDURE)
     {

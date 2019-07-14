@@ -6,6 +6,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.IElementType;
 import schemely.formatter.SchemeBlock;
 import schemely.lexer.Tokens;
+import schemely.parser.AST;
 
 
 public class SchemeSpacingProcessor
@@ -34,7 +35,8 @@ public class SchemeSpacingProcessor
     IElementType type1 = node1.getElementType();
     IElementType type2 = node2.getElementType();
 
-    if (Tokens.PREFIXES.contains(type1))
+    if (Tokens.PREFIXES.contains(type1)
+            || type1 == AST.AST_BAD_CHARACTER)
     {
       return NO_SPACING;
     }

@@ -130,7 +130,7 @@ public class SchemeParser implements PsiParser, Tokens
     }
     else
     {
-      return AST.AST_BAD_ELEMENT;
+      return AST.AST_BAD_CHARACTER;
     }
   }
 
@@ -371,7 +371,7 @@ public class SchemeParser implements PsiParser, Tokens
     }
     else if (exp_type != AST.AST_BASIC_ELE_KEYWORD)
     {
-      mark_type = eatRemainList(builder, close, AST.AST_BAD_ELEMENT);
+      mark_type = eatRemainList(builder, close, AST.AST_UNRECOGNIZED_FORM);
     }
     else
     {
@@ -475,7 +475,7 @@ public class SchemeParser implements PsiParser, Tokens
         }
         else
         {
-          mark_type = AST.AST_BAD_ELEMENT;
+          mark_type = AST.AST_BAD_CHARACTER;
         }
       }
       else

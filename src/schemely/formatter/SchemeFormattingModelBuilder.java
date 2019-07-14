@@ -1,5 +1,6 @@
 package schemely.formatter;
 
+import com.intellij.formatting.Alignment;
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.formatting.FormattingModelProvider;
@@ -23,7 +24,7 @@ public class SchemeFormattingModelBuilder implements FormattingModelBuilder
     PsiFile containingFile = element.getContainingFile();
     ASTNode astNode = containingFile.getNode();
     assert astNode != null;
-    SchemeBlock schemeBlock = SchemeBlock.create(astNode, null, Indent.getAbsoluteNoneIndent(), null, settings);
+    SchemeBlock schemeBlock = SchemeBlock.create(astNode, Alignment.createAlignment(), Indent.getAbsoluteNoneIndent(), null, settings, null);
     return FormattingModelProvider.createFormattingModelForPsiFile(containingFile, schemeBlock, settings);
   }
 

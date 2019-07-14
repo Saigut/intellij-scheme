@@ -10,6 +10,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import schemely.lexer.Tokens;
+import schemely.parser.AST;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,35 +21,65 @@ import java.util.List;
 public class ListBlock extends SchemeBlock
 {
   private final Alignment childAlignment = Alignment.createAlignment();
+  private ASTNode parentNode;
 
   public ListBlock(@NotNull ASTNode node,
                    @Nullable Alignment alignment,
                    @NotNull Indent indent,
                    @Nullable Wrap wrap,
-                   CodeStyleSettings settings)
+                   CodeStyleSettings settings,
+                   @Nullable ASTNode parentNode)
   {
     super(node, alignment, indent, wrap, settings);
+    this.parentNode = parentNode;
   }
 
   @Override
   protected List<Block> generateSubBlocks(ASTNode node, Wrap wrap, CodeStyleSettings settings)
   {
     List<Block> subBlocks = new ArrayList<Block>();
-    for (ASTNode childNode : getChildren(node))
-    {
-      Indent indent;
+    if (LEAF_ELEMENTS.contains(node.getElementType()) || Tokens.BRACES.contains(node.getElementType())) {
+      return subBlocks;
+    } else {
+//      boolean is_first_child = true;
       Alignment align;
-      if (Tokens.BRACES.contains(childNode.getElementType()))
+      for (ASTNode childNode : getChildren(node))
       {
-        indent = Indent.getNoneIndent();
-        align = null;
+        Indent indent;
+        if (Tokens.BRACES.contains(childNode.getElementType()))
+        {
+          indent = Indent.getNoneIndent();
+          align = alignment;
+        }
+        else
+        {
+          if (parentNode != null && parentNode.getElementType() == AST.AST_ELE_VECTOR) {
+            indent = Indent.getSpaceIndent(1, true);
+          } else {
+            indent = Indent.getNormalIndent(true);
+          }
+          align = Alignment.createAlignment();
+//          if (node.getElementType() == AST.AST_TEMP_LIST) {
+//            if (is_first_child) {
+//              indent = Indent.getSpaceIndent(1, true);
+//              align = Alignment.createAlignment();
+//              is_first_child = false;
+//            } else {
+//              if (align == null) {
+//                align = Alignment.createAlignment();
+//              } else {
+//                align = Alignment.createChildAlignment(align);
+//              }
+//            }
+//          } else {
+//            align = Alignment.createAlignment();
+//          }
+        }
+        if (node.getElementType() == AST.AST_FILE) {
+          indent = Indent.getNoneIndent();
+        }
+        subBlocks.add(SchemeBlock.create(childNode, align, indent, wrap, settings, node));
       }
-      else
-      {
-        indent = Indent.getNormalIndent(true);
-        align = childAlignment;
-      }
-      subBlocks.add(SchemeBlock.create(childNode, align, indent, wrap, settings));
     }
     return subBlocks;
   }

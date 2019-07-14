@@ -60,6 +60,8 @@ public interface AST
   // Macro form
 
 
+  IElementType AST_BAD_CHARACTER = new SchemeElementType("ast bad character");
+  IElementType AST_UNRECOGNIZED_FORM = new SchemeElementType("ast unrecognized form");
   IElementType AST_BAD_ELEMENT = new SchemeElementType("ast bad element");
 
   TokenSet AST_ELEMENTS = TokenSet.create(AST_TEMP_LIST,
@@ -71,4 +73,9 @@ public interface AST
           AST_FORM_BEGIN, AST_FORM_IF, AST_FORM_COND, AST_FORM_WHEN, AST_FORM_UNLESS,
           AST_FORM_AND, AST_FORM_OR, AST_FORM_NOT,
           AST_BAD_ELEMENT);
+
+  TokenSet LEAF_ELEMENTS = TokenSet.create(
+          AST_BASIC_ELE_BOOL, AST_BASIC_ELE_NUM, AST_BASIC_ELE_CHAR,
+          AST_BASIC_ELE_STR, AST_BASIC_ELE_KEYWORD, AST_BASIC_ELE_SYMBOL,
+          AST_BAD_CHARACTER, AST_BAD_ELEMENT);
 }

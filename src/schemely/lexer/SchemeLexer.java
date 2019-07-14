@@ -39,7 +39,7 @@ public class SchemeLexer extends LexerBase
     S_QUOTE_STRING,
     S_CHAR,
     S_LITERAL,
-    S_BAD_ELEMENT,
+    S_BAD_CHARACTER,
 
     S_KEYWORD
   }
@@ -147,11 +147,11 @@ public class SchemeLexer extends LexerBase
   Parser<?> s_element = Parsers.or(s_whitespace, s_comment,
           s_operators, s_numbers, s_keywords, s_literals);
 //  Parser<?> s_bad_element = s_element.not().source()
-//          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_BAD_ELEMENT)));
+//          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_BAD_CHARACTER)));
   Pattern PT_ANY_CHAR = Patterns.isChar(CharPredicates.ALWAYS);
   Parser<String> PS_ANY_CHAR = PT_ANY_CHAR.toScanner("any char").source();
   Parser<?> s_bad_element = PS_ANY_CHAR
-          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_BAD_ELEMENT)));
+          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_BAD_CHARACTER)));
 
 
   Parser<Object> token = Parsers.or(s_element, s_bad_element);
@@ -305,7 +305,7 @@ public class SchemeLexer extends LexerBase
         type = Tokens.PLAIN_LITERAL;
         break;
 
-      case S_BAD_ELEMENT:
+      case S_BAD_CHARACTER:
         type = Tokens.BAD_CHARACTER;
         break;
 
