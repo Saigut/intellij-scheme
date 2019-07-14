@@ -25,7 +25,7 @@ public class CompleteSymbol
       {
         break;
       }
-      if (bigBrother.getNode().getElementType() == AST.AST_FORM_DEFINE)
+      if (AST.DEFINE_FORMS.contains(bigBrother.getNode().getElementType()))
       {
         declaration = SchemePsiUtil.getNormalChildAt(bigBrother, 1);
         if (null != declaration)

@@ -185,6 +185,11 @@ public class SchemeParser implements PsiParser, Tokens
     return eatRemainList(builder, close, AST.AST_FORM_DEFINE);
   }
 
+  IElementType parseFormDefineRecordType(PsiBuilder builder, IElementType close)
+  {
+    return eatRemainList(builder, close, AST.AST_FORM_DEFINE_RECORD_TYPE);
+  }
+
   IElementType parseFormDefineSyntax(PsiBuilder builder, IElementType close)
   {
     return eatRemainList(builder, close, AST.AST_FORM_DEFINE_SYNTAX);
@@ -295,6 +300,10 @@ public class SchemeParser implements PsiParser, Tokens
     else if (text.equals("define"))
     {
       mark_type = parseFormDefine(builder, close);
+    }
+    else if (text.equals("define-record-type"))
+    {
+      mark_type = parseFormDefineRecordType(builder, close);
     }
     else if (text.equals("define-syntax"))
     {

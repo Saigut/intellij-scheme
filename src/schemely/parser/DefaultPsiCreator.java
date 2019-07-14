@@ -79,6 +79,10 @@ public class DefaultPsiCreator implements SchemePsiCreator
     {
       return new SchemeFormDefine(node);
     }
+    else if (elementType == AST.AST_FORM_DEFINE_RECORD_TYPE)
+    {
+      return new SchemeFormDefineRecordType(node);
+    }
     else if (elementType == AST.AST_FORM_DEFINE_SYNTAX)
     {
       return new SchemeFormDefineSyntax(node);

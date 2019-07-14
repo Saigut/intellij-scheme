@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNamedElement;
 import org.jetbrains.annotations.NotNull;
-import schemely.psi.impl.SchemeFormDefine;
+import schemely.psi.impl.SchemeFormDefineBase;
 import schemely.psi.impl.SchemePsiElementBase;
 import schemely.psi.impl.SchemeSymbol;
 import schemely.psi.util.SchemePsiUtil;
@@ -82,12 +82,12 @@ public class SchemeStructureViewElement implements StructureViewTreeElement, Ite
       SchemeSymbol symbol = (SchemeSymbol) element;
 
       PsiElement parentElement = symbol.getParent();
-      if (!(parentElement instanceof SchemeFormDefine))
+      if (!(parentElement instanceof SchemeFormDefineBase))
       {
         return false;
       }
 
-      SchemeFormDefine parent = (SchemeFormDefine) parentElement;
+      SchemeFormDefineBase parent = (SchemeFormDefineBase) parentElement;
       PsiElement tmpEle;
       tmpEle = SchemePsiUtil.getNormalChildAt(parent, 1);
       if (null == tmpEle)

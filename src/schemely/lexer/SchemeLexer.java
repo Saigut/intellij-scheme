@@ -137,7 +137,7 @@ public class SchemeLexer extends LexerBase
 
   // Keyword
   Terminals KEYWORD_TERM = Terminals
-        .operators("and", "begin", "car", "cdr", "cond", "cons", "define", "define-syntax","do", "else", "if",
+        .operators("and", "begin", "car", "cdr", "cond", "cons", "define", "define-record-type","define-syntax","do", "else", "if",
                 "lambda", "let", "let*", "library", "list", "not", "or", "set!", "unless", "when");
   Parser<?> s_keywords = KEYWORD_TERM.tokenizer().next(LITERAL.not()).source()
         .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_KEYWORD)));

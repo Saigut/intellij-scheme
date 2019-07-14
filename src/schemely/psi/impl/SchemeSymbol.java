@@ -155,7 +155,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     {
       return false;
     }
-    return AST.AST_FORM_DEFINE == element.getNode().getElementType();
+    return AST.DEFINE_FORMS.contains(element.getNode().getElementType());
   }
 
   public PsiElement resolve()
