@@ -3,11 +3,17 @@
   <id>intellij-scheme</id>
   <description>Plugin for supporting Scheme programming language</description>
   <category>Custom Languages</category>
-  <version>0.1.5</version>
+  <version>0.1.6</version>
   <vendor url="https://saigut.com">Tony Saigut</vendor>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.platform</depends>
   <idea-version since-build="103.72"/>
+
+  <change-notes><![CDATA[
+    1. Fix some indentation issues<br>
+    2. Support r6rs define-record-type<br>
+    ]]>
+  </change-notes>
 
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="schemely.file.SchemeFileTypeLoader"/>
