@@ -46,7 +46,7 @@ public class ListBlock extends SchemeBlock
       for (ASTNode childNode : getChildren(node))
       {
         Indent indent;
-        if (Tokens.BRACES.contains(childNode.getElementType()))
+        if (Tokens.OPEN_BRACES.contains(childNode.getElementType()))
         {
           indent = Indent.getNoneIndent();
           align = alignment;
