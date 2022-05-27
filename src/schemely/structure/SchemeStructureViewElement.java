@@ -110,7 +110,7 @@ public class SchemeStructureViewElement implements StructureViewTreeElement, Ite
   @Override
   public Icon getIcon(boolean open)
   {
-    return element.getIcon(Iconable.ICON_FLAG_OPEN);
+    return element.getIcon(Iconable.ICON_FLAG_VISIBILITY);
   }
 
   @Override

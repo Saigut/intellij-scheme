@@ -30,7 +30,7 @@ public class NewExternalConsoleAction extends AnAction implements DumbAware
     }
 
     Scheme scheme = SchemeImplementation.from(m.getProject());
-    REPLProvider provider = scheme.getExternalREPLProvider();
+    REPLProvider provider = scheme.getInProcessREPLProvider();
     presentation.setEnabled(provider.isSupported());
     super.update(e);
   }
@@ -43,7 +43,7 @@ public class NewExternalConsoleAction extends AnAction implements DumbAware
     // Find the tool window
     Project project = module.getProject();
     Scheme scheme = SchemeImplementation.from(project);
-    REPLProvider provider = scheme.getExternalREPLProvider();
+    REPLProvider provider = scheme.getInProcessREPLProvider();
     if (!provider.isSupported())
     {
       return;

@@ -168,7 +168,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider
     setupEditorDefault(myConsoleEditor);
     setupEditorDefault(myHistoryViewer);
 
-    myConsoleEditor.addEditorMouseListener(EditorActionUtil.createEditorPopupHandler(IdeActions.GROUP_CUT_COPY_PASTE));
+//    myConsoleEditor.addEditorMouseListener(EditorActionUtil.createEditorPopupHandler(IdeActions.GROUP_CUT_COPY_PASTE));
 
     myHistoryViewer.getComponent().setMinimumSize(new Dimension(0, 0));
     myHistoryViewer.getComponent().setPreferredSize(new Dimension(0, 0));
@@ -390,7 +390,7 @@ public class LanguageConsoleImpl implements Disposable, TypeSafeDataProvider
     {
       throw new AssertionError("file=null, name=" + name + ", language=" + language.getDisplayName());
     }
-    PsiDocumentManagerImpl.cachePsi(myEditorDocument, myFile);
+//    PsiDocumentManagerImpl.cachePsi(myEditorDocument, myFile);
     FileContentUtil.reparseFiles(myProject, Collections.<VirtualFile>singletonList(newVFile), false);
 
     if (prevFile != null)

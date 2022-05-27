@@ -21,7 +21,7 @@ public class ExecuteImmediatelyAction extends DumbAwareAction
 
   public ExecuteImmediatelyAction(SchemeConsole console)
   {
-    super(null, null, ACTIONS_EXECUTE_ICON);
+    super(ACTIONS_EXECUTE_ICON);
     this.console = console;
     EmptyAction.setupAction(this, EXECUTE_IMMEDIATELY_ID, null);
   }

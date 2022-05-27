@@ -3,15 +3,15 @@
   <id>intellij-scheme</id>
   <description>Plugin for supporting Scheme programming language</description>
   <category>Custom Languages</category>
-  <version>0.1.6</version>
+  <version>0.1.7</version>
   <vendor url="https://saigut.com">Tony Saigut</vendor>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.platform</depends>
   <idea-version since-build="103.72"/>
 
   <change-notes><![CDATA[
-    1. Fix some indentation issues<br>
-    2. Support r6rs define-record-type<br>
+    1. Update for running on newer intellij platform<br>
+    2. Remove REPL<br>
     ]]>
   </change-notes>
 
@@ -77,7 +77,7 @@
     <projectService serviceInterface="schemely.settings.SchemeProjectSettings"
                     serviceImplementation="schemely.settings.SchemeProjectSettings"/>
 
-    <toolWindow id="Scheme.REPL" secondary="true" icon="/schemely/icons/lambda.png" anchor="right" factoryClass="schemely.repl.toolwindow.REPLToolWindowFactory"/>
+    <!--<toolWindow id="Scheme.REPL" secondary="true" icon="/schemely/icons/lambda.png" anchor="right" factoryClass="schemely.repl.toolwindow.REPLToolWindowFactory"/>-->
     <!--<editorActionHandler action="EditorEnter" implementationClass="schemely.repl.toolwindow.actions.REPLEnterAction" order="FIRST"/>-->
 
     <methodNavigationOffsetProvider implementation="schemely.navigation.SchemeNavigationOffsetProvider"/>
@@ -105,71 +105,6 @@
       <!--<add-to-group group-id="EditorTabPopupMenu" anchor="last"/>-->
       <!--<keyboard-shortcut first-keystroke="control shift G" keymap="$default"/>-->
     <!--</action>-->
-
-    <!-- REPL-related actions -->
-    <group id="Scheme.REPL.Group"
-           class="schemely.repl.actions.SchemeReplActionGroup"
-           text="Scheme REPL" description="Scheme" popup="true">
-
-      <action id="schemely.repl.actions.LoadSchemeFileInConsoleAction"
-              class="schemely.repl.actions.LoadSchemeFileInConsoleAction"
-              text="Load file in REPL">
-        <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift L"/>
-      </action>
-
-      <action id="schemely.repl.actions.RunSelectedTextAction"
-              class="schemely.repl.actions.RunSelectedTextAction"
-              text="Run selected text in REPL">
-        <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift J"/>
-      </action>
-
-      <action id="schemely.repl.actions.RunLastSExprAction"
-              class="schemely.repl.actions.RunLastSExprAction"
-              text="Execute last S-expression in REPL">
-        <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift H"/>
-      </action>
-
-      <action id="schemely.repl.actions.RunTopSExprAction"
-              class="schemely.repl.actions.RunTopSExprAction"
-              text="Run Top S-expression in REPL">
-        <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift G"/>
-      </action>
-
-      <add-to-group group-id="ToolsMenu" anchor="last"/>
-      <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-    </group>
-
-    <action id="schemely.repl.toolwindow.actions.NewInProcessConsoleAction"
-            class="schemely.repl.toolwindow.actions.NewInProcessConsoleAction" text="Start In-Process Scheme Console"
-            description="Runs Scheme REPL">
-      <add-to-group group-id="ToolsMenu" anchor="last"/>
-      <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift F10"/>
-    </action>
-
-    <action id="schemely.repl.toolwindow.actions.NewExternalConsoleAction"
-            class="schemely.repl.toolwindow.actions.NewExternalConsoleAction" text="Start External Scheme Console"
-            description="Runs Scheme REPL">
-      <add-to-group group-id="ToolsMenu" anchor="last"/>
-    </action>
-
-    <action id="Scheme.REPL.Execute.Immediately"
-            class="com.intellij.openapi.actionSystem.EmptyAction"
-            text="Execute Current Statement">
-      <keyboard-shortcut keymap="$default" first-keystroke="control ENTER"/>
-    </action>
-
-    <action id="Scheme.REPL.History.Previous"
-            class="com.intellij.openapi.actionSystem.EmptyAction"
-            text="Select Previous History Item">
-      <keyboard-shortcut keymap="$default" first-keystroke="control UP"/>
-    </action>
-
-    <action id="Scheme.REPL.History.Next"
-            class="com.intellij.openapi.actionSystem.EmptyAction"
-            text="Select Next History Item">
-      <keyboard-shortcut keymap="$default" first-keystroke="control DOWN"/>
-    </action>
-
   </actions>
 
 </idea-plugin>

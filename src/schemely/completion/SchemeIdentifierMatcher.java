@@ -2,6 +2,7 @@ package schemely.completion;
 
 import com.intellij.codeInsight.completion.PrefixMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
+import com.intellij.util.text.Matcher;
 import com.intellij.util.containers.hash.LinkedHashMap;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
@@ -23,17 +24,17 @@ public class SchemeIdentifierMatcher extends PrefixMatcher
   private static final int MAX_LENGTH = 40;
 
   @GuardedBy("patternCache")
-  private static final Map<String, NameUtil.Matcher> patternCache = new LinkedHashMap<String, NameUtil.Matcher>()
+  private static final Map<String, Matcher> patternCache = new LinkedHashMap<String, Matcher>()
   {
     @Override
-    protected boolean removeEldestEntry(Map.Entry<String, NameUtil.Matcher> eldest)
+    protected boolean removeEldestEntry(Map.Entry<String, Matcher> eldest)
     {
       return size() > 10;
     }
   };
 
   private final boolean caseSensitive;
-  private NameUtil.Matcher matcher;
+  private Matcher matcher;
 
   public SchemeIdentifierMatcher(String prefix)
   {
@@ -54,7 +55,7 @@ public class SchemeIdentifierMatcher extends PrefixMatcher
     {
       if (matcher == null)
       {
-        NameUtil.Matcher pattern = patternCache.get(myPrefix);
+        Matcher pattern = patternCache.get(myPrefix);
         if (pattern == null)
         {
           pattern = createMatcher();
@@ -66,7 +67,7 @@ public class SchemeIdentifierMatcher extends PrefixMatcher
     }
   }
 
-  private NameUtil.Matcher createMatcher()
+  private Matcher createMatcher()
   {
     String pattern = myPrefix;
     int eol = pattern.indexOf('\n');
@@ -126,7 +127,7 @@ public class SchemeIdentifierMatcher extends PrefixMatcher
     regexp.append(SCHEME_SUBSEQUENT + '*');
 
     final RunAutomaton automaton = new RunAutomaton(new RegExp(regexp.toString(), RegExp.NONE).toAutomaton());
-    return new NameUtil.Matcher()
+    return new Matcher()
     {
       @Override
       public boolean matches(String name)

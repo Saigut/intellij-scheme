@@ -16,7 +16,6 @@ import schemely.scheme.sisc.psi.SISCPsiCreator;
 public class SISCScheme implements Scheme
 {
   private static final SISCInProcessREPL.Provider IN_PROCESS_PROVIDER = new SISCInProcessREPL.Provider();
-  private static final SISCProcessREPL.Provider EXTERNAL_PROVIDER = new SISCProcessREPL.Provider();
 
   @Override
   public Lexer getLexer()
@@ -46,11 +45,5 @@ public class SISCScheme implements Scheme
   public REPLProvider getInProcessREPLProvider()
   {
     return IN_PROCESS_PROVIDER;
-  }
-
-  @Override
-  public REPLProvider getExternalREPLProvider()
-  {
-    return EXTERNAL_PROVIDER;
   }
 }

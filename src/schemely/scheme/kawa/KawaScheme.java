@@ -16,7 +16,6 @@ import schemely.scheme.Scheme;
 public class KawaScheme implements Scheme
 {
   private static final UnsupportedREPLProvider IN_PROCESS_PROVIDER = new UnsupportedREPLProvider();
-  private static final UnsupportedREPLProvider EXTERNAL_PROVIDER = new UnsupportedREPLProvider();
 
   @Override
   public Lexer getLexer()
@@ -46,11 +45,5 @@ public class KawaScheme implements Scheme
   public REPLProvider getInProcessREPLProvider()
   {
     return IN_PROCESS_PROVIDER;
-  }
-
-  @Override
-  public REPLProvider getExternalREPLProvider()
-  {
-    return EXTERNAL_PROVIDER;
   }
 }

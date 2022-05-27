@@ -23,7 +23,7 @@ public class HistoryNextAction extends DumbAwareAction
 
   public HistoryNextAction(SchemeConsole console)
   {
-    super(null, null, ACTIONS_NEXT_ICON);
+    super(ACTIONS_NEXT_ICON);
     this.console = console;
     EmptyAction.setupAction(this, HISTORY_NEXT_ID, null);
   }

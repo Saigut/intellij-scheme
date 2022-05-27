@@ -12,8 +12,7 @@ import schemely.scheme.SchemeImplementation;
 
 @State(
   name = SchemeConfigurable.PROJECT_SETTINGS,
-  storages = {@Storage(file = "$PROJECT_FILE$"), @Storage(file = "$PROJECT_CONFIG_DIR$/scheme_project.xml",
-                                                          scheme = StorageScheme.DIRECTORY_BASED)})
+  storages = {@Storage(file = "$PROJECT_FILE$"), @Storage(file = "$PROJECT_CONFIG_DIR$/scheme_project.xml")})
 public class SchemeProjectSettings implements PersistentStateComponent<SchemeProjectSettings>
 {
   public SchemeImplementation schemeImplementation = SchemeImplementation.SISC_1_16_6;

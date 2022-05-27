@@ -20,6 +20,4 @@ public interface Scheme
   boolean supportsSquareBracesForLists();
 
   REPLProvider getInProcessREPLProvider();
-
-  REPLProvider getExternalREPLProvider();
 }

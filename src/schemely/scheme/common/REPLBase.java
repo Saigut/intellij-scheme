@@ -117,7 +117,7 @@ public abstract class REPLBase implements schemely.scheme.REPL
       Presentation templatePresentation = getTemplatePresentation();
       templatePresentation.setIcon(STOP_ICON);
       templatePresentation.setText("Stop REPL");
-      templatePresentation.setDescription(null);
+      templatePresentation.setDescription("Stop REPL");
     }
 
     @Override
@@ -144,7 +144,7 @@ public abstract class REPLBase implements schemely.scheme.REPL
       Presentation templatePresentation = getTemplatePresentation();
       templatePresentation.setIcon(CANCEL_ICON);
       templatePresentation.setText("Close REPL tab");
-      templatePresentation.setDescription(null);
+      templatePresentation.setDescription("Close REPL tab");
     }
 
     @Override
