@@ -6,7 +6,6 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
@@ -16,10 +15,6 @@ import schemely.SchemeIcons;
 import schemely.lexer.TokenSets;
 import schemely.lexer.Tokens;
 import schemely.psi.impl.SchemePsiElementBase;
-import schemely.psi.resolve.ResolveUtil;
-import schemely.psi.resolve.SchemeResolveResult;
-import schemely.psi.resolve.processors.ResolveProcessor;
-import schemely.psi.resolve.processors.SymbolResolveProcessor;
 import schemely.psi.util.SchemePsiElementFactory;
 import schemely.psi.util.SchemePsiUtil;
 
@@ -253,31 +248,5 @@ public class SchemeIdentifier extends SchemePsiElementBase implements PsiReferen
   public String getNameString()
   {
     return getText();
-  }
-
-  public static class IdentifierResolver implements ResolveCache.Resolver
-  {
-    @Override
-    public PsiElement resolve(PsiReference psiReference, boolean incompleteCode)
-    {
-      SchemeIdentifier schemeIdentifier = (SchemeIdentifier) psiReference;
-      if (ResolveUtil.getQuotingLevel(schemeIdentifier) != 0)
-      {
-        return null;
-      }
-
-      String name = schemeIdentifier.getReferenceName();
-      if (name == null)
-      {
-        return null;
-      }
-
-      ResolveProcessor processor = new SymbolResolveProcessor(name);
-
-      ResolveUtil.resolve(schemeIdentifier, processor);
-
-      SchemeResolveResult[] results = processor.getCandidates();
-      return results.length == 1 ? results[0].getElement() : null;
-    }
   }
 }

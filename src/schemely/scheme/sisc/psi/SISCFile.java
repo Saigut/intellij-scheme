@@ -14,7 +14,6 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
 import schemely.psi.impl.SchemeFile;
-import schemely.scheme.sisc.SISCConfigUtil;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,28 +23,6 @@ import java.util.Collection;
  */
 public class SISCFile extends SchemeFile
 {
-  private static final Collection<String> bootFiles = Arrays.asList(// These are from the heap
-                                                                    "sisc/boot/init.scm",
-                                                                    "sisc/boot/compat.scm",
-                                                                    "sisc/boot/analyzer.scm",
-                                                                    "sisc/boot/eval.scm",
-                                                                    "sisc/boot/init2.scm",
-                                                                    "sisc/boot/repl.scm",
-                                                                    "sisc/boot/psyntax.ss",
-                                                                    "sisc/boot/psyntax.scm",
-                                                                    // TODO maybe control if we load this
-                                                                    "sisc/modules/std-modules.scm",
-                                                                    // Natively supported SRFIs
-                                                                    "sisc/libs/srfi/srfi-0.scm",
-                                                                    "sisc/libs/srfi/srfi-7.scm",
-                                                                    "sisc/libs/srfi/srfi-22.scm",
-                                                                    "sisc/libs/srfi/srfi-28.scm",
-                                                                    "sisc/libs/srfi/srfi-30.scm",
-                                                                    "sisc/libs/srfi/srfi-39.scm",
-                                                                    "sisc/libs/srfi/srfi-48.scm",
-                                                                    "sisc/libs/srfi/srfi-55.scm",
-                                                                    "sisc/libs/srfi/srfi-62.scm");
-
   public SISCFile(FileViewProvider viewProvider)
   {
     super(viewProvider);
@@ -60,33 +37,6 @@ public class SISCFile extends SchemeFile
     if (!processTopLevelDefinitions(processor, state, lastParent, place))
     {
       return false;
-    }
-
-    String sourcePath = SISCConfigUtil.getJarPathForResource(sisc.REPL.class, "sisc/boot/repl.scm");
-    String sourceURL = VfsUtil.pathToUrl(sourcePath);
-    VirtualFile sourceFile = VirtualFileManager.getInstance().findFileByUrl(sourceURL);
-    if (sourceFile != null)
-    {
-      VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sourceFile);
-      if (jarFile != null)
-      {
-        for (String bootFile : bootFiles)
-        {
-          VirtualFile file = jarFile.findFileByRelativePath(bootFile);
-          if (file != null)
-          {
-            PsiFile psiFile = PsiManager.getInstance(getProject()).findFile(file);
-            if (psiFile instanceof SchemeFile)
-            {
-              SchemeFile schemeFile = (SchemeFile) psiFile;
-              if (!schemeFile.processTopLevelDefinitions(processor, state, lastParent, place))
-              {
-                return false;
-              }
-            }
-          }
-        }
-      }
     }
 
     String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(SISCFile.class));
