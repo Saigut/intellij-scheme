@@ -7,7 +7,7 @@
   <vendor url="https://saigut.com">Tony Saigut</vendor>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.platform</depends>
-  <idea-version since-build="103.72"/>
+  <idea-version since-build="192"/>
 
   <change-notes><![CDATA[
     1. Update for running on newer intellij platform<br>
@@ -16,7 +16,12 @@
   </change-notes>
 
   <extensions defaultExtensionNs="com.intellij">
-    <fileTypeFactory implementation="schemely.file.SchemeFileTypeLoader"/>
+    <fileType
+            name="Scheme"
+            implementationClass="schemely.file.SchemeFileType"
+            fieldName="SCHEME_FILE_TYPE"
+            language="Scheme"
+            extensions="ss;scm"/>
     <lang.braceMatcher language="Scheme"
                        implementationClass="schemely.highlighter.SchemeBraceMatcher"/>
     <syntaxHighlighter key="Scheme"
@@ -69,11 +74,7 @@
     <projectService serviceInterface="schemely.psi.util.SchemePsiElementFactory"
                     serviceImplementation="schemely.psi.util.SchemePsiElementFactoryImpl"/>
 
-    <projectService serviceInterface="schemely.settings.SchemeProjectSettings"
-                    serviceImplementation="schemely.settings.SchemeProjectSettings"/>
-
-    <!--<toolWindow id="Scheme.REPL" secondary="true" icon="/schemely/icons/lambda.png" anchor="right" factoryClass="schemely.repl.toolwindow.REPLToolWindowFactory"/>-->
-    <!--<editorActionHandler action="EditorEnter" implementationClass="schemely.repl.toolwindow.actions.REPLEnterAction" order="FIRST"/>-->
+    <projectService serviceImplementation="schemely.settings.SchemeProjectSettings"/>
 
     <methodNavigationOffsetProvider implementation="schemely.navigation.SchemeNavigationOffsetProvider"/>
   </extensions>
