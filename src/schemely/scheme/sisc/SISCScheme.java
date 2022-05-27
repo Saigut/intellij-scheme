@@ -4,7 +4,6 @@ import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import schemely.parser.DefaultPsiCreator;
 import schemely.parser.SchemePsiCreator;
-import schemely.repl.REPLProvider;
 import schemely.scheme.Scheme;
 import schemely.scheme.sisc.lexer.SISCLexer;
 import schemely.scheme.sisc.parser.SISCParser;
@@ -15,8 +14,6 @@ import schemely.scheme.sisc.psi.SISCPsiCreator;
  */
 public class SISCScheme implements Scheme
 {
-  private static final SISCInProcessREPL.Provider IN_PROCESS_PROVIDER = new SISCInProcessREPL.Provider();
-
   @Override
   public Lexer getLexer()
   {
@@ -39,11 +36,5 @@ public class SISCScheme implements Scheme
   public boolean supportsSquareBracesForLists()
   {
     return true;
-  }
-
-  @Override
-  public REPLProvider getInProcessREPLProvider()
-  {
-    return IN_PROCESS_PROVIDER;
   }
 }

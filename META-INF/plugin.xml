@@ -38,14 +38,12 @@
             implementation="schemely.formatter.codeStyle.SchemeLanguageCodeStyleSettingsProvider"/>
     <lang.findUsagesProvider language="Scheme"
                              implementationClass="schemely.findUsages.SchemeFindUsagesProvider"/>
-    <!--<referencesSearch implementation="schemely.findUsages.SchemeIdentifierSearch"/>-->
 
     <lang.namesValidator language="Scheme"
                          implementationClass="schemely.utils.SchemeNamesValidator"/>
     <completion.contributor language="Scheme"
                             implementationClass="schemely.completion.SchemeCompletionContributor"
                             order="first"/>
-    <!--<compilerSettingsFactory implementation="schemely.compiler.SchemeCompilerSettingsFactory"/>-->
     <fileTemplateGroup implementation="schemely.actions.SchemeTemplatesFactory"/>
     <fileTypeIndentOptionsProvider
       implementation="schemely.formatter.SchemeIndentOptionsProvider"/>
@@ -68,9 +66,6 @@
     <basicWordSelectionFilter
       implementation="schemely.editor.selection.SchemeIdentifierSelectioner$BasicWordRestriction"/>
 
-    <applicationService serviceInterface="schemely.settings.SchemeProjectSettings"
-                        serviceImplementation="schemely.settings.SchemeProjectSettings"/>
-
     <projectService serviceInterface="schemely.psi.util.SchemePsiElementFactory"
                     serviceImplementation="schemely.psi.util.SchemePsiElementFactoryImpl"/>
 
@@ -83,28 +78,7 @@
     <methodNavigationOffsetProvider implementation="schemely.navigation.SchemeNavigationOffsetProvider"/>
   </extensions>
 
-  <!--<project-components>-->
-    <!--<component>-->
-      <!--<implementation-class>schemely.compiler.SchemeCompilerSettings</implementation-class>-->
-    <!--</component>-->
-    <!--<component>-->
-      <!--<implementation-class>schemely.compiler.CompilerProjectComponent</implementation-class>-->
-    <!--</component>-->
-  <!--</project-components>-->
-
   <actions>
-    <!-- Create file actions -->
-    <!--<action id="Scheme.SchemeFile" class="schemely.actions.NewSchemeFileAction"-->
-            <!--text="Scheme File" description="Create new Scheme File">-->
-      <!--<add-to-group group-id="NewGroup" anchor="last"/>-->
-    <!--</action>-->
-
-    <!--<action id="Scheme.JavaToScheme" class="schemely.conversion.JavaToSchemeAction"-->
-            <!--text="Convert Java File To Scheme" description="Convert Java File To Scheme">-->
-      <!--<add-to-group group-id="RefactoringMenu" anchor="last"/>-->
-      <!--<add-to-group group-id="EditorTabPopupMenu" anchor="last"/>-->
-      <!--<keyboard-shortcut first-keystroke="control shift G" keymap="$default"/>-->
-    <!--</action>-->
   </actions>
 
 </idea-plugin>
