@@ -36,29 +36,9 @@ public abstract class SchemePsiElementBase extends ASTWrapperPsiElement implemen
     return first;
   }
 
-  public PsiElement getLastNonLeafElement()
-  {
-    PsiElement lastChild = getLastChild();
-    while (lastChild != null && isWrongElement(lastChild))
-    {
-      lastChild = lastChild.getPrevSibling();
-    }
-    return lastChild;
-  }
-
   public <T> T findFirstChildByClass(Class<T> aClass)
   {
     PsiElement element = getFirstChild();
-    while (element != null && !aClass.isInstance(element))
-    {
-      element = element.getNextSibling();
-    }
-    return aClass.cast(element);
-  }
-
-  public <T> T findFirstSiblingByClass(Class<T> aClass)
-  {
-    PsiElement element = getNextSibling();
     while (element != null && !aClass.isInstance(element))
     {
       element = element.getNextSibling();
@@ -70,11 +50,5 @@ public abstract class SchemePsiElementBase extends ASTWrapperPsiElement implemen
   public String toString()
   {
     return name == null ? super.toString() : name;
-  }
-
-  @Override
-  public int getQuotingLevel()
-  {
-    return 0;
   }
 }

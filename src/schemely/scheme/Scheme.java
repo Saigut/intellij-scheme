@@ -15,6 +15,4 @@ public interface Scheme
   PsiParser getParser();
 
   SchemePsiCreator getPsiCreator();
-
-  boolean supportsSquareBracesForLists();
 }

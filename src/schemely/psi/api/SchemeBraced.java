@@ -7,9 +7,4 @@ import org.jetbrains.annotations.Nullable;
 
 public interface SchemeBraced extends SchemePsiElement
 {
-  @NotNull
-  PsiElement getFirstBrace();
-
-  @Nullable
-  PsiElement getLastBrace();
 }

@@ -8,41 +8,14 @@ import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import schemely.SchemeBundle;
 import schemely.lexer.Tokens;
-import schemely.scheme.Scheme;
-import schemely.scheme.SchemeImplementation;
 
 
 public class SchemeParser implements PsiParser, Tokens
 {
-  private Scheme scheme;
-
-//  private void printAstTree(@NotNull ASTNode astNode)
-//  {
-//    ASTNode tmpNode;
-//    tmpNode = astNode.getFirstChildNode();
-//    if (null != tmpNode)
-//    {
-//      System.out.println("> Child tree");
-//      System.out.println("ele type: " + tmpNode.getElementType().toString()
-//              + ", ele text: " + tmpNode.getText());
-//      printAstTree(tmpNode);
-//    }
-//
-//    tmpNode = astNode.getTreeNext();
-//    if (null != tmpNode)
-//    {
-//      System.out.println("Next tree");
-//      System.out.println("ele type: " + tmpNode.getElementType().toString()
-//              + ", ele text: " + tmpNode.getText());
-//      printAstTree(tmpNode);
-//    }
-//  }
-
   @NotNull
   public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder)
   {
     ASTNode theAst;
-    scheme = SchemeImplementation.from(builder.getProject());
     builder.setDebugMode(true);
 
     theAst = do_parse(builder);
@@ -72,27 +45,6 @@ public class SchemeParser implements PsiParser, Tokens
     return theAst;
 
   }
-
-  ASTNode parse_pass1(PsiBuilder builder)
-  {
-    ASTNode theAst;
-
-    builder.setDebugMode(true);
-
-    PsiBuilder.Marker marker = builder.mark();
-    for (IElementType token = builder.getTokenType(); token != null; token = builder.getTokenType())
-    {
-      parseSexp(token, builder);
-    }
-    marker.done(AST.AST_FILE);
-
-    theAst = builder.getTreeBuilt();
-
-//    printAstTree(theAst);
-
-    return theAst;
-  }
-
 
   // Helpers
   boolean isParen(IElementType type) {
@@ -559,7 +511,7 @@ public class SchemeParser implements PsiParser, Tokens
     {
       parseList(builder, LEFT_PAREN, RIGHT_PAREN);
     }
-    else if (LEFT_SQUARE == token && scheme.supportsSquareBracesForLists())
+    else if (LEFT_SQUARE == token)
     {
       parseList(builder, LEFT_SQUARE, RIGHT_SQUARE);
     }

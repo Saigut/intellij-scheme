@@ -31,8 +31,6 @@
                     implementationClass="schemely.highlighter.SchemeCommenter"/>
     <lang.parserDefinition language="Scheme"
                            implementationClass="schemely.parser.SchemeParserDefinition"/>
-    <lang.foldingBuilder language="Scheme"
-                         implementationClass="schemely.SchemeFoldingBuilder"/>
     <lang.psiStructureViewFactory language="Scheme"
                                   implementationClass="schemely.structure.SchemeStructureViewBuilderFactory"/>
     <lang.formatter language="Scheme"
@@ -52,8 +50,6 @@
     <fileTemplateGroup implementation="schemely.actions.SchemeTemplatesFactory"/>
     <fileTypeIndentOptionsProvider
       implementation="schemely.formatter.SchemeIndentOptionsProvider"/>
-    <quoteHandler fileType="Scheme" className="schemely.editor.SchemeQuoteHandler"/>
-    <annotator language="Scheme" implementationClass="schemely.annotator.SchemeAnnotator"/>
 
     <gotoSymbolContributor implementation="schemely.gotoclass.SchemeGoToSymbolContributor"/>
 
@@ -62,21 +58,8 @@
     <stubIndex implementation="schemely.psi.stubs.index.SchemeClassNameIndex"/>
     <stubIndex implementation="schemely.psi.stubs.index.SchemeFullScriptNameIndex"/>
 
-    <extendWordSelectionHandler
-      implementation="schemely.editor.selection.SchemeListSelectioner"/>
-    <extendWordSelectionHandler
-      implementation="schemely.editor.selection.SchemeLiteralSelectioner"/>
-    <extendWordSelectionHandler
-      implementation="schemely.editor.selection.SchemeIdentifierSelectioner"/>
-    <basicWordSelectionFilter
-      implementation="schemely.editor.selection.SchemeIdentifierSelectioner$BasicWordRestriction"/>
-
     <projectService serviceInterface="schemely.psi.util.SchemePsiElementFactory"
                     serviceImplementation="schemely.psi.util.SchemePsiElementFactoryImpl"/>
-
-    <projectService serviceImplementation="schemely.settings.SchemeProjectSettings"/>
-
-    <methodNavigationOffsetProvider implementation="schemely.navigation.SchemeNavigationOffsetProvider"/>
   </extensions>
 
   <actions>
