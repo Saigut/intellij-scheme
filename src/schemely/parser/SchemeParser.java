@@ -6,7 +6,6 @@ import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
-import schemely.SchemeBundle;
 import schemely.lexer.Tokens;
 
 
@@ -100,7 +99,7 @@ public class SchemeParser implements PsiParser, Tokens
 
     if (builder.getTokenType() != close)
     {
-      builder.error(SchemeBundle.message("expected.token", close.toString()));
+      builder.error("Expected " + close.toString() + "'");
       mark_type = AST.AST_BAD_ELEMENT;
     }
     else
@@ -364,15 +363,15 @@ public class SchemeParser implements PsiParser, Tokens
     }
     else if (RIGHT_PAREN == type)
     {
-      syntaxError(builder, SchemeBundle.message("expected.lparen"));
+      syntaxError(builder, "'(' expected");
     }
     else if (RIGHT_SQUARE == type)
     {
-      syntaxError(builder, SchemeBundle.message("expected.lsquare"));
+      syntaxError(builder, "Expected [");
     }
     else
     {
-      syntaxError(builder, SchemeBundle.message("run.error.message.title"));
+      syntaxError(builder, "Run Error");
     }
   }
 
@@ -404,7 +403,7 @@ public class SchemeParser implements PsiParser, Tokens
         WHITESPACE == childType ||
         COMMENTS.contains(childType))
     {
-      syntaxErrorJustBad(builder, SchemeBundle.message("expected.element"));
+      syntaxErrorJustBad(builder, "Expected element");
       marker.drop();
       return null;
     }
@@ -441,7 +440,7 @@ public class SchemeParser implements PsiParser, Tokens
       }
       else
       {
-        syntaxError(builder, SchemeBundle.message("run.error.message.title"));
+        syntaxError(builder, "Run Error");
         marker.drop();
       }
       if (mark_type != null) {
@@ -478,17 +477,17 @@ public class SchemeParser implements PsiParser, Tokens
     }
     else if (RIGHT_PAREN == type)
     {
-      syntaxError(builder, SchemeBundle.message("expected.lparen"));
+      syntaxError(builder, "'(' expected");
       return null;
     }
     else if (RIGHT_SQUARE == type)
     {
-      syntaxError(builder, SchemeBundle.message("expected.lsquare"));
+      syntaxError(builder, "Expected [");
       return null;
     }
     else
     {
-      syntaxError(builder, SchemeBundle.message("run.error.message.title"));
+      syntaxError(builder, "Run Error");
       return null;
     }
   }
@@ -541,7 +540,7 @@ public class SchemeParser implements PsiParser, Tokens
     }
     else
     {
-      syntaxError(builder, SchemeBundle.message("expected.left.paren.symbol.or.literal"));
+      syntaxError(builder, "Expected Left Paren, Symbol or Literal");
     }
   }
 
@@ -555,7 +554,7 @@ public class SchemeParser implements PsiParser, Tokens
     }
     if (builder.getTokenType() != endToken)
     {
-      builder.error(SchemeBundle.message("expected.token", endToken.toString()));
+      builder.error("Expected '" + endToken.toString() + "'");
     }
     else
     {
@@ -674,7 +673,7 @@ public class SchemeParser implements PsiParser, Tokens
 
     if (builder.getTokenType() != close)
     {
-      builder.error(SchemeBundle.message("expected.token", close.toString()));
+      builder.error("Expected + '" + close.toString() + "'");
     }
     else
     {

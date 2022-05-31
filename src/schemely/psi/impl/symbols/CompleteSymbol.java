@@ -36,13 +36,4 @@ public class CompleteSymbol
     }
     return ary_list.toArray();
   }
-
-  private static LookupElement mapToLookupElement(PsiElement element)
-  {
-    if (element instanceof PsiNamedElement)
-    {
-      return LookupElementBuilder.create((PsiNamedElement) element);
-    }
-    return LookupElementBuilder.create(element, element.getText());
-  }
 }

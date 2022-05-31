@@ -16,45 +16,34 @@
   </change-notes>
 
   <extensions defaultExtensionNs="com.intellij">
-    <fileType
-            name="Scheme"
-            implementationClass="schemely.file.SchemeFileType"
-            fieldName="SCHEME_FILE_TYPE"
-            language="Scheme"
-            extensions="ss;scm"/>
-    <lang.braceMatcher language="Scheme"
-                       implementationClass="schemely.highlighter.SchemeBraceMatcher"/>
-    <syntaxHighlighter key="Scheme"
-                       implementationClass="schemely.highlighter.SchemeSyntaxHighlighter"/>
-    <colorSettingsPage implementation="schemely.highlighter.SchemeColorsAndFontsPage"/>
-    <lang.commenter language="Scheme"
-                    implementationClass="schemely.highlighter.SchemeCommenter"/>
+    <fileType name="Scheme"
+              implementationClass="schemely.file.SchemeFileType" fieldName="SCHEME_FILE_TYPE"
+              language="Scheme" extensions="ss;scm"/>
+
     <lang.parserDefinition language="Scheme"
                            implementationClass="schemely.parser.SchemeParserDefinition"/>
-    <lang.psiStructureViewFactory language="Scheme"
-                                  implementationClass="schemely.structure.SchemeStructureViewBuilderFactory"/>
+    <lang.findUsagesProvider language="Scheme"
+                             implementationClass="schemely.findUsages.SchemeFindUsagesProvider"/>
+    <lang.braceMatcher language="Scheme"
+                       implementationClass="schemely.highlighter.SchemeBraceMatcher"/>
+    <lang.commenter language="Scheme"
+                    implementationClass="schemely.highlighter.SchemeCommenter"/>
     <lang.formatter language="Scheme"
                     implementationClass="schemely.formatter.SchemeFormattingModelBuilder"/>
+    <lang.psiStructureViewFactory language="Scheme"
+                                  implementationClass="schemely.structure.SchemeStructureViewBuilderFactory"/>
+
+    <gotoSymbolContributor implementation="schemely.gotoclass.SchemeGoToSymbolContributor"/>
+    <syntaxHighlighter key="Scheme"
+                       implementationClass="schemely.highlighter.SchemeSyntaxHighlighter"/>
+
+    <colorSettingsPage implementation="schemely.highlighter.SchemeColorsAndFontsPage"/>
     <codeStyleSettingsProvider
       implementation="schemely.formatter.codeStyle.SchemeCodeStyleSettingsProvider"/>
     <langCodeStyleSettingsProvider
             implementation="schemely.formatter.codeStyle.SchemeLanguageCodeStyleSettingsProvider"/>
-    <lang.findUsagesProvider language="Scheme"
-                             implementationClass="schemely.findUsages.SchemeFindUsagesProvider"/>
-
-    <lang.namesValidator language="Scheme"
-                         implementationClass="schemely.utils.SchemeNamesValidator"/>
-    <completion.contributor language="Scheme"
-                            implementationClass="schemely.completion.SchemeCompletionContributor"
-                            order="first"/>
-    <fileTemplateGroup implementation="schemely.actions.SchemeTemplatesFactory"/>
-    <fileTypeIndentOptionsProvider
-      implementation="schemely.formatter.SchemeIndentOptionsProvider"/>
-
-    <gotoSymbolContributor implementation="schemely.gotoclass.SchemeGoToSymbolContributor"/>
 
     <stubElementTypeHolder class="schemely.parser.AST"/>
-
     <stubIndex implementation="schemely.psi.stubs.index.SchemeClassNameIndex"/>
     <stubIndex implementation="schemely.psi.stubs.index.SchemeFullScriptNameIndex"/>
 
