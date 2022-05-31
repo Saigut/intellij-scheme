@@ -3,4 +3,4 @@ out
 test-output
 jflex.log
 *.zip
-src/schemely/conversion/JavaToScala.scala
+src/main/conversion/JavaToScala.scala
