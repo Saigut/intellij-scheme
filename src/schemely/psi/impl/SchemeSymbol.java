@@ -20,7 +20,7 @@ import schemely.psi.impl.symbols.CompleteSymbol;
 import schemely.psi.util.SchemePsiElementFactory;
 import schemely.psi.util.SchemePsiUtil;
 
-import javax.swing.*;
+import javax.swing.Icon;
 
 
 public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference, PsiNamedElement

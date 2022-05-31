@@ -1,6 +1,7 @@
 package schemely.psi.util;
 
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import schemely.parser.AST;
 

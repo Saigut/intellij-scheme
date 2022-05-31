@@ -5,7 +5,9 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
@@ -18,7 +20,7 @@ import schemely.psi.impl.SchemePsiElementBase;
 import schemely.psi.util.SchemePsiElementFactory;
 import schemely.psi.util.SchemePsiUtil;
 
-import javax.swing.*;
+import javax.swing.Icon;
 
 public class SchemeIdentifier extends SchemePsiElementBase implements PsiReference, PsiNamedElement
 {

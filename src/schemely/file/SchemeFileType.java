@@ -13,8 +13,6 @@ public class SchemeFileType extends LanguageFileType
 {
   public static final SchemeFileType SCHEME_FILE_TYPE = new SchemeFileType();
   public static final Language SCHEME_LANGUAGE = SCHEME_FILE_TYPE.getLanguage();
-  @NonNls
-  public static final String SCHEME_EXTENSIONS = "ss;scm";
 
 
   public SchemeFileType()

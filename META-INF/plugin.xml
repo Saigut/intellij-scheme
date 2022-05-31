@@ -7,7 +7,7 @@
   <vendor url="https://saigut.com">Tony Saigut</vendor>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.platform</depends>
-  <idea-version since-build="192"/>
+  <idea-version since-build="192.5728.98"/>
 
   <change-notes><![CDATA[
     1. Update for running on newer intellij platform<br>

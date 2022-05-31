@@ -13,7 +13,7 @@ import schemely.psi.impl.SchemePsiElementBase;
 import schemely.psi.impl.SchemeSymbol;
 import schemely.psi.util.SchemePsiUtil;
 
-import javax.swing.*;
+import javax.swing.Icon;
 import java.util.ArrayList;
 import java.util.List;
 
