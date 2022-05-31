@@ -41,9 +41,4 @@ public class SchemeFileType extends LanguageFileType
   {
     return SchemeIcons.SCHEME_ICON;
   }
-
-  public boolean isJVMDebuggingSupported()
-  {
-    return true;
-  }
 }

@@ -60,7 +60,8 @@ public class SchemeParserDefinition implements ParserDefinition
     return psiCreator.createElement(node);
   }
 
-  public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right)
+  @NotNull
+  public SpaceRequirements spaceExistenceTypeBetweenTokens(ASTNode left, ASTNode right)
   {
     if (Tokens.PREFIXES.contains(left.getElementType()))
     {

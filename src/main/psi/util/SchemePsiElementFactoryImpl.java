@@ -33,15 +33,8 @@ public class SchemePsiElementFactoryImpl extends SchemePsiElementFactory
   public SchemeFile createSchemeFileFromText(String text)
   {
     return (SchemeFile) PsiFileFactory.getInstance(getProject())
-      .createFileFromText(DUMMY + SchemeFileType.SCHEME_FILE_TYPE.getDefaultExtension(), text);
-  }
-
-  @Override
-  public boolean hasSyntacticalErrors(@NotNull String text)
-  {
-    SchemeFile schemeFile = (SchemeFile) PsiFileFactory.getInstance(getProject())
-      .createFileFromText(DUMMY + SchemeFileType.SCHEME_FILE_TYPE.getDefaultExtension(), text);
-    return hasSyntacticalErrors(schemeFile);
+      .createFileFromText(DUMMY + SchemeFileType.SCHEME_FILE_TYPE.getDefaultExtension(),
+              SchemeFileType.SCHEME_FILE_TYPE, text);
   }
 
   @Override
