@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import main.lexer.SchemeLexer;
-import main.lexer.Tokens;
+import main.lexer.SchemeTokens;
 import main.psi.impl.symbols.SchemeIdentifier;
 
 
@@ -16,7 +16,7 @@ public class SchemeFindUsagesProvider implements FindUsagesProvider
   @Nullable
   public WordsScanner getWordsScanner()
   {
-    return new DefaultWordsScanner(new SchemeLexer(), Tokens.IDENTIFIERS, Tokens.COMMENTS, Tokens.STRINGS);
+    return new DefaultWordsScanner(new SchemeLexer(), SchemeTokens.IDENTIFIERS, SchemeTokens.COMMENTS, SchemeTokens.STRINGS);
   }
 
   public boolean canFindUsagesFor(@NotNull PsiElement psiElement)

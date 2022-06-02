@@ -11,7 +11,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
-import main.lexer.Tokens;
+import main.lexer.SchemeTokens;
 import main.scheme.impl.DefaultScheme;
 
 
@@ -38,19 +38,19 @@ public class SchemeParserDefinition implements ParserDefinition
   @NotNull
   public TokenSet getWhitespaceTokens()
   {
-    return Tokens.WHITESPACE_SET;
+    return SchemeTokens.WHITESPACE_SET;
   }
 
   @NotNull
   public TokenSet getCommentTokens()
   {
-    return Tokens.COMMENTS;
+    return SchemeTokens.COMMENTS;
   }
 
   @NotNull
   public TokenSet getStringLiteralElements()
   {
-    return Tokens.STRINGS;
+    return SchemeTokens.STRINGS;
   }
 
   @NotNull
@@ -63,26 +63,26 @@ public class SchemeParserDefinition implements ParserDefinition
   @NotNull
   public SpaceRequirements spaceExistenceTypeBetweenTokens(ASTNode left, ASTNode right)
   {
-    if (Tokens.PREFIXES.contains(left.getElementType()))
+    if (SchemeTokens.PREFIXES.contains(left.getElementType()))
     {
       return SpaceRequirements.MUST_NOT;
     }
-    else if (left.getElementType() == Tokens.LEFT_PAREN ||
-             right.getElementType() == Tokens.RIGHT_PAREN ||
-             left.getElementType() == Tokens.RIGHT_PAREN ||
-             right.getElementType() == Tokens.LEFT_PAREN
+    else if (left.getElementType() == SchemeTokens.LEFT_PAREN ||
+             right.getElementType() == SchemeTokens.RIGHT_PAREN ||
+             left.getElementType() == SchemeTokens.RIGHT_PAREN ||
+             right.getElementType() == SchemeTokens.LEFT_PAREN
 
              ||
-             left.getElementType() == Tokens.LEFT_CURLY ||
-             right.getElementType() == Tokens.RIGHT_CURLY ||
-             left.getElementType() == Tokens.RIGHT_CURLY ||
-             right.getElementType() == Tokens.LEFT_CURLY
+             left.getElementType() == SchemeTokens.LEFT_CURLY ||
+             right.getElementType() == SchemeTokens.RIGHT_CURLY ||
+             left.getElementType() == SchemeTokens.RIGHT_CURLY ||
+             right.getElementType() == SchemeTokens.LEFT_CURLY
 
              ||
-             left.getElementType() == Tokens.LEFT_SQUARE ||
-             right.getElementType() == Tokens.RIGHT_SQUARE ||
-             left.getElementType() == Tokens.RIGHT_SQUARE ||
-             right.getElementType() == Tokens.LEFT_SQUARE)
+             left.getElementType() == SchemeTokens.LEFT_SQUARE ||
+             right.getElementType() == SchemeTokens.RIGHT_SQUARE ||
+             left.getElementType() == SchemeTokens.RIGHT_SQUARE ||
+             right.getElementType() == SchemeTokens.LEFT_SQUARE)
     {
       return SpaceRequirements.MAY;
     }

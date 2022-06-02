@@ -11,7 +11,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import main.formatter.processors.SchemeSpacingProcessor;
-import main.lexer.Tokens;
+import main.lexer.SchemeTokens;
 import main.parser.AST;
 import main.psi.impl.SchemeFile;
 
@@ -166,7 +166,7 @@ public class SchemeBlock implements Block, AST
 
   public boolean isLeaf()
   {
-    if (LEAF_ELEMENTS.contains(node.getElementType()) || Tokens.BRACES.contains(node.getElementType())) {
+    if (LEAF_ELEMENTS.contains(node.getElementType()) || SchemeTokens.BRACES.contains(node.getElementType())) {
       return true;
     } else {
       if (node.getFirstChildNode() == null) {

@@ -4,10 +4,10 @@ import com.intellij.lang.CodeDocumentationAwareCommenter;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.Nullable;
-import main.lexer.Tokens;
+import main.lexer.SchemeTokens;
 
 
-public class SchemeCommenter implements CodeDocumentationAwareCommenter, Tokens
+public class SchemeCommenter implements CodeDocumentationAwareCommenter, SchemeTokens
 {
   public String getLineCommentPrefix()
   {

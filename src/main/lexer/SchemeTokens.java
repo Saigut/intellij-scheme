@@ -5,7 +5,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import main.parser.SchemeElementType;
 
-public interface Tokens
+public interface SchemeTokens
 {
   // Special characters
   IElementType SHARP = new SchemeElementType("#");

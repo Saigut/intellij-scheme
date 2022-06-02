@@ -2,7 +2,12 @@ package main.lexer;
 
 import com.intellij.lexer.LexerBase;
 import com.intellij.psi.tree.IElementType;
-import org.jparsec.*;
+import org.jparsec.Parser;
+import org.jparsec.Parsers;
+import org.jparsec.Scanners;
+import org.jparsec.Token;
+import org.jparsec.Tokens;
+import org.jparsec.Terminals;
 import org.jparsec.pattern.CharPredicates;
 import org.jparsec.pattern.Pattern;
 import org.jparsec.pattern.Patterns;
@@ -19,7 +24,7 @@ public class SchemeLexer extends LexerBase
   private int end;
   private int token_index;
   private int token_length;
-  private org.jparsec.Tokens.Fragment token_frag;
+  private Tokens.Fragment token_frag;
   protected int cursor;
   private int bufferEnd;
   protected IElementType type;
@@ -29,13 +34,13 @@ public class SchemeLexer extends LexerBase
   enum Tag {
     S_LINE_COMMENT,
     S_BLOCK_COMMENT,
-    S_DATUM_COMMENT_PRE,
+    S_DATUM_COMMENT_PREFIX,
     S_WHITE_SPACE,
     S_OPERATOR,
     S_NUMBER,
     S_QUOTE_STRING,
-    S_CHAR,
-    S_LITERAL,
+    S_SHARP_CHAR,
+    S_IDENTIFIER,
     S_BAD_CHARACTER,
 
     S_KEYWORD
@@ -58,109 +63,109 @@ public class SchemeLexer extends LexerBase
   /**
    * Elements
    */
-
   // Blanks and Conments
-  Pattern PT_DATUM_COMMENT_PRE = Patterns.string("#;");
-  Parser<?> P_DATUM_COMMENT_PRE = PT_DATUM_COMMENT_PRE.toScanner("datum comment prefix");
-  Parser<?> s_datum_comment_pre = P_DATUM_COMMENT_PRE.source()
-          .map((a) -> (org.jparsec.Tokens.fragment("#;", Tag.S_DATUM_COMMENT_PRE)));
+  Pattern PT_DATUM_COMMENT_PREFIX = Patterns.string("#;");
+  Parser<?> SCA_DATUM_COMMENT_PREFIX = PT_DATUM_COMMENT_PREFIX.toScanner("datum comment prefix");
+  Parser<?> s_datum_comment_prefix = SCA_DATUM_COMMENT_PREFIX.source()
+          .map((a) -> (Tokens.fragment("#;", Tag.S_DATUM_COMMENT_PREFIX)));
 
-  Parser<?> P_LINE_COMMENT = Patterns.lineComment(";").toScanner(";");
-  Parser<?> s_line_comment = P_LINE_COMMENT.source()
-          .map((a) -> (org.jparsec.Tokens.fragment(";", Tag.S_LINE_COMMENT)));
-  Parser<?> s_block_commented =
+  Parser<?> SCA_LINE_COMMENT = Patterns.lineComment(";").toScanner(";");
+  Parser<?> s_line_comment = SCA_LINE_COMMENT.source()
+          .map((a) -> (Tokens.fragment(";", Tag.S_LINE_COMMENT)));
+  Parser<?> SCA_BLOCK_COMMENT_CONTENT =
           notChar2('|', '#').many().toScanner("commented block");
-  Parser<?> s_block_comment = Parsers.sequence(Scanners.string("#|"), s_block_commented, Scanners.string("|#")).source()
-          .map((a) -> (org.jparsec.Tokens.fragment("#||#", Tag.S_BLOCK_COMMENT)));
-  Parser<?> s_comment = Parsers.or(s_datum_comment_pre, s_line_comment, s_block_comment);
+  Parser<?> s_block_comment = Parsers.sequence(Scanners.string("#|"),
+                  SCA_BLOCK_COMMENT_CONTENT, Scanners.string("|#")).source()
+          .map((a) -> (Tokens.fragment("#||#", Tag.S_BLOCK_COMMENT)));
+  Parser<?> PAR_COMMENT = Parsers.or(s_datum_comment_prefix, s_line_comment, s_block_comment);
 
   Parser<?> s_whitespace = Scanners.WHITESPACES
-          .map((a) -> (org.jparsec.Tokens.fragment("WHITE_SPACE", Tag.S_WHITE_SPACE)));
+          .map((a) -> (Tokens.fragment("WHITE_SPACE", Tag.S_WHITE_SPACE)));
 
   // Operators
   Pattern PT_OPS = Patterns.among("()[]'`,");
-  Pattern PT_OP_SHARP = Patterns.isChar('#').next(Patterns.isChar('(').peek());
-  Parser<String> PS_OPERATORS = Patterns.or(PT_OPS, PT_OP_SHARP).toScanner("operator").source();
-
-  Parser<?> s_operators = PS_OPERATORS
-          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_OPERATOR)));
+  Pattern PT_OP_SHARP_PAREN = Patterns.isChar('#').next(Patterns.isChar('(').peek());
+  Parser<String> PAR_OPERATORS = Patterns.or(PT_OPS, PT_OP_SHARP_PAREN)
+          .toScanner("operator").source();
+  Parser<?> s_operators = PAR_OPERATORS
+          .map((a) -> (Tokens.fragment(a, Tag.S_OPERATOR)));
 
   // Numbers
   Pattern PT_RIGHT_INTEGER = Patterns.sequence(Patterns.among("+-").optional(), Patterns.INTEGER);
-  Parser<String> PS_RIGHT_INTEGER = PT_RIGHT_INTEGER.toScanner("integer").source();
+  Parser<String> PAR_RIGHT_INTEGER = PT_RIGHT_INTEGER.toScanner("integer").source();
   Parser<?> s_numbers = Parsers.or(
-          PS_RIGHT_INTEGER,
+          PAR_RIGHT_INTEGER,
           Scanners.DECIMAL,
           Scanners.DEC_INTEGER, Scanners.OCT_INTEGER,
           Scanners.HEX_INTEGER,
           Scanners.SCIENTIFIC_NOTATION)
-          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_NUMBER)));
+          .map((a) -> (Tokens.fragment(a, Tag.S_NUMBER)));
 
-  // Literals
-  Pattern PT_LITERAL_VALID = Patterns
+  // Identifier
+  Pattern PT_IDENTIFIER_CHAR_VALID = Patterns
           .or(Patterns.isChar(CharPredicates.IS_LETTER),
                   Patterns.isChar(CharPredicates.IS_DIGIT),
                   Patterns.among("!@$%^&*-+_=:|/?<>."));
-  Pattern PT_LITERAL = PT_LITERAL_VALID.many1();
-  Parser<String> LITERAL = PT_LITERAL.toScanner("literal").source();
+  Pattern PT_IDENTIFIER = PT_IDENTIFIER_CHAR_VALID.many1();
+  Parser<String> PAR_IDENTIFIER = PT_IDENTIFIER.toScanner("identifier").source();
+  Parser<?> s_identifier = PAR_IDENTIFIER
+          .map((a) -> (Tokens.fragment(a, Tag.S_IDENTIFIER)));
 
-  Parser<?> s_literal = LITERAL
-          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_LITERAL)));
 
-
-  Terminals CHAR_NAMES = Terminals
+  // Special character and hexadecimal number
+  Terminals TERM_SPECIAL_CHAR_NAMES = Terminals
           .operators("alarm", "backspace", "delete", "esc", "linefeed", "newline", "page", "return",
                   "space", "tab", "vtab");
-  Pattern PT_SINGLE_CHAR = Patterns.ANY_CHAR.next(PT_LITERAL.not());
+  Pattern PT_SINGLE_CHAR = Patterns.ANY_CHAR.next(PT_IDENTIFIER.not());
   Pattern PT_HEX = Patterns.sequence(Patterns.among("xX"), Patterns.among("0123456789abcdefABCDEF").many1())
-          .next(PT_LITERAL.not());
-  Pattern PT_CHAR_PRE = Patterns.string("#\\");
+          .next(PT_IDENTIFIER.not());
+  Pattern PT_CHAR_PREFIX = Patterns.string("#\\");
 
-  Parser<?> s_char_pre = PT_CHAR_PRE.toScanner("char prefix");
-  Parser<?> s_char_names = CHAR_NAMES.tokenizer().next(LITERAL.not());
+  Parser<?> SCA_CHAR_PREFIX = PT_CHAR_PREFIX.toScanner("char prefix");
+  Parser<?> SCA_SPECIAL_CHAR_NAMES = TERM_SPECIAL_CHAR_NAMES.tokenizer().next(PAR_IDENTIFIER.not());
 
-  Parser<?> s_char_char = Patterns.sequence(PT_CHAR_PRE, PT_SINGLE_CHAR).toScanner("char char");
-  Parser<?> s_char_hex = Patterns.sequence(PT_CHAR_PRE, PT_HEX).toScanner("char hex");
-  Parser<?> s_char_name = Parsers.sequence(s_char_pre, s_char_names);
-  Parser<?> s_char = Parsers.or(s_char_char, s_char_name, s_char_hex).source()
-          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_CHAR)));
+  Parser<?> SCA_CHAR = Patterns.sequence(PT_CHAR_PREFIX, PT_SINGLE_CHAR).toScanner("char");
+  Parser<?> SCA_HEX_NUMBER = Patterns.sequence(PT_CHAR_PREFIX, PT_HEX).toScanner("hex number");
+  Parser<?> SCA_SPECIAL_CHAR = Parsers.sequence(SCA_CHAR_PREFIX, SCA_SPECIAL_CHAR_NAMES).label("special char");
+  Parser<?> s_sharp_char = Parsers.or(SCA_CHAR, SCA_SPECIAL_CHAR, SCA_HEX_NUMBER).source()
+          .map((a) -> (Tokens.fragment(a, Tag.S_SHARP_CHAR)));
 
 
   Parser<?> s_string = Scanners.DOUBLE_QUOTE_STRING
-          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_QUOTE_STRING)));
+          .map((a) -> (Tokens.fragment(a, Tag.S_QUOTE_STRING)));
 
-  Parser<?> s_literals = Parsers.or(s_string, s_char, s_literal);
+  Parser<?> PAR_LITERALS = Parsers.or(s_string, s_sharp_char, s_identifier);
 
 
   // Keyword
-  Terminals KEYWORD_TERM = Terminals
+  Terminals TERM_KEYWORDS = Terminals
         .operators("and", "begin", "car", "cdr", "cond", "cons", "define", "define-record-type","define-syntax","do", "else", "if",
                 "lambda", "let", "let*", "library", "list", "not", "or", "set!", "unless", "when");
-  Parser<?> s_keywords = KEYWORD_TERM.tokenizer().next(LITERAL.not()).source()
-        .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_KEYWORD)));
+  Parser<?> s_keywords = TERM_KEYWORDS.tokenizer().next(PAR_IDENTIFIER.not()).source()
+        .map((a) -> (Tokens.fragment(a, Tag.S_KEYWORD)));
 
 
   // Bad char
-  Parser<?> s_element = Parsers.or(s_whitespace, s_comment,
-          s_operators, s_numbers, s_keywords, s_literals);
+  Parser<?> PAR_ELEMENT = Parsers.or(s_whitespace, PAR_COMMENT,
+          s_operators, s_numbers, s_keywords, PAR_LITERALS);
 //  Parser<?> s_bad_element = s_element.not().source()
-//          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_BAD_CHARACTER)));
+//          .map((a) -> (Tokens.fragment(a, Tag.S_BAD_CHARACTER)));
   Pattern PT_ANY_CHAR = Patterns.isChar(CharPredicates.ALWAYS);
-  Parser<String> PS_ANY_CHAR = PT_ANY_CHAR.toScanner("any char").source();
-  Parser<?> s_bad_element = PS_ANY_CHAR
-          .map((a) -> (org.jparsec.Tokens.fragment(a, Tag.S_BAD_CHARACTER)));
+  Parser<String> PAR_ANY_CHAR = PT_ANY_CHAR.toScanner("any char").source();
+  Parser<?> s_bad_element = PAR_ANY_CHAR
+          .map((a) -> (Tokens.fragment(a, Tag.S_BAD_CHARACTER)));
 
 
-  Parser<Object> token = Parsers.or(s_element, s_bad_element);
+  Parser<Object> PAR_TOKEN = Parsers.or(PAR_ELEMENT, s_bad_element);
 
-  Parser<Token> a_token = token
+  Parser<Token> s_token = PAR_TOKEN
           .map((a) -> {
             if (null != a) {
 //              System.out.println("a: " + a.toString());
-              if (a.getClass() == org.jparsec.Tokens.Fragment.class) {
-                token_frag = (org.jparsec.Tokens.Fragment)a;
-//                System.out.println("type: " + ((org.jparsec.Tokens.Fragment)a).tag().toString());
-//                System.out.println("text: " + ((org.jparsec.Tokens.Fragment)a).text());
+              if (a.getClass() == Tokens.Fragment.class) {
+                token_frag = (Tokens.Fragment)a;
+//                System.out.println("type: " + ((Tokens.Fragment)a).tag().toString());
+//                System.out.println("text: " + ((Tokens.Fragment)a).text());
               } else {
                 token_frag = null;
 //                System.out.println("type: " + a.getClass().getName());
@@ -213,7 +218,7 @@ public class SchemeLexer extends LexerBase
     myBuffer = buffer.subSequence(this.start, this.bufferEnd);
 
     try {
-      a_token.parse(myBuffer);
+      s_token.parse(myBuffer);
 
     } catch (Exception e) {
 //      System.out.println("Exception: " + e.getMessage());
@@ -228,47 +233,47 @@ public class SchemeLexer extends LexerBase
     switch ((Tag)token_frag.tag()) {
 
       case S_LINE_COMMENT:
-        type = Tokens.LINE_COMMENT;
+        type = SchemeTokens.LINE_COMMENT;
         break;
 
       case S_BLOCK_COMMENT:
-        type = Tokens.BLOCK_COMMENT;
+        type = SchemeTokens.BLOCK_COMMENT;
         break;
 
-      case S_DATUM_COMMENT_PRE:
-        type = Tokens.DATUM_COMMENT_PRE;
+      case S_DATUM_COMMENT_PREFIX:
+        type = SchemeTokens.DATUM_COMMENT_PRE;
         break;
 
       case S_WHITE_SPACE:
-        type = Tokens.WHITESPACE;
+        type = SchemeTokens.WHITESPACE;
         break;
 
       case S_OPERATOR:
 
         String opStr = token_frag.text();
         if (opStr.equals("(")) {
-          type = Tokens.LEFT_PAREN;
+          type = SchemeTokens.LEFT_PAREN;
 
         } else if (opStr.equals(")")) {
-          type = Tokens.RIGHT_PAREN;
+          type = SchemeTokens.RIGHT_PAREN;
 
         } else if (opStr.equals("[")) {
-          type = Tokens.LEFT_SQUARE;
+          type = SchemeTokens.LEFT_SQUARE;
 
         } else if (opStr.equals("]")) {
-          type = Tokens.RIGHT_SQUARE;
+          type = SchemeTokens.RIGHT_SQUARE;
 
         } else if (opStr.equals("'")) {
-          type = Tokens.QUOTE_MARK;
+          type = SchemeTokens.QUOTE_MARK;
 
         } else if (opStr.equals("`")) {
-          type = Tokens.BACKQUOTE;
+          type = SchemeTokens.BACKQUOTE;
 
         } else if (opStr.equals(",")) {
-          type = Tokens.COMMA;
+          type = SchemeTokens.COMMA;
 
         } else if (opStr.equals("#")) {
-          type = Tokens.SHARP;
+          type = SchemeTokens.SHARP;
 
         } /*else if (opStr.equals(";")) {
           type = Tokens.OP_SEMI;
@@ -277,33 +282,33 @@ public class SchemeLexer extends LexerBase
           type = Tokens.OP_BACKSLASH;
 
         }*/ else {
-          type = Tokens.SPECIAL;
+          type = SchemeTokens.SPECIAL;
         }
 
         break;
 
       case S_NUMBER:
-        type = Tokens.NUMBER_LITERAL;
+        type = SchemeTokens.NUMBER_LITERAL;
         break;
 
       case S_QUOTE_STRING:
-        type = Tokens.STRING_LITERAL;
+        type = SchemeTokens.STRING_LITERAL;
         break;
 
-      case S_CHAR:
-        type = Tokens.CHAR_LITERAL;
+      case S_SHARP_CHAR:
+        type = SchemeTokens.CHAR_LITERAL;
         break;
 
       case S_KEYWORD:
-        type = Tokens.KEYWORD;
+        type = SchemeTokens.KEYWORD;
         break;
 
-      case S_LITERAL:
-        type = Tokens.PLAIN_LITERAL;
+      case S_IDENTIFIER:
+        type = SchemeTokens.PLAIN_LITERAL;
         break;
 
       case S_BAD_CHARACTER:
-        type = Tokens.BAD_CHARACTER;
+        type = SchemeTokens.BAD_CHARACTER;
         break;
 
       default:

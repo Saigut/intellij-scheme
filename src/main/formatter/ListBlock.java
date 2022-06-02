@@ -9,7 +9,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import main.lexer.Tokens;
+import main.lexer.SchemeTokens;
 import main.parser.AST;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class ListBlock extends SchemeBlock
   protected List<Block> generateSubBlocks(ASTNode node, Wrap wrap, CodeStyleSettings settings)
   {
     List<Block> subBlocks = new ArrayList<Block>();
-    if (LEAF_ELEMENTS.contains(node.getElementType()) || Tokens.BRACES.contains(node.getElementType())) {
+    if (LEAF_ELEMENTS.contains(node.getElementType()) || SchemeTokens.BRACES.contains(node.getElementType())) {
       return subBlocks;
     } else {
 //      boolean is_first_child = true;
@@ -46,7 +46,7 @@ public class ListBlock extends SchemeBlock
       for (ASTNode childNode : getChildren(node))
       {
         Indent indent;
-        if (Tokens.OPEN_BRACES.contains(childNode.getElementType()))
+        if (SchemeTokens.OPEN_BRACES.contains(childNode.getElementType()))
         {
           indent = Indent.getNoneIndent();
           align = alignment;

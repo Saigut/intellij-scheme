@@ -6,10 +6,10 @@ import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
-import main.lexer.Tokens;
+import main.lexer.SchemeTokens;
 
 
-public class SchemeParser implements PsiParser, Tokens
+public class SchemeParser implements PsiParser, SchemeTokens
 {
   @NotNull
   public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder)
@@ -413,7 +413,7 @@ public class SchemeParser implements PsiParser, Tokens
       if (DATUM_COMMENT_PRE == type) {
         PsiBuilder.Marker marker_datum = builder.mark();
         parseSexp(childType, builder);
-        marker_datum.collapse(Tokens.COMMENTED_DATUM);
+        marker_datum.collapse(SchemeTokens.COMMENTED_DATUM);
 
         mark_type = AST.AST_ELE_DATUM_COMMENT;
         marker.done(mark_type);

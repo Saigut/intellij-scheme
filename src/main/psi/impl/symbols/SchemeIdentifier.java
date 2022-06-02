@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import main.SchemeIcons;
 import main.lexer.TokenSets;
-import main.lexer.Tokens;
+import main.lexer.SchemeTokens;
 import main.psi.impl.SchemePsiElementBase;
 import main.psi.util.SchemePsiElementFactory;
 import main.psi.util.SchemePsiUtil;
@@ -82,7 +82,7 @@ public class SchemeIdentifier extends SchemePsiElementBase implements PsiReferen
     if (nameElement != null)
     {
       ASTNode node = nameElement.getNode();
-      if ((node != null) && (node.getElementType() == Tokens.IDENTIFIER))
+      if ((node != null) && (node.getElementType() == SchemeTokens.IDENTIFIER))
       {
         return nameElement.getText();
       }

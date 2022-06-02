@@ -5,7 +5,7 @@ import com.intellij.formatting.Spacing;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.IElementType;
 import main.formatter.SchemeBlock;
-import main.lexer.Tokens;
+import main.lexer.SchemeTokens;
 import main.parser.AST;
 
 
@@ -35,13 +35,13 @@ public class SchemeSpacingProcessor
     IElementType type1 = node1.getElementType();
     IElementType type2 = node2.getElementType();
 
-    if (Tokens.PREFIXES.contains(type1)
+    if (SchemeTokens.PREFIXES.contains(type1)
             || type1 == AST.AST_BAD_CHARACTER)
     {
       return NO_SPACING;
     }
 
-    if (Tokens.BRACES.contains(type1) || Tokens.BRACES.contains(type2))
+    if (SchemeTokens.BRACES.contains(type1) || SchemeTokens.BRACES.contains(type2))
     {
       return NO_SPACING_WITH_NEWLINE;
     }

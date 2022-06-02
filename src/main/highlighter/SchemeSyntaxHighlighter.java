@@ -10,14 +10,14 @@ import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import main.lexer.SchemeLexer;
-import main.lexer.Tokens;
+import main.lexer.SchemeTokens;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
-public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Tokens
+public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements SchemeTokens
 {
   private static final Map<IElementType, TextAttributesKey[]> ATTRIBUTES = new HashMap<IElementType, TextAttributesKey[]>();
 
@@ -139,19 +139,19 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements To
 
   static
   {
-    newFillMap(ATTRIBUTES, LINE_COMMENT_KEYS, Tokens.LINE_COMMENT);
-    newFillMap(ATTRIBUTES, BLOCK_COMMENT_KEYS, Tokens.BLOCK_COMMENT);
-    newFillMap(ATTRIBUTES, NUMBER_KEYS, Tokens.NUMBER_LITERAL);
-    newFillMap(ATTRIBUTES, STRING_KEYS, Tokens.STRING_LITERAL);
-    newFillMap(ATTRIBUTES, BRACE_KEYS, Tokens.LEFT_SQUARE, Tokens.RIGHT_SQUARE, Tokens.LEFT_CURLY, Tokens.RIGHT_CURLY);
-    newFillMap(ATTRIBUTES, PAREN_KEYS, Tokens.LEFT_PAREN, Tokens.RIGHT_PAREN);
+    newFillMap(ATTRIBUTES, LINE_COMMENT_KEYS, SchemeTokens.LINE_COMMENT);
+    newFillMap(ATTRIBUTES, BLOCK_COMMENT_KEYS, SchemeTokens.BLOCK_COMMENT);
+    newFillMap(ATTRIBUTES, NUMBER_KEYS, SchemeTokens.NUMBER_LITERAL);
+    newFillMap(ATTRIBUTES, STRING_KEYS, SchemeTokens.STRING_LITERAL);
+    newFillMap(ATTRIBUTES, BRACE_KEYS, SchemeTokens.LEFT_SQUARE, SchemeTokens.RIGHT_SQUARE, SchemeTokens.LEFT_CURLY, SchemeTokens.RIGHT_CURLY);
+    newFillMap(ATTRIBUTES, PAREN_KEYS, SchemeTokens.LEFT_PAREN, SchemeTokens.RIGHT_PAREN);
 //    newFillMap(ATTRIBUTES, LITERAL_KEYS, AST_PLAIN_LITERAL, Tokens.BOOLEAN_LITERAL);
-    newFillMap(ATTRIBUTES, CHAR_KEYS, Tokens.CHAR_LITERAL);
-    newFillMap(ATTRIBUTES, SPECIAL_KEYS, Tokens.SPECIAL);
-    newFillMap(ATTRIBUTES, IDENTIFIER_KEYS, Tokens.IDENTIFIERS);
-    newFillMap(ATTRIBUTES, KEYWORD_KEYS, Tokens.KEYWORD);
-    newFillMap(ATTRIBUTES, DOT_KEYS, Tokens.DOT);
-    newFillMap(ATTRIBUTES, COMMA_KEYS, Tokens.COMMA, Tokens.COMMA_AT);
+    newFillMap(ATTRIBUTES, CHAR_KEYS, SchemeTokens.CHAR_LITERAL);
+    newFillMap(ATTRIBUTES, SPECIAL_KEYS, SchemeTokens.SPECIAL);
+    newFillMap(ATTRIBUTES, IDENTIFIER_KEYS, SchemeTokens.IDENTIFIERS);
+    newFillMap(ATTRIBUTES, KEYWORD_KEYS, SchemeTokens.KEYWORD);
+    newFillMap(ATTRIBUTES, DOT_KEYS, SchemeTokens.DOT);
+    newFillMap(ATTRIBUTES, COMMA_KEYS, SchemeTokens.COMMA, SchemeTokens.COMMA_AT);
   }
 
   protected static void newFillMap(@NotNull Map<IElementType, TextAttributesKey[]> map, TextAttributesKey[] value, @NotNull TokenSet keys) {
