@@ -28,9 +28,9 @@ public interface SchemeTokens
   IElementType LINE_COMMENT = new SchemeElementType("line comment");
   IElementType BLOCK_COMMENT = new SchemeElementType("block comment");
   IElementType DATUM_COMMENT_PRE = new SchemeElementType("datum comment prefix");
-  IElementType COMMENTED_DATUM = new SchemeElementType("commented datum");
+  IElementType DATUM_COMMENT = new SchemeElementType("datum comment");
 
-  TokenSet COMMENTS = TokenSet.create(LINE_COMMENT, BLOCK_COMMENT);
+  TokenSet COMMENTS = TokenSet.create(LINE_COMMENT, BLOCK_COMMENT, DATUM_COMMENT);
 
   // Literals
   IElementType STRING_LITERAL = new SchemeElementType("string literal");
@@ -43,6 +43,7 @@ public interface SchemeTokens
 
   IElementType IDENTIFIER = new SchemeElementType("identifier");
   IElementType KEYWORD = new SchemeElementType("keyword");
+  IElementType PROCEDURE = new SchemeElementType("procedure");
 
   IElementType DOT = new SchemeElementType(".");
 

@@ -41,8 +41,10 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
 
   @NonNls
   public static final String COMMENT_ID = "Scheme Comment";
-  @NonNls
-  public static final String BLOCK_COMMENT_ID = "Scheme Block Comment";
+//  @NonNls
+//  public static final String BLOCK_COMMENT_ID = "Scheme Block Comment";
+//  @NonNls
+//  public static final String DATUM_COMMENT_ID = "Scheme Datum Comment";
   @NonNls
   public static final String IDENTIFIER_ID = "Identifier";
   @NonNls
@@ -61,6 +63,8 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
   public static final String CHAR_ID = "Scheme Character";
   @NonNls
   public static final String KEYWORD_ID = "Keyword";
+  @NonNls
+  public static final String PROCEDURE_ID = "Procedure";
   @NonNls
   public static final String SPECIAL_ID = "Special";
 
@@ -81,7 +85,8 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
   static
   {
     createTextAttributesKey(COMMENT_ID, DefaultLanguageHighlighterColors.LINE_COMMENT);
-    createTextAttributesKey(BLOCK_COMMENT_ID, DefaultLanguageHighlighterColors.BLOCK_COMMENT);
+//    createTextAttributesKey(BLOCK_COMMENT_ID, DefaultLanguageHighlighterColors.BLOCK_COMMENT);
+//    createTextAttributesKey(DATUM_COMMENT_ID, DefaultLanguageHighlighterColors.LINE_COMMENT);
     createTextAttributesKey(NUMBER_ID, DefaultLanguageHighlighterColors.NUMBER);
     createTextAttributesKey(STRING_ID, DefaultLanguageHighlighterColors.STRING);
     createTextAttributesKey(BRACES_ID, DefaultLanguageHighlighterColors.BRACES);
@@ -90,6 +95,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
     createTextAttributesKey(CHAR_ID, DefaultLanguageHighlighterColors.STRING);
     createTextAttributesKey(BAD_CHARACTER_ID, HighlighterColors.BAD_CHARACTER);
     createTextAttributesKey(KEYWORD_ID, DefaultLanguageHighlighterColors.KEYWORD);
+    createTextAttributesKey(PROCEDURE_ID, DefaultLanguageHighlighterColors.FUNCTION_CALL);
     createTextAttributesKey(SPECIAL_ID, DefaultLanguageHighlighterColors.KEYWORD);
 
     createTextAttributesKey(IDENTIFIER_ID, DefaultLanguageHighlighterColors.KEYWORD);
@@ -100,8 +106,9 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
     createTextAttributesKey(COMMA_ID, DefaultLanguageHighlighterColors.COMMA);
   }
 
-  public static TextAttributesKey LINE_COMMENT = createTextAttributesKey(COMMENT_ID);
-  public static TextAttributesKey BLOCK_COMMENT = createTextAttributesKey(BLOCK_COMMENT_ID);
+  public static TextAttributesKey COMMENT = createTextAttributesKey(COMMENT_ID);
+//  public static TextAttributesKey BLOCK_COMMENT = createTextAttributesKey(BLOCK_COMMENT_ID);
+//  public static TextAttributesKey DATUM_COMMENT = createTextAttributesKey(DATUM_COMMENT_ID);
   public static TextAttributesKey IDENTIFIER = createTextAttributesKey(IDENTIFIER_ID);
   public static TextAttributesKey NUMBER = createTextAttributesKey(NUMBER_ID);
   public static TextAttributesKey STRING = createTextAttributesKey(STRING_ID);
@@ -111,6 +118,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
   public static TextAttributesKey CHAR = createTextAttributesKey(CHAR_ID);
   public static TextAttributesKey BAD_CHARACTER = createTextAttributesKey(BAD_CHARACTER_ID);
   public static TextAttributesKey KEYWORD = createTextAttributesKey(KEYWORD_ID);
+  public static TextAttributesKey PROCEDURE = createTextAttributesKey(PROCEDURE_ID);
   public static TextAttributesKey SPECIAL = createTextAttributesKey(SPECIAL_ID);
   public static TextAttributesKey QUOTED_TEXT = createTextAttributesKey(QUOTED_TEXT_ID);
   public static TextAttributesKey QUOTED_STRING = createTextAttributesKey(QUOTED_STRING_ID);
@@ -119,7 +127,8 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
   public static TextAttributesKey COMMA = createTextAttributesKey(COMMA_ID);
 
   public static TextAttributesKey[] LINE_COMMENT_KEYS = new TextAttributesKey[]{createTextAttributesKey(COMMENT_ID)};
-  public static TextAttributesKey[] BLOCK_COMMENT_KEYS = new TextAttributesKey[]{createTextAttributesKey(BLOCK_COMMENT_ID)};
+//  public static TextAttributesKey[] BLOCK_COMMENT_KEYS = new TextAttributesKey[]{createTextAttributesKey(BLOCK_COMMENT_ID)};
+//  public static TextAttributesKey[] DATUM_COMMENT_KEYS = new TextAttributesKey[]{createTextAttributesKey(DATUM_COMMENT_ID)};
   public static TextAttributesKey[] IDENTIFIER_KEYS = new TextAttributesKey[]{createTextAttributesKey(IDENTIFIER_ID)};
   public static TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{createTextAttributesKey(NUMBER_ID)};
   public static TextAttributesKey[] STRING_KEYS = new TextAttributesKey[]{createTextAttributesKey(STRING_ID)};
@@ -129,6 +138,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
   public static TextAttributesKey[] CHAR_KEYS = new TextAttributesKey[]{createTextAttributesKey(CHAR_ID)};
   public static TextAttributesKey[] BAD_CHARACTER_KEYS = new TextAttributesKey[]{createTextAttributesKey(BAD_CHARACTER_ID)};
   public static TextAttributesKey[] KEYWORD_KEYS = new TextAttributesKey[]{createTextAttributesKey(KEYWORD_ID)};
+  public static TextAttributesKey[] PROCEDURE_KEYS = new TextAttributesKey[]{createTextAttributesKey(PROCEDURE_ID)};
   public static TextAttributesKey[] SPECIAL_KEYS = new TextAttributesKey[]{createTextAttributesKey(SPECIAL_ID)};
   public static TextAttributesKey[] QUOTED_TEXT_KEYS = new TextAttributesKey[]{createTextAttributesKey(QUOTED_TEXT_ID)};
   public static TextAttributesKey[] QUOTED_STRING_KEYS = new TextAttributesKey[]{createTextAttributesKey(QUOTED_STRING_ID)};
@@ -139,8 +149,10 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
 
   static
   {
-    newFillMap(ATTRIBUTES, LINE_COMMENT_KEYS, SchemeTokens.LINE_COMMENT);
-    newFillMap(ATTRIBUTES, BLOCK_COMMENT_KEYS, SchemeTokens.BLOCK_COMMENT);
+    newFillMap(ATTRIBUTES, LINE_COMMENT_KEYS,
+            SchemeTokens.LINE_COMMENT, SchemeTokens.BLOCK_COMMENT, SchemeTokens.DATUM_COMMENT);
+//    newFillMap(ATTRIBUTES, BLOCK_COMMENT_KEYS, SchemeTokens.BLOCK_COMMENT);
+//    newFillMap(ATTRIBUTES, DATUM_COMMENT_KEYS, SchemeTokens.DATUM_COMMENT);
     newFillMap(ATTRIBUTES, NUMBER_KEYS, SchemeTokens.NUMBER_LITERAL);
     newFillMap(ATTRIBUTES, STRING_KEYS, SchemeTokens.STRING_LITERAL);
     newFillMap(ATTRIBUTES, BRACE_KEYS, SchemeTokens.LEFT_SQUARE, SchemeTokens.RIGHT_SQUARE, SchemeTokens.LEFT_CURLY, SchemeTokens.RIGHT_CURLY);
@@ -150,6 +162,8 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
     newFillMap(ATTRIBUTES, SPECIAL_KEYS, SchemeTokens.SPECIAL);
     newFillMap(ATTRIBUTES, IDENTIFIER_KEYS, SchemeTokens.IDENTIFIERS);
     newFillMap(ATTRIBUTES, KEYWORD_KEYS, SchemeTokens.KEYWORD);
+    newFillMap(ATTRIBUTES, PROCEDURE_KEYS, SchemeTokens.PROCEDURE);
+    newFillMap(ATTRIBUTES, BAD_CHARACTER_KEYS, SchemeTokens.BAD_CHARACTER);
     newFillMap(ATTRIBUTES, DOT_KEYS, SchemeTokens.DOT);
     newFillMap(ATTRIBUTES, COMMA_KEYS, SchemeTokens.COMMA, SchemeTokens.COMMA_AT);
   }

@@ -46,6 +46,10 @@ public class SchemePsiCreator
     {
       return new SchemeKeyword(node);
     }
+    else if (elementType == AST.AST_BASIC_ELE_PROCEDURE)
+    {
+      return new SchemeProcedure(node);
+    }
     else if (elementType == AST.AST_BASIC_ELE_SYMBOL)
     {
       return new SchemeSymbol(node);

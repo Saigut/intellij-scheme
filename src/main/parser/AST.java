@@ -19,6 +19,7 @@ public interface AST
   IElementType AST_BASIC_ELE_CHAR = new SchemeElementType("ast character");
   IElementType AST_BASIC_ELE_STR = new SchemeElementType("ast string");
   IElementType AST_BASIC_ELE_KEYWORD = new SchemeElementType("ast keyword");
+  IElementType AST_BASIC_ELE_PROCEDURE = new SchemeElementType("ast procedure");
   IElementType AST_BASIC_ELE_SYMBOL = new SchemeElementType("ast symbol");
 
   // Other element
@@ -66,7 +67,8 @@ public interface AST
   IElementType AST_BAD_ELEMENT = new SchemeElementType("ast bad element");
 
   TokenSet AST_ELEMENTS = TokenSet.create(AST_TEMP_LIST,
-          AST_BASIC_ELE_BOOL, AST_BASIC_ELE_NUM, AST_BASIC_ELE_CHAR, AST_BASIC_ELE_STR, AST_BASIC_ELE_KEYWORD, AST_BASIC_ELE_SYMBOL,
+          AST_BASIC_ELE_BOOL, AST_BASIC_ELE_NUM, AST_BASIC_ELE_CHAR, AST_BASIC_ELE_STR,
+          AST_BASIC_ELE_KEYWORD, AST_BASIC_ELE_PROCEDURE, AST_BASIC_ELE_SYMBOL,
           AST_ELE_VECTOR,
           AST_FORM_DEFINE, AST_FORM_DEFINE_RECORD_TYPE, AST_FORM_DEFINE_SYNTAX,
           AST_FORM_PROCEDURE, AST_FORM_CALL_PROCEDURE, AST_FORM_LET, AST_FORM_SET, AST_FORM_QUOTE, AST_FORM_BACKQUOTE,
@@ -78,7 +80,7 @@ public interface AST
 
   TokenSet LEAF_ELEMENTS = TokenSet.create(
           AST_BASIC_ELE_BOOL, AST_BASIC_ELE_NUM, AST_BASIC_ELE_CHAR,
-          AST_BASIC_ELE_STR, AST_BASIC_ELE_KEYWORD, AST_BASIC_ELE_SYMBOL,
+          AST_BASIC_ELE_STR, AST_BASIC_ELE_KEYWORD, AST_BASIC_ELE_PROCEDURE, AST_BASIC_ELE_SYMBOL,
           AST_BAD_CHARACTER, AST_BAD_ELEMENT);
 
   TokenSet DEFINE_FORMS = TokenSet.create(

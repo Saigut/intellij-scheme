@@ -75,6 +75,9 @@ public class SchemeParser implements PsiParser, SchemeTokens
     else if (KEYWORD == type) {
       return AST.AST_BASIC_ELE_KEYWORD;
     }
+    else if (PROCEDURE == type) {
+      return AST.AST_BASIC_ELE_PROCEDURE;
+    }
     else if (PLAIN_LITERAL == type
              || IDENTIFIER == type) {
       return AST.AST_BASIC_ELE_SYMBOL;
@@ -413,7 +416,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
       if (DATUM_COMMENT_PRE == type) {
         PsiBuilder.Marker marker_datum = builder.mark();
         parseSexp(childType, builder);
-        marker_datum.collapse(SchemeTokens.COMMENTED_DATUM);
+        marker_datum.collapse(SchemeTokens.DATUM_COMMENT);
 
         mark_type = AST.AST_ELE_DATUM_COMMENT;
         marker.done(mark_type);
@@ -526,6 +529,10 @@ public class SchemeParser implements PsiParser, SchemeTokens
     {
       parseKeyword(builder);
     }
+    else if (PROCEDURE == token)
+    {
+      parseProcedure(builder);
+    }
     else if (IDENTIFIER == token)
     {
       parseIdentifier(builder);
@@ -623,7 +630,14 @@ public class SchemeParser implements PsiParser, SchemeTokens
   {
     PsiBuilder.Marker marker = builder.mark();
     builder.advanceLexer();
-    marker.done(AST.AST_BASIC_ELE_SYMBOL);
+    marker.done(AST.AST_BASIC_ELE_KEYWORD);
+  }
+
+  private void parseProcedure(PsiBuilder builder)
+  {
+    PsiBuilder.Marker marker = builder.mark();
+    builder.advanceLexer();
+    marker.done(AST.AST_BASIC_ELE_PROCEDURE);
   }
 
   /**

@@ -42,7 +42,9 @@ public class SchemeColorsAndFontsPage implements ColorSettingsPage
   AttributesDescriptor[]
     ATTRS =
     new AttributesDescriptor[]{desc(SchemeSyntaxHighlighter.IDENTIFIER_ID, SchemeSyntaxHighlighter.IDENTIFIER),
-                               desc(SchemeSyntaxHighlighter.COMMENT_ID, SchemeSyntaxHighlighter.LINE_COMMENT),
+                               desc(SchemeSyntaxHighlighter.COMMENT_ID, SchemeSyntaxHighlighter.COMMENT),
+//                               desc(SchemeSyntaxHighlighter.BLOCK_COMMENT_ID, SchemeSyntaxHighlighter.BLOCK_COMMENT),
+//                               desc(SchemeSyntaxHighlighter.DATUM_COMMENT_ID, SchemeSyntaxHighlighter.DATUM_COMMENT),
                                desc(SchemeSyntaxHighlighter.NUMBER_ID, SchemeSyntaxHighlighter.NUMBER),
                                desc(SchemeSyntaxHighlighter.STRING_ID, SchemeSyntaxHighlighter.STRING),
                                desc(SchemeSyntaxHighlighter.BRACES_ID, SchemeSyntaxHighlighter.BRACE),
@@ -51,6 +53,7 @@ public class SchemeColorsAndFontsPage implements ColorSettingsPage
                                desc(SchemeSyntaxHighlighter.CHAR_ID, SchemeSyntaxHighlighter.CHAR),
                                desc(SchemeSyntaxHighlighter.LITERAL_ID, SchemeSyntaxHighlighter.LITERAL),
                                desc(SchemeSyntaxHighlighter.KEYWORD_ID, SchemeSyntaxHighlighter.KEYWORD),
+                               desc(SchemeSyntaxHighlighter.PROCEDURE_ID, SchemeSyntaxHighlighter.PROCEDURE),
                                desc(SchemeSyntaxHighlighter.SPECIAL_ID, SchemeSyntaxHighlighter.SPECIAL),
                                desc(SchemeSyntaxHighlighter.QUOTED_TEXT_ID, SchemeSyntaxHighlighter.QUOTED_TEXT),
                                desc(SchemeSyntaxHighlighter.QUOTED_STRING_ID, SchemeSyntaxHighlighter.QUOTED_STRING),

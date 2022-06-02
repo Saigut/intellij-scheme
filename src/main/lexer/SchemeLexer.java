@@ -43,7 +43,8 @@ public class SchemeLexer extends LexerBase
     S_IDENTIFIER,
     S_BAD_CHARACTER,
 
-    S_KEYWORD
+    S_KEYWORD,
+    S_PROCEDURE
   }
 
   /**
@@ -105,17 +106,18 @@ public class SchemeLexer extends LexerBase
   Pattern PT_IDENTIFIER_CHAR_VALID = Patterns
           .or(Patterns.isChar(CharPredicates.IS_LETTER),
                   Patterns.isChar(CharPredicates.IS_DIGIT),
-                  Patterns.among("!@$%^&*-+_=:|/?<>."));
+                  Patterns.among("!$%&*+-./:<=>?@^_~"));
   Pattern PT_IDENTIFIER = PT_IDENTIFIER_CHAR_VALID.many1();
   Parser<String> PAR_IDENTIFIER = PT_IDENTIFIER.toScanner("identifier").source();
   Parser<?> s_identifier = PAR_IDENTIFIER
           .map((a) -> (Tokens.fragment(a, Tag.S_IDENTIFIER)));
 
 
-  // Special character and hexadecimal number
+  // Characters
   Terminals TERM_SPECIAL_CHAR_NAMES = Terminals
-          .operators("alarm", "backspace", "delete", "esc", "linefeed", "newline", "page", "return",
-                  "space", "tab", "vtab");
+          .operators("nul", "alarm", "backspace", "tab", "linefeed",
+                  "newline", "vtab", "page", "return", "esc",
+                  "space", "delete", "vtab", "λ");
   Pattern PT_SINGLE_CHAR = Patterns.ANY_CHAR.next(PT_IDENTIFIER.not());
   Pattern PT_HEX = Patterns.sequence(Patterns.among("xX"), Patterns.among("0123456789abcdefABCDEF").many1())
           .next(PT_IDENTIFIER.not());
@@ -139,17 +141,57 @@ public class SchemeLexer extends LexerBase
 
   // Keyword
   Terminals TERM_KEYWORDS = Terminals
-        .operators("and", "begin", "car", "cdr", "cond", "cons", "define", "define-record-type","define-syntax","do", "else", "if",
-                "lambda", "let", "let*", "library", "list", "not", "or", "set!", "unless", "when");
+        .operators("and", "begin", "case", "cond", "define",
+                "delay", "do", "else", "if", "lambda", "let",
+                "let*", "letrec", "quasiquote", "or", "set!",
+                "unquote", "unquote-splicing");
   Parser<?> s_keywords = TERM_KEYWORDS.tokenizer().next(PAR_IDENTIFIER.not()).source()
         .map((a) -> (Tokens.fragment(a, Tag.S_KEYWORD)));
 
+  // Built-in Procedures
+  Terminals TERM_BUILTIN_PROCEDURES = Terminals
+          .operators("*", "+", "-", "/",
+                  "<", "<=", "=", "=>", ">", ">=",
+                  "abs", "acos", "angle", "append",
+                  "apply", "asin", "assert", "assertion-violation", "atan",
+                  "begin0", "boolean=?", "boolean?", "caar",
+                  "cadr", "call-with-current-continuation", "call-with-values", "call/cc", "car",
+                  "cdddar", "cddddr", "cdr", "ceiling",
+                  "char->integer", "char<=?", "char<?", "char=?", "char>=?",
+                  "char>?", "char?", "complex?", "condition?",
+                  "cons", "consi", "cos", "define-syntax",
+                  "denominator", "div", "div-and-mod", "div0", "div0-and-mod0",
+                  "dot", "dw", "dynamic-wind", "eq?",
+                  "equal?", "eqv?", "error", "even?", "exact",
+                  "exact-integer-sqrt", "exact?", "exp", "export", "expt",
+                  "finite?", "floor", "for-each", "gcd", "identifier-syntax",
+                  "imag-part", "import", "inexact", "inexact?",
+                  "infinite?", "integer->char", "integer-valued?", "integer?",
+                  "lcm", "length", "let*-values",
+                  "let-syntax", "let-values", "letrec*", "letrec-syntax",
+                  "library", "list", "list->string", "list->vector", "list-ref",
+                  "list-tail", "list?", "log", "magnitude", "make-polar",
+                  "make-rectangular", "make-string", "make-vector", "map", "max",
+                  "min", "mod", "mod0", "nan?", "negative?",
+                  "not", "null", "null?", "number->string", "number?",
+                  "numerator", "odd?", "pair?", "positive?",
+                  "procedure?", "quote", "raise", "raise-continuable",
+                  "rational-valued?", "rational?", "rationalize", "real-part", "real-valued?",
+                  "real?", "reverse", "round", "set-car!",
+                  "set-cdr!", "sin", "sqrt", "string", "string->list",
+                  "string->number", "string->symbol", "string-append", "string-copy", "string-for-each",
+                  "string-length", "string-ref", "string<=?", "string<?", "string=?",
+                  "string>=?", "string>?", "string?", "substring", "symbol->string",
+                  "symbol=?", "symbol?", "syntax-rules", "tan", "throw",
+                  "truncate", "values", "vector",
+                  "vector->list", "vector-fill!", "vector-for-each", "vector-length", "vector-map",
+                  "vector-ref", "vector-set!", "vector?", "with-exception-handler", "zero?");
+  Parser<?> s_builtin_procedures = TERM_BUILTIN_PROCEDURES.tokenizer().next(PAR_IDENTIFIER.not()).source()
+          .map((a) -> (Tokens.fragment(a, Tag.S_PROCEDURE)));
 
   // Bad char
   Parser<?> PAR_ELEMENT = Parsers.or(s_whitespace, PAR_COMMENT,
-          s_operators, s_numbers, s_keywords, PAR_LITERALS);
-//  Parser<?> s_bad_element = s_element.not().source()
-//          .map((a) -> (Tokens.fragment(a, Tag.S_BAD_CHARACTER)));
+          s_operators, s_numbers, s_keywords, s_builtin_procedures, PAR_LITERALS);
   Pattern PT_ANY_CHAR = Patterns.isChar(CharPredicates.ALWAYS);
   Parser<String> PAR_ANY_CHAR = PT_ANY_CHAR.toScanner("any char").source();
   Parser<?> s_bad_element = PAR_ANY_CHAR
@@ -301,6 +343,10 @@ public class SchemeLexer extends LexerBase
 
       case S_KEYWORD:
         type = SchemeTokens.KEYWORD;
+        break;
+
+      case S_PROCEDURE:
+        type = SchemeTokens.PROCEDURE;
         break;
 
       case S_IDENTIFIER:
