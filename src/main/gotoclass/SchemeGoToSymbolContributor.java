@@ -23,7 +23,7 @@ public class SchemeGoToSymbolContributor implements ChooseByNameContributor
 
   public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems)
   {
-    GlobalSearchScope scope = includeNonProjectItems ? null : GlobalSearchScope.projectScope(project);
+//    GlobalSearchScope scope = includeNonProjectItems ? null : GlobalSearchScope.projectScope(project);
 
     List<NavigationItem> symbols = new ArrayList<NavigationItem>();
     //    symbols.addAll(StubIndex.getInstance().get(ClDefNameIndex.KEY, name, project, scope));

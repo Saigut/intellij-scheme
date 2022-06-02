@@ -590,11 +590,6 @@ public class SchemeParser implements PsiParser, Tokens
     return marker;
   }
 
-  private void internalError(String msg)
-  {
-    throw new Error(msg);
-  }
-
   /**
    * Enter: Lexer is pointed at literal
    * Exit: Lexer is pointed immediately after literal

@@ -7,7 +7,6 @@ import com.intellij.psi.codeStyle.*;
 import com.intellij.util.ResourceUtil;
 import org.jetbrains.annotations.NotNull;
 import main.SchemeLanguage;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;

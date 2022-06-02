@@ -2,7 +2,6 @@ package main.lexer;
 
 import com.intellij.lexer.LexerBase;
 import com.intellij.psi.tree.IElementType;
-import dk.brics.automaton.RunAutomaton;
 import org.jparsec.*;
 import org.jparsec.pattern.CharPredicates;
 import org.jparsec.pattern.Pattern;
@@ -14,8 +13,6 @@ import org.jparsec.pattern.Patterns;
  */
 public class SchemeLexer extends LexerBase
 {
-  private static final RunAutomaton NUMBER = SchemeNumber.number();
-
   private CharSequence buffer;
   private CharSequence myBuffer;
   private int start;
@@ -319,190 +316,6 @@ public class SchemeLexer extends LexerBase
     if (end > bufferEnd) {
       end = bufferEnd;
     }
-  }
-
-  protected boolean implementationSpecific()
-  {
-    return false;
-  }
-
-  protected boolean test(char ch, IElementType type)
-  {
-    if (peek() == ch)
-    {
-      this.type = type;
-      cursor++;
-      return true;
-    }
-    return false;
-  }
-
-  protected boolean test(String str, IElementType type)
-  {
-    if (lookingAt(str))
-    {
-      this.type = type;
-      cursor += str.length();
-      return true;
-    }
-    return false;
-  }
-
-  private void readNumber()
-  {
-    int length = NUMBER.run(buffer.toString(), cursor);
-    if (length >= 0)
-    {
-      cursor += length;
-      this.type = Tokens.NUMBER_LITERAL;
-    }
-    else
-    {
-      bad();
-    }
-  }
-
-  protected void readIdentifier()
-  {
-    cursor++;
-    while (isIdentifierSubsequent(peek()))
-    {
-      cursor++;
-    }
-    this.type = Tokens.IDENTIFIER;
-  }
-
-  protected boolean isIdentifierInitial(char ch)
-  {
-    return Character.isLetter(ch) || in(ch, "!$%&*/:<=>?~_^@");
-  }
-
-  protected boolean isIdentifierSubsequent(char ch)
-  {
-    return isIdentifierInitial(ch) || Character.isDigit(ch) || in(ch, ".+-");
-  }
-
-  private void readSingleChar(IElementType type)
-  {
-    this.type = type;
-    cursor++;
-  }
-
-  private void readWhitespace()
-  {
-    type = Tokens.WHITESPACE;
-    while (Character.isWhitespace(peek()))
-    {
-      cursor++;
-    }
-  }
-
-  private void readSingleLineComment()
-  {
-    char next;
-    cursor++;
-    next = peek();
-    while (more() && (next != '\r') && (next != '\n'))
-    {
-      cursor++;
-      next = peek();
-    }
-    type = Tokens.LINE_COMMENT;
-  }
-
-  private void readMultiLineComment()
-  {
-    cursor += 2;
-    int depth = 1;
-
-    while (has(2) && (depth > 0))
-    {
-      if (lookingAt("#|"))
-      {
-        depth++;
-        cursor += 2;
-      }
-      else if (lookingAt("|#"))
-      {
-        depth--;
-        cursor += 2;
-      }
-      else
-      {
-        cursor++;
-      }
-    }
-    type = Tokens.BLOCK_COMMENT;
-  }
-
-  private void readString()
-  {
-    cursor++;
-    while (more() && peek() != '"')
-    {
-      if ((peek() == '\\') && has(2))
-      {
-        cursor += 2;
-      }
-      else
-      {
-        cursor++;
-      }
-    }
-    if (peek() == '"')
-    {
-      cursor++;
-    }
-    type = Tokens.STRING_LITERAL;
-  }
-
-  protected boolean supportsLongComments()
-  {
-    return true;
-  }
-
-  protected boolean lookingAt(String str)
-  {
-    return has(str.length()) && buffer.subSequence(cursor, cursor + str.length()).toString().equalsIgnoreCase(str);
-  }
-
-  private boolean in(char ch, String options)
-  {
-    return options.indexOf(ch) >= 0;
-  }
-
-  protected char peek()
-  {
-    if (more())
-    {
-      return buffer.charAt(cursor);
-    }
-    return 0;
-  }
-
-  protected char peek(int offset)
-  {
-    if (has(offset + 1))
-    {
-      return buffer.charAt(cursor + offset);
-    }
-    return 0;
-  }
-
-  private boolean more()
-  {
-    return cursor < bufferEnd;
-  }
-
-  protected boolean has(int n)
-  {
-    return (cursor + n) <= bufferEnd;
-  }
-
-  protected void bad()
-  {
-    cursor++;
-    this.type = Tokens.BAD_CHARACTER;
   }
 
   @Override

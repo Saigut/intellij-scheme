@@ -20,22 +20,6 @@ public abstract class SchemePsiElementBase extends ASTWrapperPsiElement implemen
     this.name = name;
   }
 
-  public static boolean isWrongElement(PsiElement element)
-  {
-    return element == null ||
-           (element instanceof LeafPsiElement || element instanceof PsiWhiteSpace || element instanceof PsiComment);
-  }
-
-  public PsiElement getFirstNonLeafElement()
-  {
-    PsiElement first = getFirstChild();
-    while (first != null && isWrongElement(first))
-    {
-      first = first.getNextSibling();
-    }
-    return first;
-  }
-
   public <T> T findFirstChildByClass(Class<T> aClass)
   {
     PsiElement element = getFirstChild();

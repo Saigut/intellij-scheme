@@ -2,7 +2,6 @@ package main.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -134,12 +133,6 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
       {
         return SchemeSymbol.this.getIcon(Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
       }
-
-      @Nullable
-      public TextAttributesKey getTextAttributesKey()
-      {
-        return null;
-      }
     };
   }
 
@@ -182,11 +175,6 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
         }
       }
     }
-  }
-
-  public static String id(Object object)
-  {
-    return object == null ? "null" : Integer.toString(System.identityHashCode(object));
   }
 
   public String getCanonicalText()

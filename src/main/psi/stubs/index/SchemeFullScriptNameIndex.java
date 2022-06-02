@@ -14,13 +14,6 @@ public class SchemeFullScriptNameIndex extends IntStubIndexExtension<SchemeFile>
 {
   public static final StubIndexKey<Integer, SchemeFile> KEY = StubIndexKey.createIndexKey("scm.script.fqn");
 
-  private static final SchemeFullScriptNameIndex ourInstance = new SchemeFullScriptNameIndex();
-
-  public static SchemeFullScriptNameIndex getInstance()
-  {
-    return ourInstance;
-  }
-
   public StubIndexKey<Integer, SchemeFile> getKey()
   {
     return KEY;
