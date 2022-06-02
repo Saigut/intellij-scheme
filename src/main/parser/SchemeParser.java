@@ -314,7 +314,6 @@ public class SchemeParser implements PsiParser, SchemeTokens
     IElementType token_type = builder.getTokenType();
     String token_text = builder.getTokenText();
     if (token_text == null) {
-//      internalError("token is null, something is wrong");
       builder.error("token is null, something is wrong");
       marker.drop();
       return null;
@@ -332,7 +331,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
       marker.drop();
       return null;
     }
-    else if (exp_type != AST.AST_BASIC_ELE_KEYWORD)
+    else if ((exp_type != AST.AST_BASIC_ELE_KEYWORD) && (exp_type != AST.AST_BASIC_ELE_PROCEDURE))
     {
       mark_type = eatRemainList(builder, close, AST.AST_UNRECOGNIZED_FORM);
     }
