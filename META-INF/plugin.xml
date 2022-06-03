@@ -36,6 +36,7 @@
     <gotoSymbolContributor implementation="main.gotoclass.SchemeGoToSymbolContributor"/>
     <syntaxHighlighter key="Scheme"
                        implementationClass="main.highlighter.SchemeSyntaxHighlighter"/>
+    <annotator language="Scheme" implementationClass="main.annotator.SchemeAnnotator"/>
 
     <colorSettingsPage implementation="main.settings.colorScheme.SchemeColorsAndFontsPage"/>
     <codeStyleSettingsProvider
