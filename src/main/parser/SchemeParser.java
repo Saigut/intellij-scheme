@@ -140,7 +140,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
     if (builder.getTokenType() != close)
     {
-      builder.error("Expected " + close.toString() + "'");
+      builder.error("Expected '" + close.toString() + "'");
       mark_type = AST.AST_BAD_ELEMENT;
     }
     else
@@ -350,21 +350,29 @@ public class SchemeParser implements PsiParser, SchemeTokens
     PsiBuilder.Marker marker = markAndAdvance(builder);
 
     IElementType token_type = builder.getTokenType();
+    if (token_type == null) {
+      builder.error("parse sexp failed");
+      marker.drop();
+      return null;
+    }
+
     String token_text = builder.getTokenText();
     if (token_text == null) {
       builder.error("token is null, something is wrong");
       marker.drop();
       return null;
     }
-    IElementType exp_type = null;
-    if (token_type != close && token_type != null)
-    {
-      exp_type = parseSexp(token_type, builder);
+
+    if (token_type == close) {
+      builder.advanceLexer();
+      marker.done(mark_type);
+      return mark_type;
     }
 
+    IElementType exp_type;
+    exp_type = parseSexp(token_type, builder);
     if (exp_type == null)
     {
-//      internalError("parse sexp failed");
       builder.error("parse sexp failed");
       marker.drop();
       return null;
@@ -566,25 +574,50 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
   private IElementType parseList(PsiBuilder builder, IElementType open, IElementType close)
   {
+    IElementType mark_type = AST.AST_TEMP_LIST;
     PsiBuilder.Marker marker = markAndAdvance(builder);
 
-    IElementType token = builder.getTokenType();
-    while (token != close && token != null)
-    {
-      parseSexp(token, builder);
-      token = builder.getTokenType();
+    IElementType token_type = builder.getTokenType();
+    if (token_type == null) {
+      builder.error("parse sexp failed");
+      marker.drop();
+      return null;
     }
 
-    if (builder.getTokenType() != close)
+    String token_text = builder.getTokenText();
+    if (token_text == null) {
+      builder.error("token is null, something is wrong");
+      marker.drop();
+      return null;
+    }
+
+    if (token_type == close) {
+      builder.advanceLexer();
+      marker.done(mark_type);
+      return mark_type;
+    }
+
+    IElementType exp_type;
+    exp_type = parseSexp(token_type, builder);
+    if (exp_type == null)
     {
-      builder.error("Expected + '" + close.toString() + "'");
+      builder.error("parse sexp failed");
+      marker.drop();
+      return null;
+    }
+    else if ((exp_type != AST.AST_BASIC_ELE_KEYWORD) && (exp_type != AST.AST_BASIC_ELE_PROCEDURE))
+    {
+      mark_type = eatRemainList(builder, close, AST.AST_TEMP_LIST);
     }
     else
     {
-      builder.advanceLexer();
+      mark_type = parseTopAndLocalForm(builder, close, token_text);
+      if (mark_type == null)
+      {
+        mark_type = eatRemainList(builder, close, AST.AST_FORM_CALL_PROCEDURE);
+      }
     }
 
-    IElementType mark_type = AST.AST_TEMP_LIST;
     marker.done(mark_type);
 
     return mark_type;

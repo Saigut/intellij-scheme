@@ -1,16 +1,14 @@
 package main.structure;
 
 import com.intellij.ide.structureView.StructureViewTreeElement;
+import com.intellij.ide.util.treeView.smartTree.SortableTreeElement;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.util.Iconable;
+import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiNamedElement;
+import main.SchemeIcons;
+import main.parser.AST;
 import org.jetbrains.annotations.NotNull;
-import main.psi.impl.SchemeFormDefineBase;
-import main.psi.impl.SchemePsiElementBase;
-import main.psi.impl.SchemeSymbol;
 import main.psi.util.SchemePsiUtil;
 
 import javax.swing.Icon;
@@ -18,87 +16,80 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SchemeStructureViewElement implements StructureViewTreeElement, ItemPresentation
+public class SchemeStructureViewElement implements StructureViewTreeElement, ItemPresentation, SortableTreeElement
 {
-  private PsiElement element;
+  private final NavigatablePsiElement element;
+  private final NavigatablePsiElement nameChild;
 
-  public SchemeStructureViewElement(PsiElement element)
+  public SchemeStructureViewElement(NavigatablePsiElement element)
   {
+    nameChild = (NavigatablePsiElement)getDeclareNameChild(element);
     this.element = element;
   }
 
   public PsiElement getValue()
   {
-    return element;
+    return nameChild;
   }
 
   public void navigate(boolean requestFocus)
   {
-    ((NavigationItem) element).navigate(requestFocus);
+    nameChild.navigate(requestFocus);
   }
 
   public boolean canNavigate()
   {
-    return ((NavigationItem) element).canNavigate();
+    return nameChild.canNavigate();
   }
 
   public boolean canNavigateToSource()
   {
-    return ((NavigationItem) element).canNavigateToSource();
+    return nameChild.canNavigateToSource();
+  }
+
+  @NotNull
+  @Override
+  public String getAlphaSortKey() {
+    return nameChild != null ? nameChild.getText() : "";
+  }
+  private boolean isDeclarationFrom(PsiElement element) {
+    return AST.DEFINE_FORMS.contains(element.getNode().getElementType());
+  }
+
+  private PsiElement getDeclareNameChild(PsiElement element) {
+    return SchemePsiUtil.getNormalChildAt(element, 1);
   }
 
   @NotNull
   public StructureViewTreeElement[] getChildren()
   {
-    final List<SchemePsiElementBase> childrenElements = new ArrayList<SchemePsiElementBase>();
-    element.acceptChildren(new PsiElementVisitor()
-    {
-      public void visitElement(PsiElement element)
-      {
-        if (isBrowsableElement(element))
-        {
-          childrenElements.add((SchemePsiElementBase) element);
-        }
-        else
-        {
-          element.acceptChildren(this);
-        }
-      }
-    });
+    final List<SchemeStructureViewElement> childrenElements = new ArrayList<>();
 
-    StructureViewTreeElement[] children = new StructureViewTreeElement[childrenElements.size()];
-    for (int i = 0; i < children.length; i++)
-    {
-      children[i] = new SchemeStructureViewElement(childrenElements.get(i));
+    PsiElement child = element.getFirstChild();
+    if (child == null) {
+      return EMPTY_ARRAY;
+    }
+    if (isDeclarationFrom(child)) {
+      PsiElement nameChild = getDeclareNameChild(child);
+      if (nameChild != null) {
+        childrenElements.add(new SchemeStructureViewElement((NavigatablePsiElement)child));
+      }
     }
 
-    return children;
-  }
-
-  private boolean isBrowsableElement(PsiElement element)
-  {
-    if (element instanceof SchemeSymbol)
-    {
-      SchemeSymbol symbol = (SchemeSymbol) element;
-
-      PsiElement parentElement = symbol.getParent();
-      if (!(parentElement instanceof SchemeFormDefineBase))
-      {
-        return false;
+    while (true) {
+      child = child.getNextSibling();
+      if (child == null) {
+        break;
       }
-
-      SchemeFormDefineBase parent = (SchemeFormDefineBase) parentElement;
-      PsiElement tmpEle;
-      tmpEle = SchemePsiUtil.getNormalChildAt(parent, 1);
-      if (null == tmpEle)
-      {
-        return false;
+      if (isDeclarationFrom(child)) {
+        PsiElement nameChild = getDeclareNameChild(child);
+        if (nameChild != null) {
+          childrenElements.add(new SchemeStructureViewElement((NavigatablePsiElement)child));
+        }
       }
-
-      return tmpEle.textMatches(element);
     }
 
-    return false;
+    return childrenElements.toArray(new SchemeStructureViewElement[0]);
   }
 
   @Override
@@ -110,13 +101,15 @@ public class SchemeStructureViewElement implements StructureViewTreeElement, Ite
   @Override
   public Icon getIcon(boolean open)
   {
-    return element.getIcon(Iconable.ICON_FLAG_VISIBILITY);
+    return nameChild == null ?
+            SchemeIcons.SCHEME_ICON :
+            nameChild.getIcon(Iconable.ICON_FLAG_VISIBILITY);
   }
 
   @Override
   public String getPresentableText()
   {
-    return ((PsiNamedElement) element).getName();
+    return nameChild == null ? "" : nameChild.getText();
   }
 
   @Override
