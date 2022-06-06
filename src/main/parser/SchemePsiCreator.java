@@ -31,16 +31,19 @@ public class SchemePsiCreator
     {
       return new SchemeQuoted(node);
     }
-    else if (elementType == AST.AST_FORM_BACKQUOTE)
+    else if (elementType == AST.AST_FORM_QUASIQUOTE)
     {
       return new SchemeQuoted(node);
     }
-    else if (elementType == AST.AST_BASIC_ELE_BOOL
-            || elementType == AST.AST_BASIC_ELE_NUM
+    else if (elementType == AST.AST_BASIC_ELE_NUM
             || elementType == AST.AST_BASIC_ELE_CHAR
             || elementType == AST.AST_BASIC_ELE_STR)
     {
       return new SchemeSpecialLiteral(node);
+    }
+    else if (elementType == AST.AST_BASIC_ELE_BOOL)
+    {
+      return new SchemeBoolean(node);
     }
     else if (elementType == AST.AST_BASIC_ELE_KEYWORD)
     {

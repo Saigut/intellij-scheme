@@ -15,6 +15,13 @@
 
 (eq? 1 2)
 
+#t #f
+
+'(eq? 1 2)
+`(list ,(eq? 1 2) ,@(eq? 1 2))
+#'(eq? 1 2)
+#`(list #,(eq? 1 2) #,@(eq? 1 2))
+
 (let ((x '(1 3 5 7 9)))
   (do ((x x (cdr x))
        (sum 0 (+ sum (car x))))

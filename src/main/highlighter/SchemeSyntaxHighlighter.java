@@ -78,7 +78,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
   @NonNls
   public static final String DOT_ID = "Dot";
   @NonNls
-  public static final String COMMA_ID = "Comma";
+  public static final String ABBREVIATION_ID = "Abbreviation";
 
 
   // Registering TextAttributes
@@ -103,7 +103,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
     createTextAttributesKey(QUOTED_STRING_ID, DefaultLanguageHighlighterColors.STRING);
     createTextAttributesKey(QUOTED_NUMBER_ID, DefaultLanguageHighlighterColors.NUMBER);
     createTextAttributesKey(DOT_ID, DefaultLanguageHighlighterColors.DOT);
-    createTextAttributesKey(COMMA_ID, DefaultLanguageHighlighterColors.COMMA);
+    createTextAttributesKey(ABBREVIATION_ID, DefaultLanguageHighlighterColors.KEYWORD);
   }
 
   public static TextAttributesKey COMMENT = createTextAttributesKey(COMMENT_ID);
@@ -124,7 +124,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
   public static TextAttributesKey QUOTED_STRING = createTextAttributesKey(QUOTED_STRING_ID);
   public static TextAttributesKey QUOTED_NUMBER = createTextAttributesKey(QUOTED_NUMBER_ID);
   public static TextAttributesKey DOT = createTextAttributesKey(DOT_ID);
-  public static TextAttributesKey COMMA = createTextAttributesKey(COMMA_ID);
+  public static TextAttributesKey ABBREVIATION = createTextAttributesKey(ABBREVIATION_ID);
 
   public static TextAttributesKey[] LINE_COMMENT_KEYS = new TextAttributesKey[]{createTextAttributesKey(COMMENT_ID)};
 //  public static TextAttributesKey[] BLOCK_COMMENT_KEYS = new TextAttributesKey[]{createTextAttributesKey(BLOCK_COMMENT_ID)};
@@ -144,7 +144,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
   public static TextAttributesKey[] QUOTED_STRING_KEYS = new TextAttributesKey[]{createTextAttributesKey(QUOTED_STRING_ID)};
   public static TextAttributesKey[] QUOTED_NUMBER_KEYS = new TextAttributesKey[]{createTextAttributesKey(QUOTED_NUMBER_ID)};
   public static TextAttributesKey[] DOT_KEYS = new TextAttributesKey[]{createTextAttributesKey(DOT_ID)};
-  public static TextAttributesKey[] COMMA_KEYS = new TextAttributesKey[]{createTextAttributesKey(COMMA_ID)};
+  public static TextAttributesKey[] ABBREVIATION_KEYS = new TextAttributesKey[]{createTextAttributesKey(ABBREVIATION_ID)};
   public static TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
   static
@@ -161,11 +161,13 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
     newFillMap(ATTRIBUTES, CHAR_KEYS, SchemeTokens.CHAR_LITERAL);
     newFillMap(ATTRIBUTES, SPECIAL_KEYS, SchemeTokens.SPECIAL);
     newFillMap(ATTRIBUTES, IDENTIFIER_KEYS, SchemeTokens.IDENTIFIERS);
-    newFillMap(ATTRIBUTES, KEYWORD_KEYS, SchemeTokens.KEYWORD);
+    newFillMap(ATTRIBUTES, KEYWORD_KEYS, SchemeTokens.KEYWORD, SchemeTokens.BOOLEAN_LITERAL);
     newFillMap(ATTRIBUTES, PROCEDURE_KEYS, SchemeTokens.PROCEDURE);
     newFillMap(ATTRIBUTES, BAD_CHARACTER_KEYS, SchemeTokens.BAD_CHARACTER);
     newFillMap(ATTRIBUTES, DOT_KEYS, SchemeTokens.DOT);
-    newFillMap(ATTRIBUTES, COMMA_KEYS, SchemeTokens.COMMA, SchemeTokens.COMMA_AT);
+    newFillMap(ATTRIBUTES, ABBREVIATION_KEYS,
+            SchemeTokens.QUOTE, SchemeTokens.QUASIQUOTE, SchemeTokens.UNQUOTE, SchemeTokens.UNQUOTE_SPLICING,
+            SchemeTokens.SYNTAX, SchemeTokens.QUASISYNTAX, SchemeTokens.UNSYNTAX, SchemeTokens.UNSYNTAX_SPLICING);
   }
 
   protected static void newFillMap(@NotNull Map<IElementType, TextAttributesKey[]> map, TextAttributesKey[] value, @NotNull TokenSet keys) {

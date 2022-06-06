@@ -35,7 +35,7 @@ public class SchemeSpacingProcessor
     IElementType type1 = node1.getElementType();
     IElementType type2 = node2.getElementType();
 
-    if (SchemeTokens.PREFIXES.contains(type1)
+    if (SchemeTokens.DATUM_PREFIXES.contains(type1)
             || type1 == AST.AST_BAD_CHARACTER)
     {
       return NO_SPACING;

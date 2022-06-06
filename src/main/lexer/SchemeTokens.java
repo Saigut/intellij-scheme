@@ -8,7 +8,7 @@ import main.parser.SchemeElementType;
 public interface SchemeTokens
 {
   // Special characters
-  IElementType SHARP = new SchemeElementType("#");
+  IElementType SHARP_MARK = new SchemeElementType("#");
   IElementType OPEN_VECTOR = new SchemeElementType("#(");
   IElementType LEFT_PAREN = new SchemeElementType("(");
   IElementType RIGHT_PAREN = new SchemeElementType(")");
@@ -19,10 +19,14 @@ public interface SchemeTokens
   IElementType LEFT_SQUARE = new SchemeElementType("[");
   IElementType RIGHT_SQUARE = new SchemeElementType("]");
 
-  IElementType QUOTE_MARK = new SchemeElementType("'");
-  IElementType BACKQUOTE = new SchemeElementType("`");
-  IElementType COMMA = new SchemeElementType(",");
-  IElementType COMMA_AT = new SchemeElementType(",@");
+  IElementType QUOTE = new SchemeElementType("'");
+  IElementType QUASIQUOTE = new SchemeElementType("`");
+  IElementType UNQUOTE = new SchemeElementType(",");
+  IElementType UNQUOTE_SPLICING = new SchemeElementType(",@");
+  IElementType SYNTAX = new SchemeElementType("#'");
+  IElementType QUASISYNTAX = new SchemeElementType("#`");
+  IElementType UNSYNTAX = new SchemeElementType("#,");
+  IElementType UNSYNTAX_SPLICING = new SchemeElementType("#,@");
 
   // Comments
   IElementType LINE_COMMENT = new SchemeElementType("line comment");
@@ -58,7 +62,8 @@ public interface SchemeTokens
   TokenSet IDENTIFIERS = TokenSet.create(IDENTIFIER);
   TokenSet STRINGS = TokenSet.create(STRING_LITERAL);
 
-  TokenSet PREFIXES = TokenSet.create(QUOTE_MARK, BACKQUOTE, COMMA, COMMA_AT);
+  TokenSet DATUM_PREFIXES = TokenSet.create(QUOTE, QUASIQUOTE, UNQUOTE, UNQUOTE_SPLICING,
+          SYNTAX, QUASISYNTAX, UNSYNTAX, UNSYNTAX_SPLICING);
   TokenSet BRACES = TokenSet.create(LEFT_PAREN, LEFT_CURLY, LEFT_SQUARE, RIGHT_PAREN, RIGHT_CURLY, RIGHT_SQUARE);
   TokenSet OPEN_BRACES = TokenSet.create(LEFT_PAREN, LEFT_CURLY, LEFT_SQUARE);
 }

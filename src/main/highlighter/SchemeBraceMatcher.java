@@ -28,7 +28,7 @@ public class SchemeBraceMatcher implements PairedBraceMatcher
     return tokenType == null ||
            SchemeTokens.WHITESPACE_SET.contains(tokenType) ||
            SchemeTokens.COMMENTS.contains(tokenType) ||
-           tokenType == SchemeTokens.COMMA ||
+           tokenType == SchemeTokens.UNQUOTE ||
            tokenType == SchemeTokens.RIGHT_SQUARE ||
            tokenType == SchemeTokens.RIGHT_PAREN ||
            tokenType == SchemeTokens.RIGHT_CURLY;

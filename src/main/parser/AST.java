@@ -35,7 +35,13 @@ public interface AST
   IElementType AST_FORM_LET = new SchemeElementType("ast let");
   IElementType AST_FORM_SET = new SchemeElementType("ast set");
   IElementType AST_FORM_QUOTE = new SchemeElementType("ast quote");
-  IElementType AST_FORM_BACKQUOTE = new SchemeElementType("ast backquote");
+  IElementType AST_FORM_QUASIQUOTE = new SchemeElementType("ast quasiquote");
+  IElementType AST_FORM_UNQUOTE = new SchemeElementType("ast unquote");
+  IElementType AST_FORM_UNQUOTE_SPLICING = new SchemeElementType("ast unquote-splicing");
+  IElementType AST_FORM_SYNTAX = new SchemeElementType("ast syntax");
+  IElementType AST_FORM_QUASISYNTAX = new SchemeElementType("ast quasisyntax");
+  IElementType AST_FORM_UNSYNTAX = new SchemeElementType("ast unsyntax");
+  IElementType AST_FORM_UNSYNTAX_SPLICING = new SchemeElementType("ast unsyntax-splicing");
 
   // Data structure forms
   IElementType AST_FORM_CAR = new SchemeElementType("ast car");
@@ -71,7 +77,7 @@ public interface AST
           AST_BASIC_ELE_KEYWORD, AST_BASIC_ELE_PROCEDURE, AST_BASIC_ELE_SYMBOL,
           AST_ELE_VECTOR,
           AST_FORM_DEFINE, AST_FORM_DEFINE_RECORD_TYPE, AST_FORM_DEFINE_SYNTAX,
-          AST_FORM_PROCEDURE, AST_FORM_CALL_PROCEDURE, AST_FORM_LET, AST_FORM_SET, AST_FORM_QUOTE, AST_FORM_BACKQUOTE,
+          AST_FORM_PROCEDURE, AST_FORM_CALL_PROCEDURE, AST_FORM_LET, AST_FORM_SET, AST_FORM_QUOTE, AST_FORM_QUASIQUOTE,
           AST_FORM_CAR, AST_FORM_CDR, AST_FORM_CONS, AST_FORM_LIST,
           AST_FORM_LIBRARY,
           AST_FORM_BEGIN, AST_FORM_IF, AST_FORM_COND, AST_FORM_WHEN, AST_FORM_UNLESS,

@@ -4,7 +4,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
 import main.lexer.SchemeTokens;
 
@@ -88,6 +87,45 @@ public class SchemeParser implements PsiParser, SchemeTokens
     }
   }
 
+  IElementType datumPrefixMarkType(IElementType type)
+  {
+    if (QUOTE == type)
+    {
+      return AST.AST_FORM_QUOTE;
+    }
+    else if (QUASIQUOTE == type)
+    {
+      return AST.AST_FORM_QUASIQUOTE;
+    }
+    else if (UNQUOTE == type)
+    {
+      return AST.AST_FORM_UNQUOTE;
+    }
+    else if (UNQUOTE_SPLICING == type)
+    {
+      return AST.AST_FORM_UNQUOTE_SPLICING;
+    }
+    else if (SYNTAX == type)
+    {
+      return AST.AST_FORM_SYNTAX;
+    }
+    else if (QUASISYNTAX == type)
+    {
+      return AST.AST_FORM_QUASISYNTAX;
+    }
+    else if (UNSYNTAX == type)
+    {
+      return AST.AST_FORM_UNSYNTAX;
+    }
+    else if (UNSYNTAX_SPLICING == type)
+    {
+      return AST.AST_FORM_UNSYNTAX_SPLICING;
+    }
+    else
+    {
+      return AST.AST_BAD_CHARACTER;
+    }
+  }
 
   // New Main logic
   IElementType eatRemainList(PsiBuilder builder, IElementType close, IElementType success_type)
@@ -396,11 +434,13 @@ public class SchemeParser implements PsiParser, SchemeTokens
     return mark_type;
   }
 
-  IElementType parseSinglePrefix(IElementType type, PsiBuilder builder)
+  IElementType parsePrefix(IElementType type, PsiBuilder builder)
   {
     PsiBuilder.Marker marker = builder.mark();
     builder.advanceLexer();
     IElementType childType = builder.getTokenType();
+    IElementType mark_type = null;
+
     if (childType == null ||
         WHITESPACE == childType ||
         COMMENTS.contains(childType))
@@ -409,57 +449,50 @@ public class SchemeParser implements PsiParser, SchemeTokens
       marker.drop();
       return null;
     }
-    else
-    {
-      IElementType mark_type = null;
-      if (DATUM_COMMENT_PRE == type) {
-        PsiBuilder.Marker marker_datum = builder.mark();
-        parseSexp(childType, builder);
-        marker_datum.collapse(SchemeTokens.DATUM_COMMENT);
 
-        mark_type = AST.AST_ELE_DATUM_COMMENT;
-        marker.done(mark_type);
-        return mark_type;
-      }
+    if (DATUM_COMMENT_PRE == type) {
+      PsiBuilder.Marker marker_datum = builder.mark();
       parseSexp(childType, builder);
-      if (QUOTE_MARK == type)
-      {
-        mark_type = AST.AST_FORM_QUOTE;
-      }
-      else if (BACKQUOTE == type)
-      {
-        mark_type = AST.AST_FORM_BACKQUOTE;
-      }
-      else if (SHARP == type)
-      {
-        if (isParen(childType)) {
-          mark_type = AST.AST_ELE_VECTOR;
-        }
-        else
-        {
-          mark_type = AST.AST_BAD_CHARACTER;
-        }
+      marker_datum.collapse(SchemeTokens.DATUM_COMMENT);
+      mark_type = AST.AST_ELE_DATUM_COMMENT;
+      marker.done(mark_type);
+      return mark_type;
+    }
+
+    if (DATUM_PREFIXES.contains(type)) {
+      parseSexp(childType, builder);
+      mark_type = datumPrefixMarkType(type);
+      marker.done(mark_type);
+      return mark_type;
+    }
+
+    parseSexp(childType, builder);
+    if (SHARP_MARK == type)
+    {
+      if (isParen(childType)) {
+        mark_type = AST.AST_ELE_VECTOR;
       }
       else
       {
-        syntaxError(builder, "Run Error");
-        marker.drop();
+        mark_type = AST.AST_BAD_CHARACTER;
       }
-      if (mark_type != null) {
-        marker.done(mark_type);
-      }
+      marker.done(mark_type);
       return mark_type;
+    }
+    else
+    {
+      syntaxError(builder, "Run Error");
+      marker.drop();
+      return null;
     }
   }
 
   IElementType parseNonParen(IElementType type, PsiBuilder builder)
   {
-    // it is just leaf, mark it's type
-    if (QUOTE_MARK == type
-        || BACKQUOTE == type
-        || SHARP == type
+    if (DATUM_PREFIXES.contains(type)
+        || SHARP_MARK == type
         || DATUM_COMMENT_PRE == type) {
-      return parseSinglePrefix(type, builder);
+      return parsePrefix(type, builder);
     }
     else
     {
@@ -503,71 +536,6 @@ public class SchemeParser implements PsiParser, SchemeTokens
     }
   }
 
-
-
-  protected void parseDatum(PsiBuilder builder)
-  {
-    IElementType token = builder.getTokenType();
-    if (LEFT_PAREN == token)
-    {
-      parseList(builder, LEFT_PAREN, RIGHT_PAREN);
-    }
-    else if (LEFT_SQUARE == token)
-    {
-      parseList(builder, LEFT_SQUARE, RIGHT_SQUARE);
-    }
-    else if (OPEN_VECTOR == token)
-    {
-      parseVector(builder);
-    }
-    else if (LITERALS.contains(token))
-    {
-      parseLiteral(builder);
-    }
-    else if (KEYWORD == token)
-    {
-      parseKeyword(builder);
-    }
-    else if (PROCEDURE == token)
-    {
-      parseProcedure(builder);
-    }
-    else if (IDENTIFIER == token)
-    {
-      parseIdentifier(builder);
-    }
-    else if (SPECIAL == token)
-    {
-      parseSpecial(builder);
-    }
-    else if (getPrefixes().contains(token))
-    {
-      parseAbbreviation(builder);
-    }
-    else
-    {
-      syntaxError(builder, "Expected Left Paren, Symbol or Literal");
-    }
-  }
-
-  private void parseExpressions(IElementType endToken, PsiBuilder builder)
-  {
-    for (IElementType token = builder.getTokenType();
-         token != endToken && token != null;
-         token = builder.getTokenType())
-    {
-      parseDatum(builder);
-    }
-    if (builder.getTokenType() != endToken)
-    {
-      builder.error("Expected '" + endToken.toString() + "'");
-    }
-    else
-    {
-      builder.advanceLexer();
-    }
-  }
-
   private void syntaxError(PsiBuilder builder, String msg)
   {
     String e = msg + ": " + builder.getTokenText();
@@ -596,78 +564,6 @@ public class SchemeParser implements PsiParser, SchemeTokens
     return marker;
   }
 
-  /**
-   * Enter: Lexer is pointed at literal
-   * Exit: Lexer is pointed immediately after literal
-   *
-   * @param builder
-   */
-  private void parseLiteral(PsiBuilder builder)
-  {
-    PsiBuilder.Marker marker = builder.mark();
-    builder.advanceLexer();
-    marker.done(AST.AST_BASIC_ELE_SYMBOL);
-  }
-
-  /**
-   * Enter: Lexer is pointed at identifier
-   * Exit: Lexer is pointed immediately after identifier
-   *
-   * @param builder
-   */
-  private void parseIdentifier(PsiBuilder builder)
-  {
-    PsiBuilder.Marker marker = builder.mark();
-    //    ParserUtils.getToken(builder, AST_IDENTIFIER, "Expected identifier");
-    // Currently using this for keywords too
-    // TODO fix this
-    builder.advanceLexer();
-    marker.done(AST.AST_BASIC_ELE_SYMBOL);
-  }
-
-  private void parseKeyword(PsiBuilder builder)
-  {
-    PsiBuilder.Marker marker = builder.mark();
-    builder.advanceLexer();
-    marker.done(AST.AST_BASIC_ELE_KEYWORD);
-  }
-
-  private void parseProcedure(PsiBuilder builder)
-  {
-    PsiBuilder.Marker marker = builder.mark();
-    builder.advanceLexer();
-    marker.done(AST.AST_BASIC_ELE_PROCEDURE);
-  }
-
-  /**
-   * Enter: Lexer is pointed at special
-   * Exit: Lexer is pointed immediately after special symbol
-   *
-   * @param builder
-   */
-  private void parseSpecial(PsiBuilder builder)
-  {
-    PsiBuilder.Marker marker = builder.mark();
-    builder.advanceLexer();
-    marker.done(AST.AST_BASIC_ELE_SYMBOL);
-  }
-
-  /**
-   * Enter: Lexer is pointed at abbreviation mark
-   * Exit: Lexer is pointed immediately after datum quoted by abbreviation mark
-   */
-  private void parseAbbreviation(PsiBuilder builder)
-  {
-    PsiBuilder.Marker marker = builder.mark();
-    builder.advanceLexer();
-    parseDatum(builder);
-    marker.done(AST.AST_FORM_QUOTE);
-  }
-
-  /**
-   * Enter: Lexer is pointed at the opening left paren
-   * Exit: Lexer is pointed immediately after the closing right paren, or at the end-of-file
-   */
   private IElementType parseList(PsiBuilder builder, IElementType open, IElementType close)
   {
     PsiBuilder.Marker marker = markAndAdvance(builder);
@@ -692,21 +588,5 @@ public class SchemeParser implements PsiParser, SchemeTokens
     marker.done(mark_type);
 
     return mark_type;
-  }
-
-  /**
-   * Enter: Lexer is pointed at the opening left square
-   * Exit: Lexer is pointed immediately after the closing right paren, or at the end-of-file
-   */
-  private void parseVector(PsiBuilder builder)
-  {
-    PsiBuilder.Marker marker = markAndAdvance(builder);
-    parseExpressions(RIGHT_PAREN, builder);
-    marker.done(AST.AST_ELE_VECTOR);
-  }
-
-  protected TokenSet getPrefixes()
-  {
-    return PREFIXES;
   }
 }
