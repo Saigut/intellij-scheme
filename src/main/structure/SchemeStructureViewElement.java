@@ -1,22 +1,20 @@
 package main.structure;
 
+import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.SortableTreeElement;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
-import main.SchemeIcons;
 import main.parser.AST;
 import org.jetbrains.annotations.NotNull;
 import main.psi.util.SchemePsiUtil;
 
-import javax.swing.Icon;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class SchemeStructureViewElement implements StructureViewTreeElement, ItemPresentation, SortableTreeElement
+public class SchemeStructureViewElement implements StructureViewTreeElement, SortableTreeElement
 {
   private final NavigatablePsiElement element;
   private final NavigatablePsiElement nameChild;
@@ -29,7 +27,7 @@ public class SchemeStructureViewElement implements StructureViewTreeElement, Ite
 
   public PsiElement getValue()
   {
-    return nameChild;
+    return element;
   }
 
   public void navigate(boolean requestFocus)
@@ -52,6 +50,7 @@ public class SchemeStructureViewElement implements StructureViewTreeElement, Ite
   public String getAlphaSortKey() {
     return nameChild != null ? nameChild.getText() : "";
   }
+
   private boolean isDeclarationFrom(PsiElement element) {
     return AST.DEFINE_FORMS.contains(element.getNode().getElementType());
   }
@@ -92,30 +91,10 @@ public class SchemeStructureViewElement implements StructureViewTreeElement, Ite
     return childrenElements.toArray(new SchemeStructureViewElement[0]);
   }
 
-  @Override
-  public String getLocationString()
-  {
-    return null;
-  }
-
-  @Override
-  public Icon getIcon(boolean open)
-  {
-    return nameChild == null ?
-            SchemeIcons.SCHEME_ICON :
-            nameChild.getIcon(Iconable.ICON_FLAG_VISIBILITY);
-  }
-
-  @Override
-  public String getPresentableText()
-  {
-    return nameChild == null ? "" : nameChild.getText();
-  }
-
-  @Override
   @NotNull
-  public ItemPresentation getPresentation()
-  {
-    return this;
+  @Override
+  public ItemPresentation getPresentation() {
+    ItemPresentation presentation = nameChild.getPresentation();
+    return presentation != null ? presentation : new PresentationData();
   }
 }
