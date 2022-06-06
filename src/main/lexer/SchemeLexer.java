@@ -47,7 +47,7 @@ public class SchemeLexer extends LexerBase
     TAG_BOOLEAN,
     TAG_QUOTE_STRING,
     TAG_SHARP_CHAR,
-    TAG_IDENTIFIER,
+    TAG_NAME_LITERAL,
     TAG_BAD_CHARACTER,
 
     TAG_KEYWORD,
@@ -115,29 +115,30 @@ public class SchemeLexer extends LexerBase
           .map((a) -> (Tokens.fragment(a, Tag.TAG_NUMBER)));
 
   // Identifier
-  Pattern PT_IDENTIFIER_CHAR_VALID = Patterns
+  Pattern PT_NAME_LITERAL_CHAR_VALID = Patterns
           .or(Patterns.isChar(CharPredicates.IS_LETTER),
                   Patterns.isChar(CharPredicates.IS_DIGIT),
                   Patterns.among("!$%&*+-./:<=>?@^_~"));
-  Pattern PT_IDENTIFIER = PT_IDENTIFIER_CHAR_VALID.many1();
-  Parser<String> PAR_IDENTIFIER = PT_IDENTIFIER.toScanner("identifier").source();
-  Parser<?> s_identifier = PAR_IDENTIFIER
-          .map((a) -> (Tokens.fragment(a, Tag.TAG_IDENTIFIER)));
+  Pattern PT_NAME_LITERAL = PT_NAME_LITERAL_CHAR_VALID.many1();
+  Parser<String> PAR_NAME_LITERAL = PT_NAME_LITERAL.toScanner("name literal").source();
+  Parser<?> s_name_literal = PAR_NAME_LITERAL
+          .map((a) -> (Tokens.fragment(a, Tag.TAG_NAME_LITERAL)));
 
   // Characters
   List<String> STRS_SPECIAL_CHAR_NAME = asList("nul", "alarm",
           "backspace", "tab", "linefeed",
           "newline", "vtab", "page", "return", "esc",
-          "space", "delete", "vtab", "λ");
+          "space", "delete", "vtab", "λ",
+          "rubout", "bel", "vt", "nel", "ls");
   Terminals TERM_SPECIAL_CHAR_NAMES = Terminals
           .operators(STRS_SPECIAL_CHAR_NAME);
-  Pattern PT_SINGLE_CHAR = Patterns.ANY_CHAR.next(PT_IDENTIFIER.not());
+  Pattern PT_SINGLE_CHAR = Patterns.ANY_CHAR.next(PT_NAME_LITERAL.not());
   Pattern PT_HEX = Patterns.sequence(Patterns.among("xX"), Patterns.among("0123456789abcdefABCDEF").many1())
-          .next(PT_IDENTIFIER.not());
+          .next(PT_NAME_LITERAL.not());
   Pattern PT_CHAR_PREFIX = Patterns.string("#\\");
 
   Parser<?> SCA_CHAR_PREFIX = PT_CHAR_PREFIX.toScanner("char prefix");
-  Parser<?> SCA_SPECIAL_CHAR_NAMES = TERM_SPECIAL_CHAR_NAMES.tokenizer().next(PAR_IDENTIFIER.not());
+  Parser<?> SCA_SPECIAL_CHAR_NAMES = TERM_SPECIAL_CHAR_NAMES.tokenizer().next(PAR_NAME_LITERAL.not());
 
   Parser<?> SCA_CHAR = Patterns.sequence(PT_CHAR_PREFIX, PT_SINGLE_CHAR).toScanner("char");
   Parser<?> SCA_HEX_NUMBER = Patterns.sequence(PT_CHAR_PREFIX, PT_HEX).toScanner("hex number");
@@ -154,7 +155,7 @@ public class SchemeLexer extends LexerBase
   Parser<?> s_boolean = TERM_BOOLEAN.tokenizer().source()
           .map((a) -> (Tokens.fragment(a, Tag.TAG_BOOLEAN)));
 
-  Parser<?> PAR_LITERALS = Parsers.or(s_string, s_numbers, s_boolean, s_sharp_char, s_identifier);
+  Parser<?> PAR_LITERALS = Parsers.or(s_string, s_numbers, s_boolean, s_sharp_char, s_name_literal);
 
   /**
    * Some built-in elements
@@ -163,11 +164,12 @@ public class SchemeLexer extends LexerBase
   List<String> STRS_KEYWORD = asList(
           "and", "begin", "case", "cond", "define",
           "delay", "do", "else", "if", "lambda", "let",
-          "let*", "letrec", "quasiquote", "or", "set!",
-          "unquote", "unquote-splicing");
+          "let*", "letrec", "or", "quote", "quasiquote",
+          "quasisyntax", "set!", "syntax", "unquote", "unquote-splicing",
+          "unsyntax", "unsyntax-splicing");
   Terminals TERM_KEYWORDS = Terminals
         .operators(STRS_KEYWORD);
-  Parser<?> s_keywords = TERM_KEYWORDS.tokenizer().next(PAR_IDENTIFIER.not()).source()
+  Parser<?> s_keywords = TERM_KEYWORDS.tokenizer().next(PAR_NAME_LITERAL.not()).source()
         .map((a) -> (Tokens.fragment(a, Tag.TAG_KEYWORD)));
 
   // Built-in Procedures
@@ -209,7 +211,7 @@ public class SchemeLexer extends LexerBase
           "vector-ref", "vector-set!", "vector?", "with-exception-handler", "zero?");
   Terminals TERM_BUILTIN_PROCEDURES = Terminals
           .operators(STRS_BUILTIN_PROCEDURE);
-  Parser<?> s_builtin_procedures = TERM_BUILTIN_PROCEDURES.tokenizer().next(PAR_IDENTIFIER.not()).source()
+  Parser<?> s_builtin_procedures = TERM_BUILTIN_PROCEDURES.tokenizer().next(PAR_NAME_LITERAL.not()).source()
           .map((a) -> (Tokens.fragment(a, Tag.TAG_PROCEDURE)));
 
   Parser<?> PAR_BUILTIN_ELEMENTS = Parsers.or(s_keywords, s_builtin_procedures);
@@ -412,8 +414,8 @@ public class SchemeLexer extends LexerBase
         type = SchemeTokens.PROCEDURE;
         break;
 
-      case TAG_IDENTIFIER:
-        type = SchemeTokens.PLAIN_LITERAL;
+      case TAG_NAME_LITERAL:
+        type = SchemeTokens.NAME_LITERAL;
         break;
 
       case TAG_BAD_CHARACTER:

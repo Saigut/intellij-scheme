@@ -41,9 +41,9 @@ public interface SchemeTokens
   IElementType NUMBER_LITERAL = new SchemeElementType("number literal");
   IElementType CHAR_LITERAL = new SchemeElementType("character literal");
   IElementType BOOLEAN_LITERAL = new SchemeElementType("boolean literal");
-  IElementType PLAIN_LITERAL = new SchemeElementType("plain literal");
+  IElementType NAME_LITERAL = new SchemeElementType("name literal");
 
-  TokenSet LITERALS = TokenSet.create(PLAIN_LITERAL);
+  TokenSet LITERALS = TokenSet.create(NAME_LITERAL);
 
   IElementType IDENTIFIER = new SchemeElementType("identifier");
   IElementType KEYWORD = new SchemeElementType("keyword");

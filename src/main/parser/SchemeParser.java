@@ -77,7 +77,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
     else if (PROCEDURE == type) {
       return AST.AST_BASIC_ELE_PROCEDURE;
     }
-    else if (PLAIN_LITERAL == type
+    else if (NAME_LITERAL == type
              || IDENTIFIER == type) {
       return AST.AST_BASIC_ELE_SYMBOL;
     }
@@ -466,10 +466,10 @@ public class SchemeParser implements PsiParser, SchemeTokens
       return mark_type;
     }
 
-    parseSexp(childType, builder);
     if (SHARP_MARK == type)
     {
-      if (isParen(childType)) {
+      if (LEFT_PAREN == childType) {
+        parseSexp(childType, builder);
         mark_type = AST.AST_ELE_VECTOR;
       }
       else
