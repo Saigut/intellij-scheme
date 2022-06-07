@@ -1,5 +1,6 @@
 package main.psi.util;
 
+import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
@@ -58,6 +59,38 @@ public class SchemePsiUtil
     }
 
     return child;
+  }
+
+  public static ASTNode getNodeNormalChildAt(ASTNode node, int i)
+  {
+    if (i < 0) {
+      return null;
+    }
+    ASTNode child = node.getFirstChildNode();
+    int idx = 0;
+    while (child != null) {
+      if (AST.AST_ELEMENTS.contains(child.getElementType())) {
+        if (idx >= i) {
+          return child;
+        } else {
+          idx++;
+        }
+      }
+      child = child.getTreeNext();
+    }
+    return null;
+  }
+
+  public static ASTNode getNodeNextNormalSibling(ASTNode node)
+  {
+    ASTNode child = node.getTreeNext();
+    while (child != null) {
+      if (AST.AST_ELEMENTS.contains(child.getElementType())) {
+        return child;
+      }
+      child = child.getTreeNext();
+    }
+    return null;
   }
 
   public static PsiElement getBigBrother(PsiElement element)

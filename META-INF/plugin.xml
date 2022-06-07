@@ -32,6 +32,8 @@
                     implementationClass="main.formatter.SchemeFormattingModelBuilder"/>
     <lang.psiStructureViewFactory language="Scheme"
                                   implementationClass="main.structure.SchemeStructureViewBuilderFactory"/>
+    <lang.foldingBuilder language="Scheme"
+            implementationClass="main.fold.SchemeFoldingBuilder"/>
 
     <gotoSymbolContributor implementation="main.gotoclass.SchemeGoToSymbolContributor"/>
     <syntaxHighlighter key="Scheme"
