@@ -6,8 +6,8 @@ import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
+import main.psi.impl.SchemeFormDefineBase;
 import org.jetbrains.annotations.NotNull;
-import main.psi.impl.SchemeSymbol;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -26,9 +26,9 @@ public class SchemeStructureViewModel extends StructureViewModelBase implements
   }
 
   @NotNull
-  protected Class[] getSuitableClasses()
+  protected Class<?>[] getSuitableClasses()
   {
-    return new Class[] { SchemeSymbol.class };
+    return new Class[] { SchemeFormDefineBase.class };
   }
 
   @Override
