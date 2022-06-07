@@ -4,11 +4,11 @@ import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.psi.PsiElement;
+import main.psi.impl.SchemeSymbol;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import main.lexer.SchemeLexer;
 import main.lexer.SchemeTokens;
-import main.psi.impl.symbols.SchemeIdentifier;
 
 
 public class SchemeFindUsagesProvider implements FindUsagesProvider
@@ -21,7 +21,8 @@ public class SchemeFindUsagesProvider implements FindUsagesProvider
 
   public boolean canFindUsagesFor(@NotNull PsiElement psiElement)
   {
-    return psiElement instanceof SchemeIdentifier;
+//    return psiElement instanceof SchemeSymbol;
+    return true;
   }
 
   public String getHelpId(@NotNull PsiElement psiElement)
@@ -32,40 +33,22 @@ public class SchemeFindUsagesProvider implements FindUsagesProvider
   @NotNull
   public String getType(@NotNull PsiElement element)
   {
-    if (element instanceof SchemeIdentifier)
+    if (element instanceof SchemeSymbol)
     {
       return "symbol";
     }
-    //    if (element instanceof ClDef)
-    //    {
-    //      return "definition";
-    //    }
     return "entity";
   }
 
   @NotNull
   public String getDescriptiveName(@NotNull PsiElement element)
   {
-    if (element instanceof SchemeIdentifier)
-    {
-      SchemeIdentifier symbol = (SchemeIdentifier) element;
-      String name = symbol.getText();
-      return name == null ? symbol.getText() : name;
-    }
-
     return element.getText();
   }
 
   @NotNull
   public String getNodeText(@NotNull PsiElement element, boolean useFullName)
   {
-    if (element instanceof SchemeIdentifier)
-    {
-      SchemeIdentifier symbol = (SchemeIdentifier) element;
-      String name = symbol.getReferenceName();
-      return name == null ? symbol.getText() : name;
-    }
-
     return element.getText();
   }
 }

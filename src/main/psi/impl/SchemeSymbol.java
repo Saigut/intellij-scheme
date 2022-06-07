@@ -7,13 +7,11 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import main.SchemeIcons;
-import main.lexer.TokenSets;
 import main.parser.AST;
 import main.psi.impl.symbols.CompleteSymbol;
 import main.psi.util.SchemePsiElementFactory;
@@ -42,65 +40,36 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     return "SchemeSymbol: " + getReferenceName();
   }
 
+  @NotNull
   public PsiElement getElement()
   {
     return this;
   }
 
+  @NotNull
   public TextRange getRangeInElement()
   {
-    PsiElement refNameElement = getReferenceNameElement();
-    if (refNameElement != null)
-    {
-      int offsetInParent = refNameElement.getStartOffsetInParent();
-      return new TextRange(offsetInParent, offsetInParent + refNameElement.getTextLength());
-    }
     return new TextRange(0, getTextLength());
-  }
-
-  @Nullable
-  public PsiElement getReferenceNameElement()
-  {
-    ASTNode lastChild = getNode().getLastChildNode();
-    if (lastChild == null)
-    {
-      return null;
-    }
-    for (IElementType elementType : TokenSets.REFERENCE_NAMES.getTypes())
-    {
-      if (lastChild.getElementType() == elementType)
-      {
-        return lastChild.getPsi();
-      }
-    }
-
-    return null;
   }
 
   @Nullable
   public String getReferenceName()
   {
-    PsiElement nameElement = getReferenceNameElement();
-    if (nameElement != null)
-    {
-      ASTNode node = nameElement.getNode();
-      if ((node != null) && (node.getElementType() == AST.AST_BASIC_ELE_SYMBOL))
-      {
-        return nameElement.getText();
-      }
-    }
-    return null;
+    return getText();
   }
 
   public PsiElement setName(@NotNull @NonNls String newName) throws IncorrectOperationException
   {
     ASTNode newNode = SchemePsiElementFactory.getInstance(getProject()).createSymbolNodeFromText(newName);
-    ASTNode parentNode = getParent().getNode();
+    ASTNode thisNode = getNode();
+    ASTNode parentNode = thisNode.getTreeParent();
     if (parentNode != null)
     {
-      parentNode.replaceChild(getNode(), newNode);
+      parentNode.replaceChild(thisNode, newNode);
+      return newNode.getPsi();
+    } else {
+      return this;
     }
-    return newNode.getPsi();
   }
 
   @Override
@@ -139,16 +108,48 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
   @Override
   public String getName()
   {
-    return getNameString();
+    return getText();
   }
 
-  private boolean isItDeclaration(PsiElement element)
+  @NotNull
+  public Object[] getVariants()
   {
-    if (null == element)
+    return CompleteSymbol.getVariants(this);
+  }
+
+  public String getCanonicalText()
+  {
+    return getText();
+  }
+
+  public boolean isSoft()
+  {
+    return false;
+  }
+
+  public boolean isReferenceTo(PsiElement element)
+  {
+    if (element instanceof SchemeSymbol)
     {
-      return false;
+      SchemeSymbol symbol = (SchemeSymbol) element;
+      String referenceName = getReferenceName();
+      if ((referenceName != null) && referenceName.equals(symbol.getReferenceName()))
+      {
+        return resolve() == symbol;
+      }
     }
-    return AST.DEFINE_FORMS.contains(element.getNode().getElementType());
+    return false;
+  }
+
+  public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
+  {
+    return setName(newElementName);
+  }
+
+  public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
+  {
+    //todo implement me!
+    return this;
   }
 
   public PsiElement resolve()
@@ -177,58 +178,12 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     }
   }
 
-  public String getCanonicalText()
+  private boolean isItDeclaration(PsiElement element)
   {
-    return null;
-  }
-
-  public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
-  {
-    PsiElement nameElement = getReferenceNameElement();
-    if (nameElement != null)
+    if (null == element)
     {
-      ASTNode node = nameElement.getNode();
-      ASTNode newNameNode = SchemePsiElementFactory.getInstance(getProject()).createSymbolNodeFromText(newElementName);
-      assert newNameNode != null && node != null;
-      node.getTreeParent().replaceChild(node, newNameNode);
+      return false;
     }
-    return this;
-  }
-
-  public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
-  {
-    //todo implement me!
-    return this;
-  }
-
-  public boolean isReferenceTo(PsiElement element)
-  {
-    if (element instanceof SchemeSymbol)
-    {
-      SchemeSymbol symbol = (SchemeSymbol) element;
-      String referenceName = getReferenceName();
-      if ((referenceName != null) && referenceName.equals(symbol.getReferenceName()))
-      {
-        return resolve() == symbol;
-      }
-    }
-    return false;
-  }
-
-  @NotNull
-  public Object[] getVariants()
-  {
-    return CompleteSymbol.getVariants(this);
-  }
-
-  public boolean isSoft()
-  {
-    return false;
-  }
-
-  @NotNull
-  public String getNameString()
-  {
-    return getText();
+    return AST.DEFINE_FORMS.contains(element.getNode().getElementType());
   }
 }

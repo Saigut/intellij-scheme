@@ -59,8 +59,8 @@ public interface SchemeTokens
 
   // Useful token sets
   TokenSet WHITESPACE_SET = TokenSet.create(WHITESPACE);
-  TokenSet IDENTIFIERS = TokenSet.create(IDENTIFIER);
-  TokenSet STRINGS = TokenSet.create(STRING_LITERAL);
+  TokenSet IDENTIFIERS = TokenSet.create(IDENTIFIER, NAME_LITERAL, PROCEDURE);
+  TokenSet STRINGS = TokenSet.create(STRING_LITERAL, NUMBER_LITERAL, CHAR_LITERAL, BOOLEAN_LITERAL);
 
   TokenSet DATUM_PREFIXES = TokenSet.create(QUOTE, QUASIQUOTE, UNQUOTE, UNQUOTE_SPLICING,
           SYNTAX, QUASISYNTAX, UNSYNTAX, UNSYNTAX_SPLICING);

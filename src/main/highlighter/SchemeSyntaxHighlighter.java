@@ -162,7 +162,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
 //    newFillMap(ATTRIBUTES, LITERAL_KEYS, AST_PLAIN_LITERAL, Tokens.BOOLEAN_LITERAL);
     newFillMap(ATTRIBUTES, CHAR_KEYS, SchemeTokens.CHAR_LITERAL);
     newFillMap(ATTRIBUTES, SPECIAL_KEYS, SchemeTokens.SPECIAL);
-    newFillMap(ATTRIBUTES, IDENTIFIER_KEYS, SchemeTokens.IDENTIFIERS);
+//    newFillMap(ATTRIBUTES, IDENTIFIER_KEYS, SchemeTokens.IDENTIFIERS);
     newFillMap(ATTRIBUTES, KEYWORD_KEYS, SchemeTokens.KEYWORD, SchemeTokens.BOOLEAN_LITERAL);
     newFillMap(ATTRIBUTES, PROCEDURE_KEYS, SchemeTokens.PROCEDURE);
     newFillMap(ATTRIBUTES, BAD_CHARACTER_KEYS, SchemeTokens.BAD_CHARACTER);

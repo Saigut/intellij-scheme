@@ -51,12 +51,11 @@ public class SchemeStructureViewElement implements StructureViewTreeElement, Sor
     return nameChild != null ? nameChild.getText() : "";
   }
 
-  private boolean isDeclarationFrom(PsiElement element) {
-    return AST.DEFINE_FORMS.contains(element.getNode().getElementType());
-  }
-
-  private PsiElement getDeclareNameChild(PsiElement element) {
-    return SchemePsiUtil.getNormalChildAt(element, 1);
+  @NotNull
+  @Override
+  public ItemPresentation getPresentation() {
+    ItemPresentation presentation = nameChild.getPresentation();
+    return presentation != null ? presentation : new PresentationData();
   }
 
   @NotNull
@@ -91,10 +90,11 @@ public class SchemeStructureViewElement implements StructureViewTreeElement, Sor
     return childrenElements.toArray(new SchemeStructureViewElement[0]);
   }
 
-  @NotNull
-  @Override
-  public ItemPresentation getPresentation() {
-    ItemPresentation presentation = nameChild.getPresentation();
-    return presentation != null ? presentation : new PresentationData();
+  private boolean isDeclarationFrom(PsiElement element) {
+    return AST.DEFINE_FORMS.contains(element.getNode().getElementType());
+  }
+
+  private PsiElement getDeclareNameChild(PsiElement element) {
+    return SchemePsiUtil.getNormalChildAt(element, 1);
   }
 }
