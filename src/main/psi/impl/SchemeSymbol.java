@@ -5,6 +5,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
@@ -92,8 +93,11 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
       @Nullable
       public String getLocationString()
       {
-        String name = getContainingFile().getName();
-        //todo show namespace
+        String name = "Unknown name";
+        PsiFile file = getContainingFile();
+        if (file != null) {
+          name = file.getName();
+        }
         return "(in " + name + ")";
       }
 
