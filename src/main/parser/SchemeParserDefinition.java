@@ -25,11 +25,13 @@ public class SchemeParserDefinition implements ParserDefinition
     return scheme.getLexer();
   }
 
+  @NotNull
   public PsiParser createParser(Project project)
   {
     return scheme.getParser();
   }
 
+  @NotNull
   public IFileElementType getFileNodeType()
   {
     return AST.AST_FILE;
@@ -61,7 +63,7 @@ public class SchemeParserDefinition implements ParserDefinition
   }
 
   @NotNull
-  public SpaceRequirements spaceExistenceTypeBetweenTokens(ASTNode left, ASTNode right)
+  public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right)
   {
     if (SchemeTokens.DATUM_PREFIXES.contains(left.getElementType()))
     {

@@ -1,5 +1,6 @@
 package main.psi.util;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -11,7 +12,7 @@ public abstract class SchemePsiElementFactory
 {
   public static SchemePsiElementFactory getInstance(Project project)
   {
-    return project.getService(SchemePsiElementFactory.class);
+    return ServiceManager.getService(project, SchemePsiElementFactory.class);
   }
 
   public abstract ASTNode createSymbolNodeFromText(@NotNull String newName);

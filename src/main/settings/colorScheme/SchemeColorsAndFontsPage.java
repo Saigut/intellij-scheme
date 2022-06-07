@@ -5,7 +5,8 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
-import com.intellij.util.ResourceUtil;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,8 @@ import main.highlighter.SchemeSyntaxHighlighter;
 
 import javax.swing.Icon;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,11 +83,20 @@ public class SchemeColorsAndFontsPage implements ColorSettingsPage
   @NotNull
   public String getDemoText()
   {
-    try {
-      InputStream inputStream = ResourceUtil.getResourceAsStream(getClass().getClassLoader(),
-              "/", "sample-code.scm");
-      return new String(inputStream.readAllBytes());
-    } catch (IOException e) {
+    byte[] contentBytes = null;
+
+    URL fileUrl = getClass().getClassLoader().getResource("sample-code.scm");
+    VirtualFile virtualFile = VfsUtil.findFileByURL(fileUrl);
+    if (virtualFile != null) {
+      try {
+        contentBytes = virtualFile.contentsToByteArray();
+      } catch (IOException ignored) {
+      }
+    }
+
+    if (contentBytes != null) {
+      return new String(contentBytes, StandardCharsets.UTF_8);
+    } else {
       return ";; Test highlighting\n" +
               "\n" +
               "(define string \"Some string\")\n" +

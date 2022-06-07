@@ -16,4 +16,9 @@ public class SchemeFormatConfigurable extends CodeStyleAbstractConfigurable
   {
     return new SchemeCodeStylePanel(getCurrentSettings(), settings);
   }
+
+  public String getHelpTopic()
+  {
+    return "Scheme help topic. Nothing";
+  }
 }

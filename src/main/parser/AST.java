@@ -1,14 +1,13 @@
 package main.parser;
 
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IStubFileElementType;
+import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import main.psi.stubs.elements.SchemeStubFileElementType;
+import main.SchemeLanguage;
 
 public interface AST
 {
-  IStubFileElementType AST_FILE = new SchemeStubFileElementType();
-
+  IFileElementType AST_FILE = new IFileElementType(SchemeLanguage.INSTANCE);;
 
   // Intermediate type. Not the final AST Node
   IElementType AST_TEMP_LIST = new SchemeElementType("ast temp list");
