@@ -26,6 +26,7 @@ public interface AST
   IElementType AST_ELE_DATUM_COMMENT = new SchemeElementType("ast datum comment");
 
   // Forms
+  IElementType AST_BODY_OF_FORM = new SchemeElementType("ast body of form");
   IElementType AST_FORM_DEFINE = new SchemeElementType("ast define");
   IElementType AST_FORM_DEFINE_RECORD_TYPE = new SchemeElementType("ast define-record-type");
   IElementType AST_FORM_DEFINE_SYNTAX = new SchemeElementType("ast define-syntax");

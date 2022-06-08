@@ -63,6 +63,10 @@ public class SchemePsiCreator
     {
       return new SchemeSymbol(node);
     }
+    else if (elementType == AST.AST_BODY_OF_FORM)
+    {
+      return new SchemeBodyOfForm(node);
+    }
     else if (elementType == AST.AST_FORM_AND)
     {
       return new SchemeFormAnd(node);
