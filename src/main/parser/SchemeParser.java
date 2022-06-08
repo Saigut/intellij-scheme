@@ -459,11 +459,9 @@ public class SchemeParser implements PsiParser, SchemeTokens
     }
 
     if (DATUM_COMMENT_PRE == type) {
-      PsiBuilder.Marker marker_datum = builder.mark();
       parseSexp(childType, builder);
-      marker_datum.collapse(SchemeTokens.DATUM_COMMENT);
-      mark_type = AST.AST_ELE_DATUM_COMMENT;
-      marker.done(mark_type);
+      mark_type = SchemeTokens.DATUM_COMMENT;
+      marker.collapse(SchemeTokens.DATUM_COMMENT);
       return mark_type;
     }
 
@@ -474,33 +472,29 @@ public class SchemeParser implements PsiParser, SchemeTokens
       return mark_type;
     }
 
-    if (SHARP_MARK == type)
-    {
-      if (LEFT_PAREN == childType) {
-        parseSexp(childType, builder);
-        mark_type = AST.AST_ELE_VECTOR;
-      }
-      else
-      {
-        mark_type = AST.AST_BAD_CHARACTER;
-      }
-      marker.done(mark_type);
-      return mark_type;
-    }
-    else
-    {
-      syntaxError(builder, "Run Error");
-      marker.drop();
-      return null;
-    }
+    syntaxError(builder, "Run Error");
+    marker.drop();
+    return null;
+  }
+
+  IElementType parseVector(PsiBuilder builder)
+  {
+    PsiBuilder.Marker marker = builder.mark();
+    builder.advanceLexer();
+    IElementType mark_type  = eatRemainList(builder, RIGHT_PAREN, AST.AST_ELE_VECTOR);
+    marker.done(mark_type);
+    return mark_type;
   }
 
   IElementType parseNonParen(IElementType type, PsiBuilder builder)
   {
     if (DATUM_PREFIXES.contains(type)
-        || SHARP_MARK == type
         || DATUM_COMMENT_PRE == type) {
       return parsePrefix(type, builder);
+    }
+    else if (OPEN_VECTOR == type)
+    {
+      return parseVector(builder);
     }
     else
     {

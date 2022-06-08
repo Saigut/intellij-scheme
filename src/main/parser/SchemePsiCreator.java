@@ -35,15 +35,21 @@ public class SchemePsiCreator
     {
       return new SchemeQuoted(node);
     }
-    else if (elementType == AST.AST_BASIC_ELE_NUM
-            || elementType == AST.AST_BASIC_ELE_CHAR
-            || elementType == AST.AST_BASIC_ELE_STR)
+    else if (elementType == AST.AST_BASIC_ELE_NUM)
     {
-      return new SchemeSpecialLiteral(node);
+      return new SchemeEleNumber(node);
+    }
+    else if (elementType == AST.AST_BASIC_ELE_CHAR)
+    {
+      return new SchemeEleChar(node);
+
+    } else if (elementType == AST.AST_BASIC_ELE_STR)
+    {
+      return new SchemeEleString(node);
     }
     else if (elementType == AST.AST_BASIC_ELE_BOOL)
     {
-      return new SchemeBoolean(node);
+      return new SchemeEleBoolean(node);
     }
     else if (elementType == AST.AST_BASIC_ELE_KEYWORD)
     {
@@ -153,7 +159,7 @@ public class SchemePsiCreator
     else
     {
       System.out.println(">>> Unexpected AST Node Type: " + elementType.toString());
-      return new SchemeSpecialLiteral(node);
+      return new SchemeUnrecognizedForm(node);
     }
 
 //    throw new Error("Unexpected ASTNode: " + node.getElementType());

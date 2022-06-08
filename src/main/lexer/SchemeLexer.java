@@ -41,7 +41,7 @@ public class SchemeLexer extends LexerBase
     TAG_DATUM_COMMENT_PREFIX,
     TAG_WHITE_SPACE,
     TAG_OP_SINGLE_CHAR,
-    TAG_OP_SHARP_MARK,
+    TAG_OP_OPEN_VECTOR,
     TAG_OP_ABBREVIATIONS,
     TAG_NUMBER,
     TAG_BOOLEAN,
@@ -72,8 +72,7 @@ public class SchemeLexer extends LexerBase
    * Tokens
    */
   // Blanks and Comments
-  Pattern PT_DATUM_COMMENT_PREFIX = Patterns.string("#;");
-  Parser<?> SCA_DATUM_COMMENT_PREFIX = PT_DATUM_COMMENT_PREFIX.toScanner("#;");
+  Parser<?> SCA_DATUM_COMMENT_PREFIX = Scanners.string("#;");
   Parser<?> s_datum_comment_prefix = SCA_DATUM_COMMENT_PREFIX.source()
           .map((a) -> (Tokens.fragment(a, Tag.TAG_DATUM_COMMENT_PREFIX)));
 
@@ -94,14 +93,14 @@ public class SchemeLexer extends LexerBase
   Pattern PT_OP_SINGLE_CHAR = Patterns.among("()[]'`,");
   Parser<?> s_op_single_char = PT_OP_SINGLE_CHAR.toScanner("operator").source()
           .map((a) -> (Tokens.fragment(a, Tag.TAG_OP_SINGLE_CHAR)));
-  Parser<?> s_op_sharp_mark = Patterns.string("#").toScanner("#")
-          .source().map((a) -> (Tokens.fragment(a, Tag.TAG_OP_SHARP_MARK)));
+  Parser<?> s_op_open_vector = Scanners.string("#(")
+          .source().map((a) -> (Tokens.fragment(a, Tag.TAG_OP_OPEN_VECTOR)));
   List<String> STRS_ABBREVIATION = asList(",@", "#'", "#`", "#,", "#,@");
   Terminals TERM_ABBREVIATIONS = Terminals
           .operators(STRS_ABBREVIATION);
   Parser<?> s_op_abbreviations = TERM_ABBREVIATIONS.tokenizer().source()
           .map((a) -> (Tokens.fragment(a, Tag.TAG_OP_ABBREVIATIONS)));
-  Parser<?> PAR_OPERATORS = Parsers.or(s_op_abbreviations, s_op_sharp_mark, s_op_single_char);
+  Parser<?> PAR_OPERATORS = Parsers.or(s_op_abbreviations, s_op_open_vector, s_op_single_char);
 
   // Numbers
   Pattern PT_RIGHT_INTEGER = Patterns.sequence(Patterns.among("+-").optional(), Patterns.INTEGER);
@@ -355,8 +354,8 @@ public class SchemeLexer extends LexerBase
         break;
       }
 
-      case TAG_OP_SHARP_MARK:
-        type = SchemeTokens.SHARP_MARK;
+      case TAG_OP_OPEN_VECTOR:
+        type = SchemeTokens.OPEN_VECTOR;
         break;
 
       case TAG_OP_ABBREVIATIONS: {

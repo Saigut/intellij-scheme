@@ -3,9 +3,9 @@ package main.psi.impl;
 import com.intellij.lang.ASTNode;
 
 
-public class SchemeBoolean extends SchemePsiElementBase
+public class SchemeEleBoolean extends SchemePsiElementBase
 {
-  public SchemeBoolean(ASTNode node)
+  public SchemeEleBoolean(ASTNode node)
   {
     super(node, "SchemeBoolean");
   }

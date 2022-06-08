@@ -3,9 +3,9 @@ package main.psi.impl;
 import com.intellij.lang.ASTNode;
 
 
-public class SchemeSpecialLiteral extends SchemePsiElementBase
+public class SchemeEleChar extends SchemePsiElementBase
 {
-  public SchemeSpecialLiteral(ASTNode node)
+  public SchemeEleChar(ASTNode node)
   {
     super(node, "SchemeSpecialLiteral");
   }

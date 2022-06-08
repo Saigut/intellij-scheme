@@ -11,7 +11,7 @@
 
 (define char #\c)
 
-(define special #!eof)
+(define special #\nul)
 
 (eq? 1 2)
 
