@@ -17,11 +17,14 @@ import java.util.List;
 public class SchemeStructureViewElement implements StructureViewTreeElement, SortableTreeElement
 {
   private final NavigatablePsiElement element;
-  private final NavigatablePsiElement nameChild;
+  private NavigatablePsiElement nameChild;
 
   public SchemeStructureViewElement(NavigatablePsiElement element)
   {
     nameChild = (NavigatablePsiElement)getDeclareNameChild(element);
+    if (nameChild == null) {
+      nameChild = element;
+    }
     this.element = element;
   }
 

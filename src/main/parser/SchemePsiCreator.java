@@ -104,6 +104,10 @@ public class SchemePsiCreator
     {
       return new SchemeFormDefineSyntax(node);
     }
+    else if (elementType == AST.AST_FORM_DO)
+    {
+      return new SchemeFormDo(node);
+    }
     else if (elementType == AST.AST_FORM_IF)
     {
       return new SchemeFormIf(node);
@@ -128,6 +132,18 @@ public class SchemePsiCreator
     {
       return new SchemeFormOr(node);
     }
+    else if (elementType == AST.AST_FORM_QUASIQUOTE)
+    {
+      return new SchemeFormQuasiquote(node);
+    }
+    else if (elementType == AST.AST_FORM_QUASISYNTAX)
+    {
+      return new SchemeFormQuasisyntax(node);
+    }
+    else if (elementType == AST.AST_FORM_QUOTE)
+    {
+      return new SchemeFormQuote(node);
+    }
     else if (elementType == AST.AST_FORM_PROCEDURE)
     {
       return new SchemeFormProcedure(node);
@@ -136,9 +152,29 @@ public class SchemePsiCreator
     {
       return new SchemeFormSet(node);
     }
+    else if (elementType == AST.AST_FORM_SYNTAX)
+    {
+      return new SchemeFormSyntax(node);
+    }
     else if (elementType == AST.AST_FORM_UNLESS)
     {
       return new SchemeFormUnless(node);
+    }
+    else if (elementType == AST.AST_FORM_UNQUOTE)
+    {
+      return new SchemeFormUnquote(node);
+    }
+    else if (elementType == AST.AST_FORM_UNQUOTE_SPLICING)
+    {
+      return new SchemeFormUnquoteSplicing(node);
+    }
+    else if (elementType == AST.AST_FORM_UNSYNTAX)
+    {
+      return new SchemeFormUnsyntax(node);
+    }
+    else if (elementType == AST.AST_FORM_UNSYNTAX_SPLICING)
+    {
+      return new SchemeFormUnsyntaxSplicing(node);
     }
     else if (elementType == AST.AST_FORM_WHEN)
     {
@@ -162,7 +198,7 @@ public class SchemePsiCreator
     }
     else
     {
-      System.out.println(">>> Unexpected AST Node Type: " + elementType.toString());
+      System.out.println(">>> Unexpected AST Node Type: " + elementType);
       return new SchemeUnrecognizedForm(node);
     }
 
