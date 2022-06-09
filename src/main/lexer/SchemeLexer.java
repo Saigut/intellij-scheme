@@ -88,7 +88,7 @@ public class SchemeLexer extends LexerBase
   Pattern PT_OP_SINGLE_CHAR = Patterns.among("()[]'`,");
   Parser<?> s_op_single_char = PT_OP_SINGLE_CHAR.toScanner("operator").source()
           .map((a) -> (Tokens.fragment(a, Tag.TAG_OP_SINGLE_CHAR)));
-  Parser<?> s_op_open_vector = Scanners.string("#(")
+  Parser<?> s_op_open_vector = Parsers.or(Scanners.string("#("), Scanners.string("#vu8("))
           .source().map((a) -> (Tokens.fragment(a, Tag.TAG_OP_OPEN_VECTOR)));
   List<String> STRS_ABBREVIATION = asList(",@", "#'", "#`", "#,", "#,@");
   Terminals TERM_ABBREVIATIONS = Terminals
