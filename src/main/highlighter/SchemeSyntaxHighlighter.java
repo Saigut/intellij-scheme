@@ -54,6 +54,8 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
   @NonNls
   public static final String STRING_ID = "Scheme Strings";
   @NonNls
+  public static final String STRING_ESCAPE_ID = "Scheme String Escapes";
+  @NonNls
   public static final String BAD_CHARACTER_ID = "Bad character";
   @NonNls
   public static final String BRACES_ID = "Scheme Braces";
@@ -91,6 +93,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
 //    createTextAttributesKey(DATUM_COMMENT_ID, DefaultLanguageHighlighterColors.LINE_COMMENT);
     createTextAttributesKey(NUMBER_ID, defaultFor(SyntaxHighlighterColors.NUMBER));
     createTextAttributesKey(STRING_ID, defaultFor(SyntaxHighlighterColors.STRING));
+    createTextAttributesKey(STRING_ESCAPE_ID, defaultFor(SyntaxHighlighterColors.VALID_STRING_ESCAPE));
     createTextAttributesKey(BRACES_ID, defaultFor(SyntaxHighlighterColors.BRACES));
     createTextAttributesKey(PAREN_ID, defaultFor(SyntaxHighlighterColors.PARENTHS));
     createTextAttributesKey(LITERAL_ID, defaultFor(SyntaxHighlighterColors.KEYWORD));
@@ -114,6 +117,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
   public static TextAttributesKey IDENTIFIER = createTextAttributesKey(IDENTIFIER_ID);
   public static TextAttributesKey NUMBER = createTextAttributesKey(NUMBER_ID);
   public static TextAttributesKey STRING = createTextAttributesKey(STRING_ID);
+  public static TextAttributesKey STRING_ESCAPE = createTextAttributesKey(STRING_ESCAPE_ID);
   public static TextAttributesKey BRACE = createTextAttributesKey(BRACES_ID);
   public static TextAttributesKey PAREN = createTextAttributesKey(PAREN_ID);
   public static TextAttributesKey LITERAL = createTextAttributesKey(LITERAL_ID);
@@ -134,6 +138,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
   public static TextAttributesKey[] IDENTIFIER_KEYS = new TextAttributesKey[]{createTextAttributesKey(IDENTIFIER_ID)};
   public static TextAttributesKey[] NUMBER_KEYS = new TextAttributesKey[]{createTextAttributesKey(NUMBER_ID)};
   public static TextAttributesKey[] STRING_KEYS = new TextAttributesKey[]{createTextAttributesKey(STRING_ID)};
+  public static TextAttributesKey[] STRING_ESCAPE_KEYS = new TextAttributesKey[]{createTextAttributesKey(STRING_ESCAPE_ID)};
   public static TextAttributesKey[] BRACE_KEYS = new TextAttributesKey[]{createTextAttributesKey(BRACES_ID)};
   public static TextAttributesKey[] PAREN_KEYS = new TextAttributesKey[]{createTextAttributesKey(PAREN_ID)};
   public static TextAttributesKey[] LITERAL_KEYS = new TextAttributesKey[]{createTextAttributesKey(LITERAL_ID)};
@@ -156,7 +161,9 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
 //    newFillMap(ATTRIBUTES, BLOCK_COMMENT_KEYS, SchemeTokens.BLOCK_COMMENT);
 //    newFillMap(ATTRIBUTES, DATUM_COMMENT_KEYS, SchemeTokens.DATUM_COMMENT);
     newFillMap(ATTRIBUTES, NUMBER_KEYS, SchemeTokens.NUMBER_LITERAL);
-    newFillMap(ATTRIBUTES, STRING_KEYS, SchemeTokens.STRING_LITERAL);
+    newFillMap(ATTRIBUTES, STRING_KEYS,
+            SchemeTokens.STRING_LITERAL, SchemeTokens.STRING_QUOTE_CHAR, SchemeTokens.STRING_CHAR);
+    newFillMap(ATTRIBUTES, STRING_ESCAPE_KEYS, SchemeTokens.STRING_ESCAPE);
     newFillMap(ATTRIBUTES, BRACE_KEYS, SchemeTokens.LEFT_SQUARE, SchemeTokens.RIGHT_SQUARE, SchemeTokens.LEFT_CURLY, SchemeTokens.RIGHT_CURLY);
     newFillMap(ATTRIBUTES, PAREN_KEYS, SchemeTokens.LEFT_PAREN, SchemeTokens.RIGHT_PAREN);
 //    newFillMap(ATTRIBUTES, LITERAL_KEYS, AST_PLAIN_LITERAL, Tokens.BOOLEAN_LITERAL);

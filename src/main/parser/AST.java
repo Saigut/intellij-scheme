@@ -17,6 +17,8 @@ public interface AST
   IElementType AST_BASIC_ELE_NUM = new SchemeElementType("ast number");
   IElementType AST_BASIC_ELE_CHAR = new SchemeElementType("ast character");
   IElementType AST_BASIC_ELE_STR = new SchemeElementType("ast string");
+  IElementType AST_BASIC_ELE_STR_CHAR = new SchemeElementType("ast string char");
+  IElementType AST_BASIC_ELE_STR_ESCAPE = new SchemeElementType("ast string escape");
   IElementType AST_BASIC_ELE_KEYWORD = new SchemeElementType("ast keyword");
   IElementType AST_BASIC_ELE_PROCEDURE = new SchemeElementType("ast procedure");
   IElementType AST_BASIC_ELE_SYMBOL = new SchemeElementType("ast symbol");

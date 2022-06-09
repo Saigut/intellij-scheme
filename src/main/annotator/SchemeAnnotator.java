@@ -1,16 +1,11 @@
 package main.annotator;
 
-import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
-import main.lexer.SchemeTokens;
-import main.parser.AST;
-import main.psi.impl.SchemeBadCharacter;
-import main.psi.impl.SchemeEleChar;
+import main.psi.impl.*;
 import org.jetbrains.annotations.NotNull;
 import main.highlighter.SchemeSyntaxHighlighter;
-import main.psi.impl.SchemeEleDatumComment;
 
 import static main.lexer.SchemeTokens.COMMENTS;
 
@@ -28,6 +23,12 @@ public class SchemeAnnotator implements Annotator
     } else if (element instanceof SchemeBadCharacter) {
       holder.createInfoAnnotation(element, null)
               .setTextAttributes(SchemeSyntaxHighlighter.BAD_CHARACTER);
+    } else if (element instanceof SchemeEleStringChar) {
+      holder.createInfoAnnotation(element, null)
+              .setTextAttributes(SchemeSyntaxHighlighter.STRING);
+    } else if (element instanceof SchemeEleStringEscape) {
+      holder.createInfoAnnotation(element, null)
+              .setTextAttributes(SchemeSyntaxHighlighter.STRING_ESCAPE);
     }
   }
 }

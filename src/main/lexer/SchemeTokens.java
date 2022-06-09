@@ -38,6 +38,9 @@ public interface SchemeTokens
 
   // Literals
   IElementType STRING_LITERAL = new SchemeElementType("string literal");
+  IElementType STRING_QUOTE_CHAR = new SchemeElementType("string quote char");
+  IElementType STRING_CHAR = new SchemeElementType("string char");
+  IElementType STRING_ESCAPE = new SchemeElementType("string escape");
   IElementType NUMBER_LITERAL = new SchemeElementType("number literal");
   IElementType CHAR_LITERAL = new SchemeElementType("character literal");
   IElementType BOOLEAN_LITERAL = new SchemeElementType("boolean literal");

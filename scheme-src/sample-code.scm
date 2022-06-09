@@ -5,6 +5,8 @@
   Comment
 |#
 
+"String\r\n"
+
 (define string "Some string")
 
 (define quoted '(my quoted 3 items "with quoted string"))
