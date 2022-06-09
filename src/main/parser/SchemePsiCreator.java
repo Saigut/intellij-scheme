@@ -42,19 +42,10 @@ public class SchemePsiCreator
     else if (elementType == AST.AST_BASIC_ELE_CHAR)
     {
       return new SchemeEleChar(node);
-
     }
     else if (elementType == AST.AST_BASIC_ELE_STR)
     {
       return new SchemeEleString(node);
-    }
-    else if (elementType == AST.AST_BASIC_ELE_STR_CHAR)
-    {
-      return new SchemeEleStringChar(node);
-    }
-    else if (elementType == AST.AST_BASIC_ELE_STR_ESCAPE)
-    {
-      return new SchemeEleStringEscape(node);
     }
     else if (elementType == AST.AST_BASIC_ELE_BOOL)
     {

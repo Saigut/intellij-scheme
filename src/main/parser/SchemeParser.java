@@ -563,43 +563,6 @@ public class SchemeParser implements PsiParser, SchemeTokens
     return mark_type;
   }
 
-  IElementType parseString(PsiBuilder builder)
-  {
-    PsiBuilder.Marker marker = builder.mark();
-    PsiBuilder.Marker quote_prefix_marker = builder.mark();
-    builder.advanceLexer();
-    quote_prefix_marker.done(AST.AST_BASIC_ELE_STR_CHAR);
-    IElementType token_type = builder.getTokenType();
-    while (token_type != STRING_QUOTE_CHAR && token_type != null)
-    {
-      PsiBuilder.Marker in_str_marker = null;
-      IElementType in_str_mark_type = null;
-      if (token_type == STRING_CHAR) {
-        in_str_marker = builder.mark();
-        in_str_mark_type = AST.AST_BASIC_ELE_STR_CHAR;
-      } else if (token_type == STRING_ESCAPE) {
-        in_str_marker = builder.mark();
-        in_str_mark_type = AST.AST_BASIC_ELE_STR_ESCAPE;
-      }
-      builder.advanceLexer();
-      if (in_str_mark_type != null) {
-        in_str_marker.done(in_str_mark_type);
-      }
-      token_type = builder.getTokenType();
-    }
-    IElementType mark_type;
-    if (token_type == STRING_QUOTE_CHAR) {
-      PsiBuilder.Marker quote_suffix_marker = builder.mark();
-      builder.advanceLexer();
-      quote_suffix_marker.done(AST.AST_BASIC_ELE_STR_CHAR);
-      mark_type = AST.AST_BASIC_ELE_STR;
-    } else {
-      mark_type = AST.AST_BAD_ELEMENT;
-    }
-    marker.done(mark_type);
-    return mark_type;
-  }
-
   IElementType parseNonParen(IElementType type, PsiBuilder builder)
   {
     if (DATUM_PREFIXES.contains(type)
@@ -609,10 +572,6 @@ public class SchemeParser implements PsiParser, SchemeTokens
     else if (OPEN_VECTOR == type)
     {
       return parseVector(builder);
-    }
-    else if (STRING_QUOTE_CHAR == type)
-    {
-      return parseString(builder);
     }
     else
     {

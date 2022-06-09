@@ -25,10 +25,8 @@ public class SchemeLexer extends LexerBase
   private CharSequence buffer;
   private int lex_start_pos;
   private int lexed_end_pos;
-  private int token_index;
   private int token_length;
   private Tokens.Fragment token_frag;
-  protected int cursor;
   private int bufferEnd;
   protected IElementType type;
 
@@ -43,9 +41,6 @@ public class SchemeLexer extends LexerBase
     TAG_NUMBER,
     TAG_BOOLEAN,
     TAG_QUOTE_STRING,
-    TAG_STRING_QUOTE_CHAR,
-    TAG_STRING_CHAR,
-    TAG_STRING_ESCAPE,
     TAG_SHARP_CHAR,
     TAG_NAME_LITERAL,
     TAG_BAD_CHARACTER,
@@ -111,8 +106,6 @@ public class SchemeLexer extends LexerBase
           .or(Patterns.isChar(CharPredicates.IS_LETTER),
                   Patterns.isChar(CharPredicates.IS_DIGIT),
                   PT_EXTENDED_ALPHABETIC_CHAR, PT_INLINE_HEX_ESCAPE);
-//  Parser<?> PAR_NAME_LITERAL_CHAR_VALID = PT_NAME_LITERAL_CHAR_VALID
-//          .toScanner("extended alphabetic char").source();
   Pattern PT_NAME_LITERAL_FIRST_CHAR = Patterns
           .or(Patterns.isChar(CharPredicates.IS_LETTER),
                   PT_EXTENDED_ALPHABETIC_CHAR, PT_INLINE_HEX_ESCAPE);
@@ -136,7 +129,6 @@ public class SchemeLexer extends LexerBase
                   PAR_RIGHT_INTEGER, Scanners.DEC_INTEGER,
                   Scanners.DECIMAL, Scanners.SCIENTIFIC_NOTATION,
                   PAR_BIN_INTEGER, PAR_OCT_INTEGER, PAR_DEC_INTEGER, PAR_HEX_INTEGER)
-//          .next(Parsers.or(PAR_NAME_LITERAL_CHAR_VALID, Scanners.isChar(CharPredicates.isChar('#'))).not())
           .map((a) -> (Tokens.fragment("number", Tag.TAG_NUMBER)));
 
   // Characters
@@ -164,17 +156,6 @@ public class SchemeLexer extends LexerBase
   // String
   Parser<?> PAR_STRING = Scanners.DOUBLE_QUOTE_STRING
           .map((a) -> (Tokens.fragment(a, Tag.TAG_QUOTE_STRING)));
-  List<String> STRS_STRING_ESCAPE = asList(
-          "\\a", "\\b", "\\t", "\\n", "\\v",
-          "\\f", "\\r", "\\\"", "\\\\", "\\\t",
-          "\\\r", "\\\n", "\\\r\n");
-  Terminals TERM_STRING_ESCAPE = Terminals
-          .operators(STRS_STRING_ESCAPE);
-  Parser<?> s_string_escape = Parsers.or(TERM_STRING_ESCAPE.tokenizer(), PAR_INLINE_HEX_ESCAPE).many1()
-          .map((a) -> (Tokens.fragment("string escape", Tag.TAG_STRING_ESCAPE)));
-  Parser<?> s_string_char = Scanners.notAmong("\"").many1()
-          .map((a) -> (Tokens.fragment("string char", Tag.TAG_STRING_CHAR)));
-  Parser<?> PAR_IN_STRING = Parsers.or(s_string_escape, s_string_char);
 
   // Boolean
   Terminals TERM_BOOLEAN = Terminals
@@ -271,33 +252,8 @@ public class SchemeLexer extends LexerBase
             return a;
           }).token()
           .map((a) -> {
-            token_index = a.index();
             token_length = a.length();
 //            System.out.println("index: " + a.index() + ", length: " + a.length());
-            return a;
-          }).atomic();
-
-  Parser<Token> s_in_string_token = PAR_IN_STRING.map((a) -> {
-            if (null != a) {
-//              System.out.println("string_token a: " + a);
-              if (a.getClass() == Tokens.Fragment.class) {
-                token_frag = (Tokens.Fragment)a;
-//                System.out.println("string_token type: " + ((Tokens.Fragment)a).tag().toString());
-//                System.out.println("string_token text: " + ((Tokens.Fragment)a).text());
-              } else {
-                token_frag = null;
-//                System.out.println("string_token type: " + a.getClass().getName());
-              }
-            } else {
-              token_frag = null;
-//              System.out.println("string_token a: null");
-            }
-            return a;
-          }).token()
-          .map((a) -> {
-            token_index = a.index();
-            token_length = a.length();
-//            System.out.println("string_token index: " + a.index() + ", length: " + a.length());
             return a;
           }).atomic();
 
@@ -316,68 +272,8 @@ public class SchemeLexer extends LexerBase
     advance();
   }
 
-
-  boolean lexing_string = false;
-  int lexing_str_start = 0;
-
   int cur_token_start = 0;
   int cur_token_end = 0;
-
-  public void advance_in_string()
-  {
-    if (lexing_str_start == lex_start_pos) {
-      token_frag = Tokens.fragment("\"", Tag.TAG_STRING_QUOTE_CHAR);
-      cur_token_start = lexing_str_start;
-      cur_token_end = cur_token_start + 1;
-      lexing_str_start += 1;
-    } else if (lexing_str_start + 1 >= lexed_end_pos) {
-      token_frag = Tokens.fragment("\"", Tag.TAG_STRING_QUOTE_CHAR);
-      cur_token_start = lexing_str_start;
-      cur_token_end = cur_token_start + 1;
-      lexing_str_start += 1;
-    } else {
-      CharSequence strBuffer = buffer.subSequence(lexing_str_start, lexed_end_pos - 1);
-      try {
-        s_in_string_token.parse(strBuffer);
-
-      } catch (Exception e) {
-//        System.out.println("advance_in_string Exception: " + e.getMessage());
-
-        if (null == token_frag) {
-//          System.out.println("advance_in_string no valid token");
-          type = null;
-          return;
-        }
-      }
-      cur_token_start = lexing_str_start;
-      cur_token_end = cur_token_start + token_length;
-      lexing_str_start += token_length;
-    }
-
-    if (token_frag != null) {
-//      System.out.println("type: " + token_frag.tag());
-    } else {
-//      System.out.println("token_frag null!");
-      cur_token_start = lexed_end_pos;
-      return;
-    }
-    switch ((Tag)token_frag.tag()) {
-      case TAG_STRING_QUOTE_CHAR:
-        type = SchemeTokens.STRING_QUOTE_CHAR;
-        break;
-
-      case TAG_STRING_CHAR:
-        type = SchemeTokens.STRING_CHAR;
-        break;
-
-      case TAG_STRING_ESCAPE:
-        type = SchemeTokens.STRING_ESCAPE;
-        break;
-
-      default:
-        type = null;
-    }
-  }
 
   @Override
   public void advance()
@@ -389,15 +285,6 @@ public class SchemeLexer extends LexerBase
     }
 
     this.token_frag = null;
-    if (lexing_string) {
-      if (lexing_str_start >= lexed_end_pos) {
-        lexing_string = false;
-      } else {
-        advance_in_string();
-        return;
-      }
-    }
-
     if (lexed_end_pos >= bufferEnd)
     {
       lex_start_pos = lexed_end_pos;
@@ -422,7 +309,6 @@ public class SchemeLexer extends LexerBase
       }
     }
 
-    cursor += token_length;
     lexed_end_pos = lex_start_pos + token_length;
     if (lexed_end_pos > bufferEnd) {
       lexed_end_pos = bufferEnd;
@@ -530,9 +416,7 @@ public class SchemeLexer extends LexerBase
         break;
 
       case TAG_QUOTE_STRING:
-        lexing_string = true;
-        lexing_str_start = lex_start_pos;
-        advance_in_string();
+        type = SchemeTokens.STRING_LITERAL;
         return;
 
       case TAG_SHARP_CHAR:
