@@ -7,6 +7,6 @@ public class SchemeEleChar extends SchemePsiElementBase
 {
   public SchemeEleChar(ASTNode node)
   {
-    super(node, "SchemeSpecialLiteral");
+    super(node, "SchemeEleChar");
   }
 }

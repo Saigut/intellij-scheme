@@ -150,7 +150,7 @@ public class SchemeLexer extends LexerBase
   Parser<?> SCA_SINGLE_CHAR = Patterns.sequence(PT_CHAR_PREFIX, PT_SINGLE_CHAR).toScanner("char");
   Parser<?> SCA_HEX_CHAR = Patterns.sequence(PT_CHAR_PREFIX, PT_HEX_CHAR).toScanner("hex char");
   Parser<?> SCA_SPECIAL_CHAR = Parsers.sequence(SCA_CHAR_PREFIX, SCA_SPECIAL_CHAR_NAMES).label("special char");
-  Parser<?> s_sharp_char = Parsers.or(SCA_SINGLE_CHAR, SCA_SPECIAL_CHAR, SCA_HEX_CHAR).source()
+  Parser<?> s_sharp_char = Parsers.or(SCA_SPECIAL_CHAR, SCA_HEX_CHAR, SCA_SINGLE_CHAR).source()
           .map((a) -> (Tokens.fragment(a, Tag.TAG_SHARP_CHAR)));
 
   // String
@@ -163,7 +163,7 @@ public class SchemeLexer extends LexerBase
   Parser<?> s_boolean = TERM_BOOLEAN.tokenizer().source()
           .map((a) -> (Tokens.fragment(a, Tag.TAG_BOOLEAN)));
 
-  Parser<?> PAR_LITERALS = Parsers.or(PAR_STRING, s_numbers, s_boolean, s_sharp_char, s_name_literal);
+  Parser<?> PAR_LITERALS = Parsers.or(PAR_STRING, s_numbers, s_boolean, s_name_literal, s_sharp_char);
 
   /**
    * Some built-in elements
