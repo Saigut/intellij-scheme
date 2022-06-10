@@ -163,7 +163,7 @@ public class SchemeLexer extends LexerBase
   Parser<?> s_boolean = TERM_BOOLEAN.tokenizer().source()
           .map((a) -> (Tokens.fragment(a, Tag.TAG_BOOLEAN)));
 
-  Parser<?> PAR_LITERALS = Parsers.or(PAR_STRING, s_numbers, s_boolean, s_name_literal, s_sharp_char);
+  Parser<?> PAR_LITERALS = Parsers.or(PAR_STRING, s_numbers, s_boolean, s_sharp_char);
 
   /**
    * Some built-in elements
@@ -226,7 +226,7 @@ public class SchemeLexer extends LexerBase
 
   // Bad elements
   Parser<?> PAR_ELEMENT = Parsers.or(s_whitespace, PAR_COMMENT,
-          PAR_BUILTIN_ELEMENTS, PAR_LITERALS, PAR_OPERATORS);
+          PAR_LITERALS, PAR_BUILTIN_ELEMENTS, s_name_literal, PAR_OPERATORS);
   Parser<String> PAR_ANY_CHAR = Scanners.ANY_CHAR.source();
   Parser<?> s_bad_element = PAR_ANY_CHAR
           .map((a) -> (Tokens.fragment(a, Tag.TAG_BAD_CHARACTER)));
