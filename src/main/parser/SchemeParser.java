@@ -266,7 +266,12 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
   IElementType parseFormLibrary(PsiBuilder builder, IElementType close)
   {
-    return eatRemainList(builder, close, AST.AST_FORM_LIBRARY);
+    IElementType form_mark_type = AST.AST_FORM_LIBRARY;
+    if (helperAdvanceForBody(builder, close, 3)) {
+      PsiBuilder.Marker bodyMarker = builder.mark();
+      helperEatFormBody(builder, close, bodyMarker);
+    }
+    return eatRemainList(builder, close, form_mark_type);
   }
 
   IElementType parseFormCar(PsiBuilder builder, IElementType close)
