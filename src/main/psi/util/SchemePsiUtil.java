@@ -118,16 +118,7 @@ public class SchemePsiUtil
       {
         return null;
       }
-
-      bigBrother = parent.getPrevSibling();
-      if (null == bigBrother)
-      {
-        return null;
-      }
-      else
-      {
-        return bigBrother;
-      }
+      return getBigBrother(parent);
     }
   }
 }
