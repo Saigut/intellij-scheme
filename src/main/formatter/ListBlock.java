@@ -10,6 +10,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import main.psi.impl.SchemeBodyOfForm;
+import main.psi.impl.SchemeFormBegin;
 import main.psi.impl.SchemeUnrecognizedForm;
 import main.psi.impl.list.SchemeList;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +56,7 @@ public class ListBlock extends SchemeBlock
         } else if (childNode.getFirstChildNode() == null) {
           align = alignment;
           indent = Indent.getNoneIndent();
-        } else if (nodePsi instanceof SchemeBodyOfForm) {
+        } else if ((nodePsi instanceof SchemeFormBegin) || (nodePsi instanceof SchemeBodyOfForm)) {
           align = alignment;
           indent = Indent.getNoneIndent();
         } else if ((nodePsi instanceof SchemeList) || (nodePsi instanceof SchemeUnrecognizedForm)) {
