@@ -6,6 +6,6 @@ public class SchemeBodyOfForm extends SchemePsiElementBase
 {
     public SchemeBodyOfForm(ASTNode node)
     {
-        super(node, "SchemeFormBody");
+        super(node, "SchemeBodyOfForm");
     }
 }

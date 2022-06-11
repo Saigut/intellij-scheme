@@ -6,11 +6,14 @@ import com.intellij.formatting.ChildAttributes;
 import com.intellij.formatting.Indent;
 import com.intellij.formatting.Wrap;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import main.psi.impl.SchemeBodyOfForm;
+import main.psi.impl.SchemeUnrecognizedForm;
+import main.psi.impl.list.SchemeList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import main.lexer.SchemeTokens;
-import main.parser.AST;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,46 +40,30 @@ public class ListBlock extends SchemeBlock
   @Override
   protected List<Block> generateSubBlocks(ASTNode node, Wrap wrap, CodeStyleSettings settings)
   {
-    List<Block> subBlocks = new ArrayList<Block>();
-    if (LEAF_ELEMENTS.contains(node.getElementType()) || SchemeTokens.BRACES.contains(node.getElementType())) {
+    List<Block> subBlocks = new ArrayList<>();
+    PsiElement nodePsi = node.getPsi();
+    if (node.getFirstChildNode() == null) {
       return subBlocks;
     } else {
-//      boolean is_first_child = true;
       Alignment align;
       for (ASTNode childNode : getChildren(node))
       {
         Indent indent;
-        if (SchemeTokens.OPEN_BRACES.contains(childNode.getElementType()))
-        {
-          indent = Indent.getNoneIndent();
+        if (nodePsi instanceof PsiFile) {
           align = alignment;
-        }
-        else
-        {
-          if (parentNode != null && parentNode.getElementType() == AST.AST_ELE_VECTOR) {
-            indent = Indent.getSpaceIndent(1, true);
-          } else {
-            indent = Indent.getNormalIndent(true);
-          }
-          align = Alignment.createAlignment();
-//          if (node.getElementType() == AST.AST_TEMP_LIST) {
-//            if (is_first_child) {
-//              indent = Indent.getSpaceIndent(1, true);
-//              align = Alignment.createAlignment();
-//              is_first_child = false;
-//            } else {
-//              if (align == null) {
-//                align = Alignment.createAlignment();
-//              } else {
-//                align = Alignment.createChildAlignment(align);
-//              }
-//            }
-//          } else {
-//            align = Alignment.createAlignment();
-//          }
-        }
-        if (node.getElementType() == AST.AST_FILE) {
           indent = Indent.getNoneIndent();
+        } else if (childNode.getFirstChildNode() == null) {
+          align = alignment;
+          indent = Indent.getNoneIndent();
+        } else if (nodePsi instanceof SchemeBodyOfForm) {
+          align = alignment;
+          indent = Indent.getNoneIndent();
+        } else if ((nodePsi instanceof SchemeList) || (nodePsi instanceof SchemeUnrecognizedForm)) {
+          align = Alignment.createAlignment();
+          indent = Indent.getSpaceIndent(1, true);
+        } else {
+          align = Alignment.createAlignment();
+          indent = Indent.getNormalIndent(true);
         }
         subBlocks.add(SchemeBlock.create(childNode, align, indent, wrap, settings, node));
       }
