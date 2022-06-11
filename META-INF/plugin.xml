@@ -3,16 +3,18 @@
   <id>intellij-scheme</id>
   <description>Plugin for supporting Scheme programming language</description>
   <category>Custom Languages</category>
-  <version>0.1.8</version>
+  <version>0.1.9</version>
   <vendor url="https://saigut.com">Tony Saigut</vendor>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.platform</depends>
   <idea-version since-build="103"/>
 
   <change-notes><![CDATA[
-    1. Improve lexer and parser<br>
-    2. Improve structure view<br>
-    3. Support find usage, rename, and fold<br>
+    1. Support recognizing escape characters in string<br>
+    2. Support fold of comment<br>
+    3. Fix and improve lexer<br>
+    4. Fix and improve Indentation<br>
+    5. Fix symbol resolve<br>
     ]]>
   </change-notes>
 
