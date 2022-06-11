@@ -61,7 +61,7 @@ public class ListBlock extends SchemeBlock
         } else if ((nodePsi instanceof SchemeFormBegin) || (nodePsi instanceof SchemeBodyOfForm)) {
           align = alignment;
           indent = Indent.getNoneIndent();
-        } else if ((nodePsi instanceof SchemeList) || (nodePsi instanceof SchemeUnrecognizedForm)) {
+        } else if ((nodePsi instanceof SchemeList)) {
           align = Alignment.createAlignment();
           indent = Indent.getSpaceIndent(1, true);
         } else {

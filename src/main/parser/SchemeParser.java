@@ -454,11 +454,9 @@ public class SchemeParser implements PsiParser, SchemeTokens
       marker.drop();
       return null;
     }
-    else if ((exp_type != AST.AST_BASIC_ELE_KEYWORD) && (exp_type != AST.AST_BASIC_ELE_PROCEDURE))
-    {
-      mark_type = eatRemainList(builder, close, AST.AST_UNRECOGNIZED_FORM);
-    }
-    else
+    else if ((exp_type == AST.AST_BASIC_ELE_KEYWORD)
+            || (exp_type == AST.AST_BASIC_ELE_PROCEDURE)
+            || (exp_type == AST.AST_FORM_PROCEDURE))
     {
       mark_type = parseTopOnlyForm(builder, close, token_text);
       if (mark_type == null)
@@ -469,6 +467,10 @@ public class SchemeParser implements PsiParser, SchemeTokens
           mark_type = eatRemainList(builder, close, AST.AST_FORM_CALL_PROCEDURE);
         }
       }
+    }
+    else
+    {
+      mark_type = eatRemainList(builder, close, AST.AST_UNRECOGNIZED_FORM);
     }
 
     marker.done(mark_type);
@@ -676,17 +678,19 @@ public class SchemeParser implements PsiParser, SchemeTokens
       marker.drop();
       return null;
     }
-    else if ((exp_type != AST.AST_BASIC_ELE_KEYWORD) && (exp_type != AST.AST_BASIC_ELE_PROCEDURE))
-    {
-      mark_type = eatRemainList(builder, close, AST.AST_TEMP_LIST);
-    }
-    else
+    else if ((exp_type == AST.AST_BASIC_ELE_KEYWORD)
+            || (exp_type == AST.AST_BASIC_ELE_PROCEDURE)
+            || (exp_type == AST.AST_FORM_PROCEDURE))
     {
       mark_type = parseTopAndLocalForm(builder, close, token_text);
       if (mark_type == null)
       {
         mark_type = eatRemainList(builder, close, AST.AST_FORM_CALL_PROCEDURE);
       }
+    }
+    else
+    {
+      mark_type = eatRemainList(builder, close, AST.AST_UNRECOGNIZED_FORM);
     }
 
     marker.done(mark_type);
