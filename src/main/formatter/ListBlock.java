@@ -6,6 +6,7 @@ import com.intellij.formatting.ChildAttributes;
 import com.intellij.formatting.Indent;
 import com.intellij.formatting.Wrap;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -53,7 +54,8 @@ public class ListBlock extends SchemeBlock
         if (nodePsi instanceof PsiFile) {
           align = alignment;
           indent = Indent.getNoneIndent();
-        } else if (childNode.getFirstChildNode() == null) {
+        } else if (childNode.getFirstChildNode() == null
+                && !(childNode.getPsi() instanceof PsiComment)) {
           align = alignment;
           indent = Indent.getNoneIndent();
         } else if ((nodePsi instanceof SchemeFormBegin) || (nodePsi instanceof SchemeBodyOfForm)) {

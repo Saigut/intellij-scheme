@@ -3,6 +3,7 @@ package main.formatter.processors;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.Spacing;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.tree.IElementType;
 import main.formatter.SchemeBlock;
 import main.lexer.SchemeTokens;
@@ -35,6 +36,13 @@ public class SchemeSpacingProcessor
     IElementType type1 = node1.getElementType();
     IElementType type2 = node2.getElementType();
 
+    if ((node2.getPsi() instanceof PsiComment)) {
+      ASTNode preNode = node2.getTreePrev();
+      if ((preNode.getElementType() == SchemeTokens.WHITESPACE)
+              && (preNode.getText().indexOf('\n') < 0)) {
+        return Spacing.getReadOnlySpacing();
+      }
+    }
     if (SchemeTokens.DATUM_PREFIXES.contains(type1)
             || type1 == AST.AST_BAD_CHARACTER)
     {
