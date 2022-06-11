@@ -22,6 +22,8 @@ public class SchemeFoldingBuilder implements FoldingBuilder
       return ";...";
     } else if (node.getElementType() == SchemeTokens.BLOCK_COMMENT) {
       return "#|...|#";
+    } else if (node.getElementType() == SchemeTokens.DATUM_COMMENT) {
+      return "#;...";
     } else {
       return "...";
     }
@@ -74,6 +76,7 @@ public class SchemeFoldingBuilder implements FoldingBuilder
   private boolean isFoldableNode(ASTNode node)
   {
     PsiElement element = node.getPsi();
-    return (element instanceof SchemeBodyOfForm) || (node.getElementType() == SchemeTokens.BLOCK_COMMENT);
+    return (element instanceof SchemeBodyOfForm)
+            || SchemeTokens.COMMENTS.contains(node.getElementType());
   }
 }
