@@ -81,11 +81,33 @@ public class SchemePsiUtil
     return null;
   }
 
-  public static ASTNode getNodeNextNormalSibling(ASTNode node)
+  public static ASTNode getNonLeafChildAt(ASTNode node, int i)
+  {
+    if (i < 0) {
+      return null;
+    }
+    ASTNode child = node.getFirstChildNode();
+    int idx = 0;
+    while (child != null) {
+      if (child.getFirstChildNode() != null
+              && child.getElementType() != AST.AST_ELE_DATUM_COMMENT) {
+        if (idx >= i) {
+          return child;
+        } else {
+          idx++;
+        }
+      }
+      child = child.getTreeNext();
+    }
+    return null;
+  }
+
+  public static ASTNode getNodeNextNonLeafSibling(ASTNode node)
   {
     ASTNode child = node.getTreeNext();
     while (child != null) {
-      if (AST.AST_ELEMENTS.contains(child.getElementType())) {
+      if (child.getFirstChildNode() != null
+              && child.getElementType() != AST.AST_ELE_DATUM_COMMENT) {
         return child;
       }
       child = child.getTreeNext();

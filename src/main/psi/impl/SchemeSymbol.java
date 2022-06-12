@@ -16,7 +16,6 @@ import main.SchemeIcons;
 import main.parser.AST;
 import main.psi.impl.symbols.CompleteSymbol;
 import main.psi.util.SchemePsiElementFactory;
-import main.psi.util.SchemePsiUtil;
 
 import javax.swing.Icon;
 
@@ -61,16 +60,11 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
 
   public PsiElement setName(@NotNull @NonNls String newName) throws IncorrectOperationException
   {
-    ASTNode newNode = SchemePsiElementFactory.getInstance(getProject()).createSymbolNodeFromText(newName);
     ASTNode thisNode = getNode();
-    ASTNode parentNode = thisNode.getTreeParent();
-    if (parentNode != null)
-    {
-      parentNode.replaceChild(thisNode, newNode);
-      return newNode.getPsi();
-    } else {
-      return this;
-    }
+    ASTNode newNode = SchemePsiElementFactory.getInstance(getProject()).createSymbolNodeFromText(newName);
+    ASTNode oldNode = thisNode.getFirstChildNode();
+    thisNode.replaceChild(oldNode, newNode);
+    return this;
   }
 
   @Override
@@ -158,28 +152,55 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
 
   public PsiElement resolve()
   {
-    PsiElement bigBrother = this;
-    PsiElement declaration;
-
-    while (true)
+    PsiElement brother;
+    brother = this.getPrevSibling();
+    while (brother != null)
     {
-      bigBrother = SchemePsiUtil.getBigBrother(bigBrother);
-      if (null == bigBrother)
-      {
+      if (brother instanceof SchemeFormDefineBase) {
+        PsiElement defPsi = ((SchemeFormDefineBase)brother).getDeclareName();
+        if (defPsi.textMatches(this)) {
+          return defPsi;
+        }
+      }
+      brother = brother.getPrevSibling();
+    }
+
+    PsiElement parent;
+    parent = this.getParent();
+    while (parent != null) {
+      if (parent instanceof PsiFile) {
         return null;
       }
-      if (isItDeclaration(bigBrother))
-      {
-        declaration = SchemePsiUtil.getNormalChildAt(bigBrother, 1);
-        if (null != declaration)
-        {
-          if (declaration.textMatches(this))
-          {
-            return declaration;
+      if (parent instanceof SchemeFormDefineBase) {
+        PsiElement dec = ((SchemeFormDefineBase)parent).getDeclareName();
+        if (dec.textMatches(this)) {
+          return dec;
+        }
+      }
+      if (parent instanceof SchemeFormLocalBase) {
+        PsiElement[] defs = ((SchemeFormLocalBase)parent).getLocalDefinitions();
+//        System.out.println("my text: " + this.getText());
+        for (PsiElement def : defs) {
+//          System.out.println("localDefinition: " + def.getText());
+          if (def.textMatches(this)) {
+            return def;
           }
         }
       }
+      brother = parent.getPrevSibling();
+      while (brother != null)
+      {
+        if (brother instanceof SchemeFormDefineBase) {
+          PsiElement defPsi = ((SchemeFormDefineBase)brother).getDeclareName();
+          if (defPsi.textMatches(this)) {
+            return defPsi;
+          }
+        }
+        brother = brother.getPrevSibling();
+      }
+      parent = parent.getParent();
     }
+    return null;
   }
 
   private boolean isItDeclaration(PsiElement element)

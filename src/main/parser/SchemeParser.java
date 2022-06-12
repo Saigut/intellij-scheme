@@ -153,7 +153,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
   }
 
   // ret: true, have body; false, have no body.
-  boolean helperAdvanceForBody(PsiBuilder builder, IElementType close, int i)
+  boolean helperListAdvance(PsiBuilder builder, IElementType close, int i)
   {
     int j = 0;
     IElementType token_type = builder.getTokenType();
@@ -161,7 +161,9 @@ public class SchemeParser implements PsiParser, SchemeTokens
     {
       parseSexp(token_type, builder);
       token_type = builder.getTokenType();
-      j++;
+      if (token_type != SchemeTokens.DATUM_COMMENT_PRE) {
+        j++;
+      }
     }
     return (token_type != null) && (token_type != close);
   }
@@ -183,9 +185,9 @@ public class SchemeParser implements PsiParser, SchemeTokens
     boolean haveBody;
     IElementType form_mark_type = AST.AST_FORM_LET;
     if (builder.getTokenType() == NAME_LITERAL) {
-      haveBody = helperAdvanceForBody(builder, close, 2);
+      haveBody = helperListAdvance(builder, close, 2);
     } else {
-      haveBody = helperAdvanceForBody(builder, close, 1);
+      haveBody = helperListAdvance(builder, close, 1);
     }
     if (haveBody) {
       PsiBuilder.Marker bodyMarker = builder.mark();
@@ -202,7 +204,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormLambda(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_PROCEDURE;
-    if (helperAdvanceForBody(builder, close, 1)) {
+    if (helperListAdvance(builder, close, 1)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -217,7 +219,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormDefine(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_DEFINE;
-    if (helperAdvanceForBody(builder, close, 1)) {
+    if (helperListAdvance(builder, close, 1)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -227,7 +229,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormDefineRecordType(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_DEFINE_RECORD_TYPE;
-    if (helperAdvanceForBody(builder, close, 1)) {
+    if (helperListAdvance(builder, close, 1)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -237,7 +239,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormDefineSyntax(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_DEFINE_SYNTAX;
-    if (helperAdvanceForBody(builder, close, 1)) {
+    if (helperListAdvance(builder, close, 1)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -247,7 +249,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormDo(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_DO;
-    if (helperAdvanceForBody(builder, close, 2)) {
+    if (helperListAdvance(builder, close, 2)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -257,7 +259,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormList(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_LIST;
-    if (helperAdvanceForBody(builder, close, 0)) {
+    if (helperListAdvance(builder, close, 0)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -267,7 +269,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormLibrary(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_LIBRARY;
-    if (helperAdvanceForBody(builder, close, 3)) {
+    if (helperListAdvance(builder, close, 3)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -287,7 +289,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormBegin(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_BEGIN;
-    if (helperAdvanceForBody(builder, close, 0)) {
+    if (helperListAdvance(builder, close, 0)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -297,7 +299,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormIf(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_IF;
-    if (helperAdvanceForBody(builder, close, 1)) {
+    if (helperListAdvance(builder, close, 1)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }

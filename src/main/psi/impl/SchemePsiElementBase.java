@@ -16,7 +16,7 @@ public abstract class SchemePsiElementBase extends ASTWrapperPsiElement implemen
 {
   final private String name;
 
-  public SchemePsiElementBase(@NotNull ASTNode astNode, String name)
+  public SchemePsiElementBase(@NotNull ASTNode astNode, @NotNull String name)
   {
     super(astNode);
     this.name = name;

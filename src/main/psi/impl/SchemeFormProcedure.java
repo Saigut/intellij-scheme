@@ -2,7 +2,7 @@ package main.psi.impl;
 
 import com.intellij.lang.ASTNode;
 
-public class SchemeFormProcedure extends SchemePsiElementBase
+public class SchemeFormProcedure extends SchemeFormLocalBase
 {
     public SchemeFormProcedure(ASTNode node)
     {

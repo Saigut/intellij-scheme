@@ -7,6 +7,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import main.psi.impl.*;
 import main.psi.impl.list.SchemeList;
+import main.psi.util.SchemePsiUtil;
 
 
 public class SchemePsiCreator
@@ -91,18 +92,32 @@ public class SchemePsiCreator
     {
       return new SchemeFormCons(node);
     }
-    // (define ...)
     else if (elementType == AST.AST_FORM_DEFINE)
     {
-      return new SchemeFormDefine(node);
+      SchemeFormDefine form = new SchemeFormDefine(node);
+      if (setupDefineForm(form)) {
+        return form;
+      } else {
+        return new SchemeBadElement(node);
+      }
     }
     else if (elementType == AST.AST_FORM_DEFINE_RECORD_TYPE)
     {
-      return new SchemeFormDefineRecordType(node);
+      SchemeFormDefineRecordType form = new SchemeFormDefineRecordType(node);
+      if (setupDefineRecordType(form)) {
+        return form;
+      } else {
+        return new SchemeBadElement(node);
+      }
     }
     else if (elementType == AST.AST_FORM_DEFINE_SYNTAX)
     {
-      return new SchemeFormDefineSyntax(node);
+      SchemeFormDefineSyntax form = new SchemeFormDefineSyntax(node);
+      if (setupDefineSyntax(form)) {
+        return form;
+      } else {
+        return new SchemeBadElement(node);
+      }
     }
     else if (elementType == AST.AST_FORM_DO)
     {
@@ -114,7 +129,12 @@ public class SchemePsiCreator
     }
     else if (elementType == AST.AST_FORM_LET)
     {
-      return new SchemeFormLet(node);
+      SchemeFormLet form = new SchemeFormLet(node);
+      if (setupLetForm(form)) {
+        return form;
+      } else {
+        return new SchemeBadElement(node);
+      }
     }
     else if (elementType == AST.AST_FORM_LIBRARY)
     {
@@ -146,7 +166,12 @@ public class SchemePsiCreator
     }
     else if (elementType == AST.AST_FORM_PROCEDURE)
     {
-      return new SchemeFormProcedure(node);
+      SchemeFormProcedure form = new SchemeFormProcedure(node);
+      if (setupProcedure(form)) {
+        return form;
+      } else {
+        return new SchemeBadElement(node);
+      }
     }
     else if (elementType == AST.AST_FORM_SET)
     {
@@ -203,6 +228,137 @@ public class SchemePsiCreator
     }
 
 //    throw new Error("Unexpected ASTNode: " + node.getElementType());
+  }
+
+  private boolean setupLetForm(SchemeFormLet form)
+  {
+    ASTNode node = form.getNode();
+    form.clareLocalDefinitions();
+    ASTNode defNode = SchemePsiUtil.getNonLeafChildAt(node, 1);
+    if (defNode == null) {
+      return false;
+    }
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+      form.addLocalDefinition(defNode.getPsi());
+      defNode = SchemePsiUtil.getNodeNextNonLeafSibling(defNode);
+      if (defNode == null) {
+        return false;
+      }
+    }
+    IElementType defNodeType = defNode.getElementType();
+    if (defNodeType != AST.AST_TEMP_LIST && defNodeType != AST.AST_UNRECOGNIZED_FORM) {
+      return false;
+    }
+    defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
+    if (defNode == null) {
+      return true;
+    }
+    while (defNode != null) {
+      ASTNode localDefinition = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
+      if (localDefinition != null && localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+        form.addLocalDefinition(localDefinition.getPsi());
+      }
+      defNode = SchemePsiUtil.getNodeNextNonLeafSibling(defNode);
+    }
+//    PsiElement[] defs = form.getLocalDefinitions();
+//    for (PsiElement def : defs) {
+//      System.out.println("let localDefinition: " + def.getText());
+//    }
+    return true;
+  }
+
+  private boolean setupDefineForm(SchemeFormDefine form) {
+    ASTNode node = form.getNode();
+    form.clareLocalDefinitions();
+    ASTNode defNode = SchemePsiUtil.getNonLeafChildAt(node, 1);
+    if (defNode == null) {
+      return false;
+    }
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+      form.setDeclareName(defNode.getPsi());
+      return true;
+    }
+    defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
+    if (defNode == null) {
+      return false;
+    }
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+      form.setDeclareName(defNode.getPsi());
+      ASTNode localDefinition;
+      localDefinition = defNode.getTreeNext();
+      while (localDefinition != null) {
+        if (localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+          form.addLocalDefinition(localDefinition.getPsi());
+        }
+        localDefinition = localDefinition.getTreeNext();
+      }
+      return true;
+    }
+    return false;
+  }
+
+  private boolean setupDefineSyntax(SchemeFormDefineSyntax form) {
+    ASTNode node = form.getNode();
+    ASTNode declareName = getDeclareName(node);
+    if (declareName == null) {
+      return false;
+    } else {
+      form.setDeclareName(declareName.getPsi());
+      return true;
+    }
+  }
+
+  private boolean setupDefineRecordType(SchemeFormDefineRecordType form) {
+    ASTNode node = form.getNode();
+    ASTNode declareName = getDeclareName(node);
+    if (declareName == null) {
+      return false;
+    } else {
+      form.setDeclareName(declareName.getPsi());
+      return true;
+    }
+  }
+
+  private boolean setupProcedure(SchemeFormProcedure form) {
+    ASTNode node = form.getNode();
+    form.clareLocalDefinitions();
+    ASTNode defNode = SchemePsiUtil.getNonLeafChildAt(node, 1);
+    if (defNode == null) {
+      return false;
+    }
+    IElementType defNodeType = defNode.getElementType();
+    if (defNodeType == AST.AST_BASIC_ELE_SYMBOL) {
+      form.addLocalDefinition(defNode.getPsi());
+      return true;
+    }
+    if (defNodeType != AST.AST_TEMP_LIST && defNodeType != AST.AST_UNRECOGNIZED_FORM) {
+      return false;
+    }
+    defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
+    if (defNode == null) {
+      return true;
+    }
+    while (defNode != null) {
+      if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+        form.addLocalDefinition(defNode.getPsi());
+      }
+      defNode = SchemePsiUtil.getNodeNextNonLeafSibling(defNode);
+    }
+    return true;
+  }
+
+  private ASTNode getDeclareName(ASTNode node)
+  {
+    ASTNode defNode = SchemePsiUtil.getNonLeafChildAt(node, 1);
+    if (defNode == null) {
+      return null;
+    }
+    IElementType defNodeType = defNode.getElementType();
+    if (defNodeType == AST.AST_BASIC_ELE_SYMBOL) {
+      return defNode;
+    } else {
+      return null;
+    }
   }
 
   public PsiFile createFile(FileViewProvider viewProvider)
