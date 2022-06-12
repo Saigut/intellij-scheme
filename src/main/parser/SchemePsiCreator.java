@@ -95,29 +95,20 @@ public class SchemePsiCreator
     else if (elementType == AST.AST_FORM_DEFINE)
     {
       SchemeFormDefine form = new SchemeFormDefine(node);
-      if (setupDefineForm(form)) {
-        return form;
-      } else {
-        return new SchemeBadElement(node);
-      }
+      setupDefineForm(form);
+      return form;
     }
     else if (elementType == AST.AST_FORM_DEFINE_RECORD_TYPE)
     {
       SchemeFormDefineRecordType form = new SchemeFormDefineRecordType(node);
-      if (setupDefineRecordType(form)) {
-        return form;
-      } else {
-        return new SchemeBadElement(node);
-      }
+      setupDefineRecordType(form);
+      return form;
     }
     else if (elementType == AST.AST_FORM_DEFINE_SYNTAX)
     {
       SchemeFormDefineSyntax form = new SchemeFormDefineSyntax(node);
-      if (setupDefineSyntax(form)) {
-        return form;
-      } else {
-        return new SchemeBadElement(node);
-      }
+      setupDefineSyntax(form);
+      return form;
     }
     else if (elementType == AST.AST_FORM_DO)
     {
@@ -130,11 +121,8 @@ public class SchemePsiCreator
     else if (elementType == AST.AST_FORM_LET)
     {
       SchemeFormLet form = new SchemeFormLet(node);
-      if (setupLetForm(form)) {
-        return form;
-      } else {
-        return new SchemeBadElement(node);
-      }
+//      setupLetForm(form);
+      return form;
     }
     else if (elementType == AST.AST_FORM_LIBRARY)
     {
@@ -167,11 +155,8 @@ public class SchemePsiCreator
     else if (elementType == AST.AST_FORM_PROCEDURE)
     {
       SchemeFormProcedure form = new SchemeFormProcedure(node);
-      if (setupProcedure(form)) {
-        return form;
-      } else {
-        return new SchemeBadElement(node);
-      }
+//      setupProcedure(form);
+      return form;
     }
     else if (elementType == AST.AST_FORM_SET)
     {
@@ -284,15 +269,16 @@ public class SchemePsiCreator
     }
     if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
       form.setDeclareName(defNode.getPsi());
-      ASTNode localDefinition;
-      localDefinition = defNode.getTreeNext();
-      while (localDefinition != null) {
-        if (localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
-          form.addLocalDefinition(localDefinition.getPsi());
-        }
-        localDefinition = localDefinition.getTreeNext();
-      }
       return true;
+//      ASTNode localDefinition;
+//      localDefinition = defNode.getTreeNext();
+//      while (localDefinition != null) {
+//        if (localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+//          form.addLocalDefinition(localDefinition.getPsi());
+//        }
+//        localDefinition = localDefinition.getTreeNext();
+//      }
+//      return true;
     }
     return false;
   }

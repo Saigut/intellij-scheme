@@ -8,7 +8,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
+import main.psi.util.SchemePsiUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -171,28 +173,46 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
       if (parent instanceof PsiFile) {
         return null;
       }
-      if (parent instanceof SchemeFormDefineBase) {
-        PsiElement dec = ((SchemeFormDefineBase)parent).getDeclareName();
-        if (dec.textMatches(this)) {
-          return dec;
+      if (parent instanceof SchemeFormLet) {
+        PsiElement find = findInLetForm((SchemeFormLet)parent, this);
+        if (find != null) {
+          return find;
         }
-      }
-      if (parent instanceof SchemeFormLocalBase) {
-        PsiElement[] defs = ((SchemeFormLocalBase)parent).getLocalDefinitions();
+      } else if (parent instanceof SchemeFormDefine) {
+        PsiElement find = findInDefineForm((SchemeFormDefine)parent, this);
+        if (find != null) {
+          return find;
+        }
+      } else if (parent instanceof SchemeFormProcedure) {
+        PsiElement find = findInProcedure((SchemeFormProcedure)parent, this);
+        if (find != null) {
+          return find;
+        }
+      } else {
+        if (parent instanceof SchemeFormDefineBase) {
+          PsiElement dec = ((SchemeFormDefineBase)parent).getDeclareName();
+          if (dec.textMatches(this)) {
+            return dec;
+          }
+        }
+        if (parent instanceof SchemeFormLocalBase) {
+          PsiElement[] defs = ((SchemeFormLocalBase)parent).getLocalDefinitions();
 //        System.out.println("my text: " + this.getText());
-        for (PsiElement def : defs) {
+          for (PsiElement def : defs) {
 //          System.out.println("localDefinition: " + def.getText());
-          if (def.textMatches(this)) {
-            return def;
+            if (def.textMatches(this)) {
+              return def;
+            }
           }
         }
       }
+
       brother = parent.getPrevSibling();
       while (brother != null)
       {
         if (brother instanceof SchemeFormDefineBase) {
           PsiElement defPsi = ((SchemeFormDefineBase)brother).getDeclareName();
-          if (defPsi.textMatches(this)) {
+          if (defPsi != null && defPsi.textMatches(this)) {
             return defPsi;
           }
         }
@@ -202,6 +222,106 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     }
     return null;
   }
+
+  private PsiElement findInLetForm(SchemeFormLet form, PsiElement toFind)
+  {
+    ASTNode node = form.getNode();
+    ASTNode defNode = SchemePsiUtil.getNonLeafChildAt(node, 1);
+    if (defNode == null) {
+      return null;
+    }
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+      if (toFind.textMatches(defNode.getPsi())) {
+        return defNode.getPsi();
+      }
+      defNode = SchemePsiUtil.getNodeNextNonLeafSibling(defNode);
+      if (defNode == null) {
+        return null;
+      }
+    }
+    IElementType defNodeType = defNode.getElementType();
+    if (defNodeType != AST.AST_TEMP_LIST && defNodeType != AST.AST_UNRECOGNIZED_FORM) {
+      return null;
+    }
+    defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
+    if (defNode == null) {
+      return null;
+    }
+    while (defNode != null) {
+      ASTNode localDefinition = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
+      if (localDefinition != null && localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+        if (toFind.textMatches(localDefinition.getPsi())) {
+          return localDefinition.getPsi();
+        }
+      }
+      defNode = SchemePsiUtil.getNodeNextNonLeafSibling(defNode);
+    }
+    return null;
+  }
+
+  private PsiElement findInDefineForm(SchemeFormDefine form, PsiElement toFind) {
+    ASTNode node = form.getNode();
+    ASTNode defNode = SchemePsiUtil.getNonLeafChildAt(node, 1);
+    if (defNode == null) {
+      return null;
+    }
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+      if (toFind.textMatches(defNode.getPsi())) {
+        return defNode.getPsi();
+      }
+    }
+    defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
+    if (defNode == null) {
+      return null;
+    }
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+      if (toFind.textMatches(defNode.getPsi())) {
+        return defNode.getPsi();
+      }
+      ASTNode localDefinition;
+      localDefinition = defNode.getTreeNext();
+      while (localDefinition != null) {
+        if (localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+          if (toFind.textMatches(localDefinition.getPsi())) {
+            return localDefinition.getPsi();
+          }
+        }
+        localDefinition = localDefinition.getTreeNext();
+      }
+    }
+    return null;
+  }
+
+  private PsiElement findInProcedure(SchemeFormProcedure form, PsiElement toFind) {
+    ASTNode node = form.getNode();
+    ASTNode defNode = SchemePsiUtil.getNonLeafChildAt(node, 1);
+    if (defNode == null) {
+      return null;
+    }
+    IElementType defNodeType = defNode.getElementType();
+    if (defNodeType == AST.AST_BASIC_ELE_SYMBOL) {
+      if (toFind.textMatches(defNode.getPsi())) {
+        return defNode.getPsi();
+      }
+    }
+    if (defNodeType != AST.AST_TEMP_LIST && defNodeType != AST.AST_UNRECOGNIZED_FORM) {
+      return null;
+    }
+    defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
+    if (defNode == null) {
+      return null;
+    }
+    while (defNode != null) {
+      if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+        if (toFind.textMatches(defNode.getPsi())) {
+          return defNode.getPsi();
+        }
+      }
+      defNode = SchemePsiUtil.getNodeNextNonLeafSibling(defNode);
+    }
+    return null;
+  }
+
 
   private boolean isItDeclaration(PsiElement element)
   {
