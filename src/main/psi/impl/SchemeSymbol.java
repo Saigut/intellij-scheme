@@ -191,7 +191,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
       } else {
         if (parent instanceof SchemeFormDefineBase) {
           PsiElement dec = ((SchemeFormDefineBase)parent).getDeclareName();
-          if (dec.textMatches(this)) {
+          if (dec != null && dec.textMatches(this)) {
             return dec;
           }
         }
