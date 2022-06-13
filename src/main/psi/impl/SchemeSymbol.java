@@ -183,6 +183,11 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
         if (find != null) {
           return find;
         }
+      } else if (parent instanceof SchemeFormDo) {
+        PsiElement find = findInDoForm((SchemeFormDo)parent, this);
+        if (find != null) {
+          return find;
+        }
       } else if (parent instanceof SchemeFormProcedure) {
         PsiElement find = findInProcedure((SchemeFormProcedure)parent, this);
         if (find != null) {
@@ -223,6 +228,66 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     return null;
   }
 
+  private PsiElement findInDefineForm(SchemeFormDefine form, PsiElement toFind) {
+    ASTNode node = form.getNode();
+    ASTNode defNode = SchemePsiUtil.getNonLeafChildAt(node, 1);
+    if (defNode == null) {
+      return null;
+    }
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+      if (toFind.textMatches(defNode.getPsi())) {
+        return defNode.getPsi();
+      }
+    }
+    defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
+    if (defNode == null) {
+      return null;
+    }
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+      if (toFind.textMatches(defNode.getPsi())) {
+        return defNode.getPsi();
+      }
+      ASTNode localDefinition;
+      localDefinition = defNode.getTreeNext();
+      while (localDefinition != null) {
+        if (localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+          if (toFind.textMatches(localDefinition.getPsi())) {
+            return localDefinition.getPsi();
+          }
+        }
+        localDefinition = localDefinition.getTreeNext();
+      }
+    }
+    return null;
+  }
+
+  private PsiElement findInDoForm(SchemeFormDo form, PsiElement toFind)
+  {
+    ASTNode node = form.getNode();
+    ASTNode defNode = SchemePsiUtil.getNonLeafChildAt(node, 1);
+    if (defNode == null) {
+      return null;
+    }
+    IElementType defNodeType = defNode.getElementType();
+    if (defNodeType != AST.AST_TEMP_LIST && defNodeType != AST.AST_UNRECOGNIZED_FORM) {
+      return null;
+    }
+    defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
+    if (defNode == null) {
+      return null;
+    }
+    while (defNode != null) {
+      ASTNode localDefinition = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
+      if (localDefinition != null && localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+        if (toFind.textMatches(localDefinition.getPsi())) {
+          return localDefinition.getPsi();
+        }
+      }
+      defNode = SchemePsiUtil.getNodeNextNonLeafSibling(defNode);
+    }
+    return null;
+  }
+
   private PsiElement findInLetForm(SchemeFormLet form, PsiElement toFind)
   {
     ASTNode node = form.getNode();
@@ -255,39 +320,6 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
         }
       }
       defNode = SchemePsiUtil.getNodeNextNonLeafSibling(defNode);
-    }
-    return null;
-  }
-
-  private PsiElement findInDefineForm(SchemeFormDefine form, PsiElement toFind) {
-    ASTNode node = form.getNode();
-    ASTNode defNode = SchemePsiUtil.getNonLeafChildAt(node, 1);
-    if (defNode == null) {
-      return null;
-    }
-    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
-      if (toFind.textMatches(defNode.getPsi())) {
-        return defNode.getPsi();
-      }
-    }
-    defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
-    if (defNode == null) {
-      return null;
-    }
-    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
-      if (toFind.textMatches(defNode.getPsi())) {
-        return defNode.getPsi();
-      }
-      ASTNode localDefinition;
-      localDefinition = defNode.getTreeNext();
-      while (localDefinition != null) {
-        if (localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
-          if (toFind.textMatches(localDefinition.getPsi())) {
-            return localDefinition.getPsi();
-          }
-        }
-        localDefinition = localDefinition.getTreeNext();
-      }
     }
     return null;
   }

@@ -401,6 +401,14 @@ public class SchemeParser implements PsiParser, SchemeTokens
     {
       mark_type = parseFormLet(builder, close);
     }
+    else if (text.equals("letrec"))
+    {
+      mark_type = parseFormLet(builder, close);
+    }
+    else if (text.equals("let*"))
+    {
+      mark_type = parseFormLet(builder, close);
+    }
     else if (text.equals("list"))
     {
       mark_type = parseFormList(builder, close);
