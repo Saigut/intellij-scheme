@@ -87,17 +87,6 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
       }
 
       @Nullable
-      public String getLocationString()
-      {
-        String name = "Unknown name";
-        PsiFile file = getContainingFile();
-        if (file != null) {
-          name = file.getName();
-        }
-        return "(in " + name + ")";
-      }
-
-      @Nullable
       public Icon getIcon(boolean open)
       {
         return SchemeSymbol.this.getIcon(Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
