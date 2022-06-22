@@ -10,9 +10,8 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import main.lexer.SchemeTokens;
 import main.psi.impl.SchemeBodyOfForm;
-import main.psi.impl.SchemeFormBegin;
-import main.psi.impl.SchemeUnrecognizedForm;
 import main.psi.impl.list.SchemeList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,13 +54,14 @@ public class ListBlock extends SchemeBlock
           align = alignment;
           indent = Indent.getNoneIndent();
         } else if (childNode.getFirstChildNode() == null
+                && !SchemeTokens.CLOSE_BRACES.contains(childNode.getElementType())
                 && !(childNode.getPsi() instanceof PsiComment)) {
           align = alignment;
           indent = Indent.getNoneIndent();
-        } else if ((nodePsi instanceof SchemeFormBegin) || (nodePsi instanceof SchemeBodyOfForm)) {
+        } else if (nodePsi instanceof SchemeBodyOfForm) {
           align = alignment;
           indent = Indent.getNoneIndent();
-        } else if ((nodePsi instanceof SchemeList)) {
+        } else if (nodePsi instanceof SchemeList) {
           align = Alignment.createAlignment();
           indent = Indent.getSpaceIndent(1, true);
         } else {
