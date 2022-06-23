@@ -4,6 +4,8 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
+import main.parser.AST;
 import main.psi.impl.*;
 import org.jetbrains.annotations.NotNull;
 import main.highlighter.SchemeSyntaxHighlighter;
@@ -15,9 +17,13 @@ public class SchemeAnnotator implements Annotator
 {
   public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder)
   {
-    if (COMMENTS.contains(element.getNode().getElementType())) {
+    IElementType ele_type = element.getNode().getElementType();
+    if (COMMENTS.contains(ele_type)) {
       holder.createInfoAnnotation(element, null)
               .setTextAttributes(SchemeSyntaxHighlighter.COMMENT);
+    } else if (ele_type == AST.AST_BASIC_ELE_SYMBOL) {
+      holder.createInfoAnnotation(element, null)
+              .setTextAttributes(SchemeSyntaxHighlighter.LITERAL);
     } else if (element instanceof SchemeEleChar) {
       holder.createInfoAnnotation(element, null)
               .setTextAttributes(SchemeSyntaxHighlighter.CHAR);

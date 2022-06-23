@@ -235,7 +235,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
       } else {
         listMarker.done(eatRemainList(builder, list_close, AST.AST_BODY_IN_FORM_PARAM_LIST));
       }
-    } else {
+    } else if (token_type != close) {
       markAToken(builder, AST.AST_BAD_ELEMENT);
     }
     if (helperListAdvance(builder, close, 0)) {
@@ -271,7 +271,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
         next_token_type = builder.getTokenType();
       }
       listMarker.done(eatRemainList(builder, list_close, AST.AST_BODY_IN_FORM_PARAM_LIST));
-    } else {
+    } else if (token_type != close) {
       markASexp(builder, AST.AST_BAD_ELEMENT);
     }
     if (helperListAdvance(builder, close, 0)) {
@@ -401,6 +401,8 @@ public class SchemeParser implements PsiParser, SchemeTokens
       } else {
         listMarker.done(eatRemainList(builder, list_close, AST.AST_BODY_IN_FORM_PARAM_LIST));
       }
+    } else if (token_type != close) {
+      markASexp(builder, AST.AST_BAD_ELEMENT);
     }
     if (helperListAdvance(builder, close, 0)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
@@ -730,7 +732,13 @@ public class SchemeParser implements PsiParser, SchemeTokens
     }
 
     if (DATUM_PREFIXES.contains(type)) {
-      parseSexp(childType, builder);
+      if (!isParen(childType)) {
+        PsiBuilder.Marker quote_marker = builder.mark();
+        parseNonParen(childType, builder);
+        quote_marker.collapse(AST.AST_BASIC_ELE_SYMBOL);
+      } else {
+        parseParen(childType, builder);
+      }
       mark_type = datumPrefixMarkType(type);
       marker.done(mark_type);
       return mark_type;

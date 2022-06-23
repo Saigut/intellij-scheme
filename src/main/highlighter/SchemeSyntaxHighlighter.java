@@ -66,7 +66,7 @@ public class SchemeSyntaxHighlighter extends SyntaxHighlighterBase implements Sc
   public static TextAttributesKey STRING_ESCAPE = createTextAttributesKey(STRING_ESCAPE_ID, defaultFor(SyntaxHighlighterColors.VALID_STRING_ESCAPE));
   public static TextAttributesKey BRACE = createTextAttributesKey(BRACES_ID, defaultFor(SyntaxHighlighterColors.BRACES));
   public static TextAttributesKey PAREN = createTextAttributesKey(PAREN_ID, defaultFor(SyntaxHighlighterColors.PARENTHS));
-  public static TextAttributesKey LITERAL = createTextAttributesKey(LITERAL_ID, defaultFor(SyntaxHighlighterColors.KEYWORD));
+  public static TextAttributesKey LITERAL = createTextAttributesKey(LITERAL_ID, defaultFor(HighlighterColors.TEXT));
   public static TextAttributesKey CHAR = createTextAttributesKey(CHAR_ID, defaultFor(SyntaxHighlighterColors.STRING));
   public static TextAttributesKey BAD_CHARACTER = createTextAttributesKey(BAD_CHARACTER_ID, defaultFor(HighlighterColors.BAD_CHARACTER));
   public static TextAttributesKey KEYWORD = createTextAttributesKey(KEYWORD_ID, defaultFor(SyntaxHighlighterColors.KEYWORD));
