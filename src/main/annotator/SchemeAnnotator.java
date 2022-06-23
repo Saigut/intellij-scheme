@@ -21,7 +21,7 @@ public class SchemeAnnotator implements Annotator
     } else if (element instanceof SchemeEleChar) {
       holder.createInfoAnnotation(element, null)
               .setTextAttributes(SchemeSyntaxHighlighter.CHAR);
-    } else if (element instanceof SchemeBadCharacter) {
+    } else if (element instanceof SchemeBadCharacter/* || element instanceof SchemeBadElement*/) {
       holder.createInfoAnnotation(element, null)
               .setTextAttributes(SchemeSyntaxHighlighter.BAD_CHARACTER);
     } else if (element instanceof SchemeEleString) {

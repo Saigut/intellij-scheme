@@ -64,9 +64,21 @@ public class SchemePsiCreator
     {
       return new SchemeSymbol(node);
     }
-    else if (elementType == AST.AST_BODY_OF_FORM)
+    else if (elementType == AST.AST_BASIC_ELE_SYMBOL_DEFINE)
     {
-      return new SchemeBodyOfForm(node);
+      return new SchemeSymbolDefine(node);
+    }
+    else if (elementType == AST.AST_BODY_IN_FORM_BODY)
+    {
+      return new SchemeInFormBody(node);
+    }
+    else if (elementType == AST.AST_BODY_IN_FORM_PARAM_LIST)
+    {
+      return new SchemeInFormParamList(node);
+    }
+    else if (elementType == AST.AST_BODY_IN_FORM_PARAM_LIST_LET_INNER)
+    {
+      return new SchemeInFormParamListLetInner(node);
     }
     else if (elementType == AST.AST_FORM_AND)
     {
@@ -123,6 +135,14 @@ public class SchemePsiCreator
       SchemeFormLet form = new SchemeFormLet(node);
 //      setupLetForm(form);
       return form;
+    }
+    else if (elementType == AST.AST_FORM_LET_A)
+    {
+      return new SchemeFormLetA(node);
+    }
+    else if (elementType == AST.AST_FORM_LETREC)
+    {
+      return new SchemeFormLetrec(node);
     }
     else if (elementType == AST.AST_FORM_LIBRARY)
     {
@@ -215,7 +235,7 @@ public class SchemePsiCreator
 //    throw new Error("Unexpected ASTNode: " + node.getElementType());
   }
 
-  private boolean setupLetForm(SchemeFormLet form)
+  private boolean setupLetForm(SchemeFormLetBase form)
   {
     ASTNode node = form.getNode();
     form.clareLocalDefinitions();
@@ -259,7 +279,7 @@ public class SchemePsiCreator
     if (defNode == null) {
       return false;
     }
-    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL_DEFINE) {
       form.setDeclareName(defNode.getPsi());
       return true;
     }
@@ -267,7 +287,7 @@ public class SchemePsiCreator
     if (defNode == null) {
       return false;
     }
-    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL_DEFINE) {
       form.setDeclareName(defNode.getPsi());
       return true;
 //      ASTNode localDefinition;
@@ -340,7 +360,7 @@ public class SchemePsiCreator
       return null;
     }
     IElementType defNodeType = defNode.getElementType();
-    if (defNodeType == AST.AST_BASIC_ELE_SYMBOL) {
+    if (defNodeType == AST.AST_BASIC_ELE_SYMBOL_DEFINE) {
       return defNode;
     } else {
       return null;

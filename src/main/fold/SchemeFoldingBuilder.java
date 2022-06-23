@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import main.lexer.SchemeTokens;
-import main.psi.impl.SchemeBodyOfForm;
+import main.psi.impl.SchemeInFormBody;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class SchemeFoldingBuilder implements FoldingBuilder
   private boolean isFoldableNode(ASTNode node)
   {
     PsiElement element = node.getPsi();
-    return (element instanceof SchemeBodyOfForm)
+    return (element instanceof SchemeInFormBody)
             || SchemeTokens.COMMENTS.contains(node.getElementType());
   }
 }

@@ -11,7 +11,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import main.lexer.SchemeTokens;
-import main.psi.impl.SchemeBodyOfForm;
+import main.psi.impl.SchemeInFormBody;
 import main.psi.impl.list.SchemeList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +58,7 @@ public class ListBlock extends SchemeBlock
                 && !(childNode.getPsi() instanceof PsiComment)) {
           align = alignment;
           indent = Indent.getNoneIndent();
-        } else if (nodePsi instanceof SchemeBodyOfForm) {
+        } else if (nodePsi instanceof SchemeInFormBody) {
           align = alignment;
           indent = Indent.getNoneIndent();
         } else if (nodePsi instanceof SchemeList) {

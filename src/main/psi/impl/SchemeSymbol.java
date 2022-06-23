@@ -6,12 +6,10 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import main.psi.util.SchemePsiUtil;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import main.SchemeIcons;
@@ -22,7 +20,7 @@ import main.psi.util.SchemePsiElementFactory;
 import javax.swing.Icon;
 
 
-public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference, PsiNamedElement
+public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference
 {
   public SchemeSymbol(ASTNode node)
   {
@@ -60,15 +58,6 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     return getText();
   }
 
-  public PsiElement setName(@NotNull @NonNls String newName) throws IncorrectOperationException
-  {
-    ASTNode thisNode = getNode();
-    ASTNode newNode = SchemePsiElementFactory.getInstance(getProject()).createSymbolNodeFromText(newName);
-    ASTNode oldNode = thisNode.getFirstChildNode();
-    thisNode.replaceChild(oldNode, newNode);
-    return this;
-  }
-
   @Override
   public Icon getIcon(int flags)
   {
@@ -94,12 +83,6 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     };
   }
 
-  @Override
-  public String getName()
-  {
-    return getText();
-  }
-
   @NotNull
   public Object[] getVariants()
   {
@@ -116,13 +99,13 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     return false;
   }
 
-  public boolean isReferenceTo(PsiElement element)
+  public boolean isReferenceTo(@NotNull PsiElement element)
   {
-    if (element instanceof SchemeSymbol)
+    if (element instanceof SchemeSymbolDefine)
     {
-      SchemeSymbol symbol = (SchemeSymbol) element;
+      SchemeSymbolDefine symbol = (SchemeSymbolDefine)element;
       String referenceName = getReferenceName();
-      if ((referenceName != null) && referenceName.equals(symbol.getReferenceName()))
+      if ((referenceName != null) && referenceName.equals(symbol.getName()))
       {
         return resolve() == symbol;
       }
@@ -132,7 +115,11 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
 
   public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException
   {
-    return setName(newElementName);
+    ASTNode thisNode = getNode();
+    ASTNode newNode = SchemePsiElementFactory.getInstance(getProject()).createSymbolNodeFromText(newElementName);
+    ASTNode oldNode = thisNode.getFirstChildNode();
+    thisNode.replaceChild(oldNode, newNode);
+    return this;
   }
 
   public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException
@@ -149,7 +136,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     {
       if (brother instanceof SchemeFormDefineBase) {
         PsiElement defPsi = ((SchemeFormDefineBase)brother).getDeclareName();
-        if (defPsi.textMatches(this)) {
+        if (defPsi != null && defPsi.textMatches(this)) {
           return defPsi;
         }
       }
@@ -157,45 +144,48 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     }
 
     PsiElement parent;
+    PsiElement cur_ele = this;
     parent = this.getParent();
     while (parent != null) {
       if (parent instanceof PsiFile) {
         return null;
       }
-      if (parent instanceof SchemeFormLet) {
-        PsiElement find = findInLetForm((SchemeFormLet)parent, this);
-        if (find != null) {
-          return find;
-        }
-      } else if (parent instanceof SchemeFormDefine) {
-        PsiElement find = findInDefineForm((SchemeFormDefine)parent, this);
-        if (find != null) {
-          return find;
-        }
-      } else if (parent instanceof SchemeFormDo) {
-        PsiElement find = findInDoForm((SchemeFormDo)parent, this);
-        if (find != null) {
-          return find;
-        }
-      } else if (parent instanceof SchemeFormProcedure) {
-        PsiElement find = findInProcedure((SchemeFormProcedure)parent, this);
-        if (find != null) {
-          return find;
-        }
-      } else {
-        if (parent instanceof SchemeFormDefineBase) {
-          PsiElement dec = ((SchemeFormDefineBase)parent).getDeclareName();
-          if (dec != null && dec.textMatches(this)) {
-            return dec;
+      if (!(cur_ele instanceof SchemeInFormParamListLetInner)) {
+        if (parent instanceof SchemeFormLetBase) {
+          PsiElement find = findInLetForm((SchemeFormLetBase) parent, this);
+          if (find != null) {
+            return find;
           }
-        }
-        if (parent instanceof SchemeFormLocalBase) {
-          PsiElement[] defs = ((SchemeFormLocalBase)parent).getLocalDefinitions();
+        } else if (parent instanceof SchemeFormDefine) {
+          PsiElement find = findInDefineForm((SchemeFormDefine)parent, this);
+          if (find != null) {
+            return find;
+          }
+        } else if (parent instanceof SchemeFormDo) {
+          PsiElement find = findInDoForm((SchemeFormDo)parent, this);
+          if (find != null) {
+            return find;
+          }
+        } else if (parent instanceof SchemeFormProcedure) {
+          PsiElement find = findInProcedure((SchemeFormProcedure)parent, this);
+          if (find != null) {
+            return find;
+          }
+        } else {
+          if (parent instanceof SchemeFormDefineBase) {
+            PsiElement dec = ((SchemeFormDefineBase)parent).getDeclareName();
+            if (dec != null && dec.textMatches(this)) {
+              return dec;
+            }
+          }
+          if (parent instanceof SchemeFormLocalBase) {
+            PsiElement[] defs = ((SchemeFormLocalBase)parent).getLocalDefinitions();
 //        System.out.println("my text: " + this.getText());
-          for (PsiElement def : defs) {
+            for (PsiElement def : defs) {
 //          System.out.println("localDefinition: " + def.getText());
-            if (def.textMatches(this)) {
-              return def;
+              if (def.textMatches(this)) {
+                return def;
+              }
             }
           }
         }
@@ -212,6 +202,14 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
         }
         brother = brother.getPrevSibling();
       }
+
+      cur_ele = parent;
+      if (cur_ele instanceof SchemeInFormParamListLetInner) {
+        parent = cur_ele.getParent();
+        if (parent == null) {
+          return null;
+        }
+      }
       parent = parent.getParent();
     }
     return null;
@@ -223,7 +221,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     if (defNode == null) {
       return null;
     }
-    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL_DEFINE) {
       if (toFind.textMatches(defNode.getPsi())) {
         return defNode.getPsi();
       }
@@ -232,14 +230,14 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     if (defNode == null) {
       return null;
     }
-    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL_DEFINE) {
       if (toFind.textMatches(defNode.getPsi())) {
         return defNode.getPsi();
       }
       ASTNode localDefinition;
       localDefinition = defNode.getTreeNext();
       while (localDefinition != null) {
-        if (localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+        if (localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL_DEFINE) {
           if (toFind.textMatches(localDefinition.getPsi())) {
             return localDefinition.getPsi();
           }
@@ -258,7 +256,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
       return null;
     }
     IElementType defNodeType = defNode.getElementType();
-    if (defNodeType != AST.AST_TEMP_LIST && defNodeType != AST.AST_UNRECOGNIZED_FORM) {
+    if (defNodeType != AST.AST_BODY_IN_FORM_PARAM_LIST) {
       return null;
     }
     defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
@@ -267,7 +265,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     }
     while (defNode != null) {
       ASTNode localDefinition = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
-      if (localDefinition != null && localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+      if (localDefinition != null && localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL_DEFINE) {
         if (toFind.textMatches(localDefinition.getPsi())) {
           return localDefinition.getPsi();
         }
@@ -277,14 +275,14 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     return null;
   }
 
-  private PsiElement findInLetForm(SchemeFormLet form, PsiElement toFind)
+  private PsiElement findInLetForm(SchemeFormLetBase form, PsiElement toFind)
   {
     ASTNode node = form.getNode();
     ASTNode defNode = SchemePsiUtil.getNonLeafChildAt(node, 1);
     if (defNode == null) {
       return null;
     }
-    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+    if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL_DEFINE) {
       if (toFind.textMatches(defNode.getPsi())) {
         return defNode.getPsi();
       }
@@ -294,7 +292,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
       }
     }
     IElementType defNodeType = defNode.getElementType();
-    if (defNodeType != AST.AST_TEMP_LIST && defNodeType != AST.AST_UNRECOGNIZED_FORM) {
+    if (defNodeType != AST.AST_BODY_IN_FORM_PARAM_LIST) {
       return null;
     }
     defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
@@ -303,7 +301,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     }
     while (defNode != null) {
       ASTNode localDefinition = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
-      if (localDefinition != null && localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+      if (localDefinition != null && localDefinition.getElementType() == AST.AST_BASIC_ELE_SYMBOL_DEFINE) {
         if (toFind.textMatches(localDefinition.getPsi())) {
           return localDefinition.getPsi();
         }
@@ -320,12 +318,12 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
       return null;
     }
     IElementType defNodeType = defNode.getElementType();
-    if (defNodeType == AST.AST_BASIC_ELE_SYMBOL) {
+    if (defNodeType == AST.AST_BASIC_ELE_SYMBOL_DEFINE) {
       if (toFind.textMatches(defNode.getPsi())) {
         return defNode.getPsi();
       }
     }
-    if (defNodeType != AST.AST_TEMP_LIST && defNodeType != AST.AST_UNRECOGNIZED_FORM) {
+    if (defNodeType != AST.AST_BODY_IN_FORM_PARAM_LIST) {
       return null;
     }
     defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
@@ -333,7 +331,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
       return null;
     }
     while (defNode != null) {
-      if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL) {
+      if (defNode.getElementType() == AST.AST_BASIC_ELE_SYMBOL_DEFINE) {
         if (toFind.textMatches(defNode.getPsi())) {
           return defNode.getPsi();
         }
@@ -342,7 +340,6 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference,
     }
     return null;
   }
-
 
   private boolean isItDeclaration(PsiElement element)
   {

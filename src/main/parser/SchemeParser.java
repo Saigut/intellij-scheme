@@ -157,12 +157,18 @@ public class SchemeParser implements PsiParser, SchemeTokens
   {
     int j = 0;
     IElementType token_type = builder.getTokenType();
+    while (token_type == SchemeTokens.DATUM_COMMENT_PRE) {
+      parseSexp(token_type, builder);
+      token_type = builder.getTokenType();
+    }
     while (j < i && token_type != close && token_type != null)
     {
       parseSexp(token_type, builder);
       token_type = builder.getTokenType();
       if (token_type != SchemeTokens.DATUM_COMMENT_PRE) {
         j++;
+      } else {
+        parseSexp(token_type, builder);
       }
     }
     return (token_type != null) && (token_type != close);
@@ -177,23 +183,66 @@ public class SchemeParser implements PsiParser, SchemeTokens
       parseSexp(token_type, builder);
       token_type = builder.getTokenType();
     }
-    bodyMarker.done(AST.AST_BODY_OF_FORM);
+    bodyMarker.done(AST.AST_BODY_IN_FORM_BODY);
   }
 
-  IElementType parseFormLet(PsiBuilder builder, IElementType close)
+  IElementType parseFormLetForms(PsiBuilder builder, IElementType close, IElementType let_type)
   {
-    boolean haveBody;
-    IElementType form_mark_type = AST.AST_FORM_LET;
     if (builder.getTokenType() == NAME_LITERAL) {
-      haveBody = helperListAdvance(builder, close, 2);
-    } else {
-      haveBody = helperListAdvance(builder, close, 1);
+      markAToken(builder, AST.AST_BASIC_ELE_SYMBOL_DEFINE);
     }
-    if (haveBody) {
+    helperListAdvance(builder, close, 0);
+    IElementType token_type = builder.getTokenType();
+    if (OPEN_SEXP_BRACES.contains(token_type)) {
+      PsiBuilder.Marker listMarker = builder.mark();
+      IElementType list_close = getCloseParen(token_type);
+      IElementType sub_list_token_type;
+      builder.advanceLexer();
+      helperListAdvance(builder, list_close, 0);
+      sub_list_token_type = builder.getTokenType();
+      while (sub_list_token_type != null && sub_list_token_type != list_close) {
+        if (OPEN_SEXP_BRACES.contains(sub_list_token_type)) {
+          PsiBuilder.Marker subListMarker = builder.mark();
+          IElementType sub_list_close = getCloseParen(sub_list_token_type);
+          builder.advanceLexer();
+          helperListAdvance(builder, sub_list_close, 0);
+          IElementType name_token_type = builder.getTokenType();
+          if (name_token_type == NAME_LITERAL) {
+            markAToken(builder, AST.AST_BASIC_ELE_SYMBOL_DEFINE);
+            if (let_type == AST.AST_FORM_LET) {
+              subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_BODY_IN_FORM_PARAM_LIST_LET_INNER));
+            } else {
+              subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_TEMP_LIST));
+            }
+          } else if (name_token_type == sub_list_close) {
+            subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_BAD_ELEMENT));
+          } else {
+            markASexp(builder, AST.AST_BAD_ELEMENT);
+            subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_BAD_ELEMENT));
+          }
+        } else {
+          if (sub_list_token_type == NAME_LITERAL) {
+            markAToken(builder, AST.AST_BAD_ELEMENT);
+          } else {
+            markASexp(builder, AST.AST_BAD_ELEMENT);
+          }
+        }
+        helperListAdvance(builder, list_close, 0);
+        sub_list_token_type = builder.getTokenType();
+      }
+      if (sub_list_token_type != list_close) {
+        listMarker.done(eatRemainList(builder, list_close, AST.AST_BAD_ELEMENT));
+      } else {
+        listMarker.done(eatRemainList(builder, list_close, AST.AST_BODY_IN_FORM_PARAM_LIST));
+      }
+    } else {
+      markAToken(builder, AST.AST_BAD_ELEMENT);
+    }
+    if (helperListAdvance(builder, close, 0)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
-    return eatRemainList(builder, close, form_mark_type);
+    return eatRemainList(builder, close, let_type);
   }
 
   IElementType parseFormSet(PsiBuilder builder, IElementType close)
@@ -204,7 +253,28 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormLambda(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_PROCEDURE;
-    if (helperListAdvance(builder, close, 1)) {
+    IElementType token_type = builder.getTokenType();
+    if (OPEN_SEXP_BRACES.contains(token_type)) {
+      PsiBuilder.Marker listMarker = builder.mark();
+      IElementType next_token_type;
+      IElementType list_close = getCloseParen(token_type);
+      builder.advanceLexer();
+      helperListAdvance(builder, list_close, 0);
+      next_token_type = builder.getTokenType();
+      while (next_token_type != null && next_token_type != list_close) {
+        if (next_token_type == NAME_LITERAL) {
+          markAToken(builder, AST.AST_BASIC_ELE_SYMBOL_DEFINE);
+        } else {
+          markASexp(builder, AST.AST_BAD_ELEMENT);
+        }
+        helperListAdvance(builder, list_close, 0);
+        next_token_type = builder.getTokenType();
+      }
+      listMarker.done(eatRemainList(builder, list_close, AST.AST_BODY_IN_FORM_PARAM_LIST));
+    } else {
+      markASexp(builder, AST.AST_BAD_ELEMENT);
+    }
+    if (helperListAdvance(builder, close, 0)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -216,10 +286,42 @@ public class SchemeParser implements PsiParser, SchemeTokens
     return eatRemainList(builder, close, AST.AST_FORM_CONS);
   }
 
+  private IElementType getCloseParen(IElementType open) {
+    if (LEFT_PAREN == open)
+    {
+      return  RIGHT_PAREN;
+    }
+    else
+    {
+      return RIGHT_SQUARE;
+    }
+  }
+
   IElementType parseFormDefine(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_DEFINE;
-    if (helperListAdvance(builder, close, 1)) {
+    IElementType token_type = builder.getTokenType();
+    if (token_type == NAME_LITERAL) {
+      markAToken(builder, AST.AST_BASIC_ELE_SYMBOL_DEFINE);
+    } else if (OPEN_SEXP_BRACES.contains(token_type)) {
+      PsiBuilder.Marker listMarker = builder.mark();
+      IElementType list_mark_type;
+      IElementType list_close = getCloseParen(token_type);
+      builder.advanceLexer();
+      helperListAdvance(builder, list_close, 0);
+      token_type = builder.getTokenType();
+      while (token_type != null && token_type != list_close) {
+        if (token_type == NAME_LITERAL) {
+          markAToken(builder, AST.AST_BASIC_ELE_SYMBOL_DEFINE);
+        } else {
+          markASexp(builder, AST.AST_BAD_ELEMENT);
+        }
+        helperListAdvance(builder, list_close, 0);
+        token_type = builder.getTokenType();
+      }
+      listMarker.done(eatRemainList(builder, list_close, AST.AST_BODY_IN_FORM_PARAM_LIST));
+    }
+    if (helperListAdvance(builder, close, 0)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -229,7 +331,13 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormDefineRecordType(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_DEFINE_RECORD_TYPE;
-    if (helperListAdvance(builder, close, 1)) {
+    IElementType token_type = builder.getTokenType();
+    if (token_type == NAME_LITERAL) {
+      markAToken(builder, AST.AST_BASIC_ELE_SYMBOL_DEFINE);
+    } else {
+      markASexp(builder, AST.AST_BAD_ELEMENT);
+    }
+    if (helperListAdvance(builder, close, 0)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -239,7 +347,13 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormDefineSyntax(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_DEFINE_SYNTAX;
-    if (helperListAdvance(builder, close, 1)) {
+    IElementType token_type = builder.getTokenType();
+    if (token_type == NAME_LITERAL) {
+      markAToken(builder, AST.AST_BASIC_ELE_SYMBOL_DEFINE);
+    } else {
+      markASexp(builder, AST.AST_BAD_ELEMENT);
+    }
+    if (helperListAdvance(builder, close, 0)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -249,7 +363,46 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormDo(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_DO;
-    if (helperListAdvance(builder, close, 2)) {
+    helperListAdvance(builder, close, 0);
+    IElementType token_type = builder.getTokenType();
+    if (OPEN_SEXP_BRACES.contains(token_type)) {
+      PsiBuilder.Marker listMarker = builder.mark();
+      IElementType list_close = getCloseParen(token_type);
+      IElementType sub_list_token_type;
+      builder.advanceLexer();
+      helperListAdvance(builder, list_close, 0);
+      sub_list_token_type = builder.getTokenType();
+      while (sub_list_token_type != null && sub_list_token_type != list_close) {
+        if (OPEN_SEXP_BRACES.contains(sub_list_token_type)) {
+          PsiBuilder.Marker subListMarker = builder.mark();
+          IElementType sub_list_close = getCloseParen(sub_list_token_type);
+          builder.advanceLexer();
+          helperListAdvance(builder, sub_list_close, 0);
+          IElementType name_token_type = builder.getTokenType();
+          if (name_token_type == NAME_LITERAL) {
+            markAToken(builder, AST.AST_BASIC_ELE_SYMBOL_DEFINE);
+            subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_TEMP_LIST));
+          } else if (name_token_type == sub_list_close) {
+            subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_BAD_ELEMENT));
+          } else {
+            markASexp(builder, AST.AST_BAD_ELEMENT);
+            subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_BAD_ELEMENT));
+          }
+        } else {
+          PsiBuilder.Marker marker = builder.mark();
+          parseSexp(builder.getTokenType(), builder);
+          marker.collapse(AST.AST_BAD_ELEMENT);
+        }
+        helperListAdvance(builder, list_close, 0);
+        sub_list_token_type = builder.getTokenType();
+      }
+      if (sub_list_token_type != list_close) {
+        listMarker.done(eatRemainList(builder, list_close, AST.AST_BAD_ELEMENT));
+      } else {
+        listMarker.done(eatRemainList(builder, list_close, AST.AST_BODY_IN_FORM_PARAM_LIST));
+      }
+    }
+    if (helperListAdvance(builder, close, 0)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }
@@ -399,15 +552,15 @@ public class SchemeParser implements PsiParser, SchemeTokens
     }
     else if (text.equals("let"))
     {
-      mark_type = parseFormLet(builder, close);
+      mark_type = parseFormLetForms(builder, close, AST.AST_FORM_LET);
     }
     else if (text.equals("letrec"))
     {
-      mark_type = parseFormLet(builder, close);
+      mark_type = parseFormLetForms(builder, close, AST.AST_FORM_LETREC);
     }
     else if (text.equals("let*"))
     {
-      mark_type = parseFormLet(builder, close);
+      mark_type = parseFormLetForms(builder, close, AST.AST_FORM_LET_A);
     }
     else if (text.equals("list"))
     {
@@ -441,6 +594,8 @@ public class SchemeParser implements PsiParser, SchemeTokens
     IElementType mark_type = AST.AST_TEMP_LIST;
     PsiBuilder.Marker marker = markAndAdvance(builder);
 
+    helperListAdvance(builder, close, 0);
+
     IElementType token_type = builder.getTokenType();
     if (token_type == null) {
       builder.error("parse sexp failed");
@@ -463,6 +618,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
     IElementType exp_type;
     exp_type = parseSexp(token_type, builder);
+    helperListAdvance(builder, close, 0);
     if (exp_type == null)
     {
       builder.error("parse sexp failed");
@@ -527,6 +683,20 @@ public class SchemeParser implements PsiParser, SchemeTokens
   }
 
   // Main logic
+  void markAToken(PsiBuilder builder, IElementType mark_type)
+  {
+    PsiBuilder.Marker marker = builder.mark();
+    builder.advanceLexer();
+    marker.done(mark_type);
+  }
+
+  void markASexp(PsiBuilder builder, IElementType mark_type)
+  {
+    PsiBuilder.Marker marker = builder.mark();
+    parseSexp(builder.getTokenType(), builder);
+    marker.done(mark_type);
+  }
+
   IElementType parseAtom(IElementType type, PsiBuilder builder)
   {
     PsiBuilder.Marker marker = builder.mark();
@@ -664,6 +834,8 @@ public class SchemeParser implements PsiParser, SchemeTokens
   {
     IElementType mark_type = AST.AST_TEMP_LIST;
     PsiBuilder.Marker marker = markAndAdvance(builder);
+
+    helperListAdvance(builder, close, 0);
 
     IElementType token_type = builder.getTokenType();
     if (token_type == null) {
