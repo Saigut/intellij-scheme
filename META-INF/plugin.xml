@@ -21,7 +21,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <fileType name="Scheme"
               implementationClass="main.file.SchemeFileType" fieldName="SCHEME_FILE_TYPE"
-              language="Scheme" extensions="ss;scm"/>
+              language="Scheme" extensions="ss;scm;sls"/>
 
     <lang.parserDefinition language="Scheme"
                            implementationClass="main.parser.SchemeParserDefinition"/>
