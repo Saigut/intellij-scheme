@@ -9,8 +9,7 @@ public interface AST
 {
   IFileElementType AST_FILE = new IFileElementType(SchemeLanguage.INSTANCE);;
 
-  // Intermediate type. Not the final AST Node
-  IElementType AST_TEMP_LIST = new SchemeElementType("ast temp list");
+  IElementType AST_PLAIN_LIST = new SchemeElementType("ast plain list");
 
   // Basic element
   IElementType AST_BASIC_ELE_BOOL = new SchemeElementType("ast bool");
@@ -27,9 +26,9 @@ public interface AST
   IElementType AST_ELE_DATUM_COMMENT = new SchemeElementType("ast datum comment");
 
   // Forms
-  IElementType AST_BODY_IN_FORM_BODY = new SchemeElementType("ast body of form");
-  IElementType AST_BODY_IN_FORM_PARAM_LIST = new SchemeElementType("ast parameter list of form");
-  IElementType AST_BODY_IN_FORM_PARAM_LIST_LET_INNER = new SchemeElementType("ast inner parameter list of let form");
+  IElementType AST_IN_FORM_BODY = new SchemeElementType("ast body of form");
+  IElementType AST_IN_FORM_PARAM_LIST = new SchemeElementType("ast parameter list of form");
+  IElementType AST_IN_FORM_PARAM_LIST_LET_INNER = new SchemeElementType("ast inner parameter list of let form");
   IElementType AST_FORM_DEFINE = new SchemeElementType("ast define");
   IElementType AST_FORM_DEFINE_RECORD_TYPE = new SchemeElementType("ast define-record-type");
   IElementType AST_FORM_DEFINE_SYNTAX = new SchemeElementType("ast define-syntax");
@@ -56,6 +55,8 @@ public interface AST
 
   // Library form
   IElementType AST_FORM_LIBRARY = new SchemeElementType("ast library");
+  IElementType AST_FORM_IMPORT = new SchemeElementType("ast import");
+  IElementType AST_FORM_EXPORT = new SchemeElementType("ast export");
 
   // Running process form
   IElementType AST_FORM_BEGIN = new SchemeElementType("ast begin");
@@ -77,11 +78,11 @@ public interface AST
   IElementType AST_UNRECOGNIZED_FORM = new SchemeElementType("ast unrecognized form");
   IElementType AST_BAD_ELEMENT = new SchemeElementType("ast bad element");
 
-  TokenSet AST_ELEMENTS = TokenSet.create(AST_TEMP_LIST,
+  TokenSet AST_ELEMENTS = TokenSet.create(AST_PLAIN_LIST,
           AST_BASIC_ELE_BOOL, AST_BASIC_ELE_NUM, AST_BASIC_ELE_CHAR, AST_BASIC_ELE_STR,
           AST_BASIC_ELE_KEYWORD, AST_BASIC_ELE_PROCEDURE, AST_BASIC_ELE_SYMBOL, AST_BASIC_ELE_SYMBOL_DEFINE,
           AST_ELE_VECTOR,
-          AST_BODY_IN_FORM_BODY, AST_BODY_IN_FORM_PARAM_LIST, AST_BODY_IN_FORM_PARAM_LIST_LET_INNER,
+          AST_IN_FORM_BODY, AST_IN_FORM_PARAM_LIST, AST_IN_FORM_PARAM_LIST_LET_INNER,
           AST_FORM_DEFINE, AST_FORM_DEFINE_RECORD_TYPE, AST_FORM_DEFINE_SYNTAX,
           AST_FORM_PROCEDURE, AST_FORM_CALL_PROCEDURE,
           AST_FORM_LET, AST_FORM_LET_A, AST_FORM_LETREC,

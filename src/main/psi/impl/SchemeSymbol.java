@@ -256,7 +256,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference
       return null;
     }
     IElementType defNodeType = defNode.getElementType();
-    if (defNodeType != AST.AST_BODY_IN_FORM_PARAM_LIST) {
+    if (defNodeType != AST.AST_IN_FORM_PARAM_LIST) {
       return null;
     }
     defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
@@ -292,7 +292,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference
       }
     }
     IElementType defNodeType = defNode.getElementType();
-    if (defNodeType != AST.AST_BODY_IN_FORM_PARAM_LIST) {
+    if (defNodeType != AST.AST_IN_FORM_PARAM_LIST) {
       return null;
     }
     defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);
@@ -323,7 +323,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference
         return defNode.getPsi();
       }
     }
-    if (defNodeType != AST.AST_BODY_IN_FORM_PARAM_LIST) {
+    if (defNodeType != AST.AST_IN_FORM_PARAM_LIST) {
       return null;
     }
     defNode = SchemePsiUtil.getNonLeafChildAt(defNode, 0);

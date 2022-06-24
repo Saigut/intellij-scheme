@@ -183,7 +183,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
       parseSexp(token_type, builder);
       token_type = builder.getTokenType();
     }
-    bodyMarker.done(AST.AST_BODY_IN_FORM_BODY);
+    bodyMarker.done(AST.AST_IN_FORM_BODY);
   }
 
   IElementType parseFormLetForms(PsiBuilder builder, IElementType close, IElementType let_type)
@@ -210,9 +210,9 @@ public class SchemeParser implements PsiParser, SchemeTokens
           if (name_token_type == NAME_LITERAL) {
             markAToken(builder, AST.AST_BASIC_ELE_SYMBOL_DEFINE);
             if (let_type == AST.AST_FORM_LET) {
-              subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_BODY_IN_FORM_PARAM_LIST_LET_INNER));
+              subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_IN_FORM_PARAM_LIST_LET_INNER));
             } else {
-              subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_TEMP_LIST));
+              subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_PLAIN_LIST));
             }
           } else if (name_token_type == sub_list_close) {
             subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_BAD_ELEMENT));
@@ -233,7 +233,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
       if (sub_list_token_type != list_close) {
         listMarker.done(eatRemainList(builder, list_close, AST.AST_BAD_ELEMENT));
       } else {
-        listMarker.done(eatRemainList(builder, list_close, AST.AST_BODY_IN_FORM_PARAM_LIST));
+        listMarker.done(eatRemainList(builder, list_close, AST.AST_IN_FORM_PARAM_LIST));
       }
     } else if (token_type != close) {
       markAToken(builder, AST.AST_BAD_ELEMENT);
@@ -270,7 +270,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
         helperListAdvance(builder, list_close, 0);
         next_token_type = builder.getTokenType();
       }
-      listMarker.done(eatRemainList(builder, list_close, AST.AST_BODY_IN_FORM_PARAM_LIST));
+      listMarker.done(eatRemainList(builder, list_close, AST.AST_IN_FORM_PARAM_LIST));
     } else if (token_type != close) {
       markASexp(builder, AST.AST_BAD_ELEMENT);
     }
@@ -319,7 +319,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
         helperListAdvance(builder, list_close, 0);
         token_type = builder.getTokenType();
       }
-      listMarker.done(eatRemainList(builder, list_close, AST.AST_BODY_IN_FORM_PARAM_LIST));
+      listMarker.done(eatRemainList(builder, list_close, AST.AST_IN_FORM_PARAM_LIST));
     }
     if (helperListAdvance(builder, close, 0)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
@@ -381,7 +381,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
           IElementType name_token_type = builder.getTokenType();
           if (name_token_type == NAME_LITERAL) {
             markAToken(builder, AST.AST_BASIC_ELE_SYMBOL_DEFINE);
-            subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_TEMP_LIST));
+            subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_PLAIN_LIST));
           } else if (name_token_type == sub_list_close) {
             subListMarker.done(eatRemainList(builder, sub_list_close, AST.AST_BAD_ELEMENT));
           } else {
@@ -399,7 +399,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
       if (sub_list_token_type != list_close) {
         listMarker.done(eatRemainList(builder, list_close, AST.AST_BAD_ELEMENT));
       } else {
-        listMarker.done(eatRemainList(builder, list_close, AST.AST_BODY_IN_FORM_PARAM_LIST));
+        listMarker.done(eatRemainList(builder, list_close, AST.AST_IN_FORM_PARAM_LIST));
       }
     } else if (token_type != close) {
       markASexp(builder, AST.AST_BAD_ELEMENT);
@@ -451,6 +451,11 @@ public class SchemeParser implements PsiParser, SchemeTokens
     return eatRemainList(builder, close, form_mark_type);
   }
 
+  IElementType parseFormExport(PsiBuilder builder, IElementType close)
+  {
+    return eatRemainList(builder, close, AST.AST_FORM_EXPORT);
+  }
+
   IElementType parseFormIf(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_IF;
@@ -459,6 +464,11 @@ public class SchemeParser implements PsiParser, SchemeTokens
       helperEatFormBody(builder, close, bodyMarker);
     }
     return eatRemainList(builder, close, form_mark_type);
+  }
+
+  IElementType parseFormImport(PsiBuilder builder, IElementType close)
+  {
+    return eatRemainList(builder, close, AST.AST_FORM_IMPORT);
   }
 
   IElementType parseFormCond(PsiBuilder builder, IElementType close)
@@ -504,96 +514,83 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseTopAndLocalForm(PsiBuilder builder, IElementType close, String text)
   {
     IElementType mark_type = null;
-    if (text.equals("and"))
-    {
-      mark_type = parseFormAnd(builder, close);
-    }
-    else if (text.equals("begin"))
-    {
-      mark_type = parseFormBegin(builder, close);
-    }
-    else if (text.equals("car"))
-    {
-      mark_type = parseFormCar(builder, close);
-    }
-    else if (text.equals("cdr"))
-    {
-      mark_type = parseFormCdr(builder, close);
-    }
-    else if (text.equals("cond"))
-    {
-      mark_type = parseFormCond(builder, close);
-    }
-    else if (text.equals("cons"))
-    {
-      mark_type = parseFormCons(builder, close);
-    }
-    else if (text.equals("define"))
-    {
-      mark_type = parseFormDefine(builder, close);
-    }
-    else if (text.equals("define-record-type"))
-    {
-      mark_type = parseFormDefineRecordType(builder, close);
-    }
-    else if (text.equals("define-syntax"))
-    {
-      mark_type = parseFormDefineSyntax(builder, close);
-    }
-    else if (text.equals("do"))
-    {
-      mark_type = parseFormDo(builder, close);
-    }
-    else if (text.equals("if"))
-    {
-      mark_type = parseFormIf(builder, close);
-    }
-    else if (text.equals("lambda"))
-    {
-      mark_type = parseFormLambda(builder, close);
-    }
-    else if (text.equals("let"))
-    {
-      mark_type = parseFormLetForms(builder, close, AST.AST_FORM_LET);
-    }
-    else if (text.equals("letrec"))
-    {
-      mark_type = parseFormLetForms(builder, close, AST.AST_FORM_LETREC);
-    }
-    else if (text.equals("let*"))
-    {
-      mark_type = parseFormLetForms(builder, close, AST.AST_FORM_LET_A);
-    }
-    else if (text.equals("list"))
-    {
-      mark_type = parseFormList(builder, close);
-    }
-    else if (text.equals("not"))
-    {
-      mark_type = parseFormNot(builder, close);
-    }
-    else if (text.equals("or"))
-    {
-      mark_type = parseFormOr(builder, close);
-    }
-    else if (text.equals("set!"))
-    {
-      mark_type = parseFormSet(builder, close);
-    }
-    else if (text.equals("unless"))
-    {
-      mark_type = parseFormUnless(builder, close);
-    }
-    else if (text.equals("when"))
-    {
-      mark_type = parseFormWhen(builder, close);
+    switch (text) {
+      case "and":
+        mark_type = parseFormAnd(builder, close);
+        break;
+      case "begin":
+        mark_type = parseFormBegin(builder, close);
+        break;
+      case "car":
+        mark_type = parseFormCar(builder, close);
+        break;
+      case "cdr":
+        mark_type = parseFormCdr(builder, close);
+        break;
+      case "cond":
+        mark_type = parseFormCond(builder, close);
+        break;
+      case "cons":
+        mark_type = parseFormCons(builder, close);
+        break;
+      case "define":
+        mark_type = parseFormDefine(builder, close);
+        break;
+      case "define-record-type":
+        mark_type = parseFormDefineRecordType(builder, close);
+        break;
+      case "define-syntax":
+        mark_type = parseFormDefineSyntax(builder, close);
+        break;
+      case "do":
+        mark_type = parseFormDo(builder, close);
+        break;
+      case "export":
+        mark_type = parseFormExport(builder, close);
+        break;
+      case "if":
+        mark_type = parseFormIf(builder, close);
+        break;
+      case "import":
+        mark_type = parseFormImport(builder, close);
+        break;
+      case "lambda":
+        mark_type = parseFormLambda(builder, close);
+        break;
+      case "let":
+        mark_type = parseFormLetForms(builder, close, AST.AST_FORM_LET);
+        break;
+      case "letrec":
+        mark_type = parseFormLetForms(builder, close, AST.AST_FORM_LETREC);
+        break;
+      case "let*":
+        mark_type = parseFormLetForms(builder, close, AST.AST_FORM_LET_A);
+        break;
+      case "list":
+        mark_type = parseFormList(builder, close);
+        break;
+      case "not":
+        mark_type = parseFormNot(builder, close);
+        break;
+      case "or":
+        mark_type = parseFormOr(builder, close);
+        break;
+      case "set!":
+        mark_type = parseFormSet(builder, close);
+        break;
+      case "unless":
+        mark_type = parseFormUnless(builder, close);
+        break;
+      case "when":
+        mark_type = parseFormWhen(builder, close);
+        break;
     }
     return mark_type;
   }
 
   private IElementType parseTopList(PsiBuilder builder, IElementType open, IElementType close)
   {
-    IElementType mark_type = AST.AST_TEMP_LIST;
+    IElementType mark_type = AST.AST_PLAIN_LIST;
     PsiBuilder.Marker marker = markAndAdvance(builder);
 
     helperListAdvance(builder, close, 0);
@@ -643,7 +640,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
     }
     else
     {
-      mark_type = eatRemainList(builder, close, AST.AST_UNRECOGNIZED_FORM);
+      mark_type = eatRemainList(builder, close, AST.AST_PLAIN_LIST);
     }
 
     marker.done(mark_type);
@@ -840,7 +837,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
   private IElementType parseList(PsiBuilder builder, IElementType open, IElementType close)
   {
-    IElementType mark_type = AST.AST_TEMP_LIST;
+    IElementType mark_type = AST.AST_PLAIN_LIST;
     PsiBuilder.Marker marker = markAndAdvance(builder);
 
     helperListAdvance(builder, close, 0);
@@ -885,7 +882,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
     }
     else
     {
-      mark_type = eatRemainList(builder, close, AST.AST_UNRECOGNIZED_FORM);
+      mark_type = eatRemainList(builder, close, AST.AST_PLAIN_LIST);
     }
 
     marker.done(mark_type);
