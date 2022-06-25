@@ -722,6 +722,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
   void parseTopParen(IElementType type, PsiBuilder builder)
   {
+    type = builder.getTokenType();
     if (LEFT_PAREN == type)
     {
       parseTopList(builder, LEFT_PAREN, RIGHT_PAREN);
@@ -746,6 +747,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
   void parseTopSexp(IElementType type, PsiBuilder builder)
   {
+    type = builder.getTokenType();
     if (!isParen(type)) {
       parseNonParen(type, builder);
     } else {
@@ -770,6 +772,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
   IElementType parseAtom(IElementType type, PsiBuilder builder)
   {
+    type = builder.getTokenType();
     PsiBuilder.Marker marker = builder.mark();
     builder.advanceLexer();
     IElementType mark_type = atomMarkType(type);
@@ -779,6 +782,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
   IElementType parsePrefix(IElementType type, PsiBuilder builder)
   {
+    type = builder.getTokenType();
     PsiBuilder.Marker marker = builder.mark();
     builder.advanceLexer();
     IElementType childType = builder.getTokenType();
@@ -796,7 +800,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
     if (DATUM_COMMENT_PRE == type) {
       parseSexp(childType, builder);
       mark_type = SchemeTokens.DATUM_COMMENT;
-      marker.collapse(SchemeTokens.DATUM_COMMENT);
+      marker.collapse(mark_type);
       return mark_type;
     }
 
@@ -829,6 +833,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
   IElementType parseNonParen(IElementType type, PsiBuilder builder)
   {
+    type = builder.getTokenType();
     if (DATUM_PREFIXES.contains(type)
         || DATUM_COMMENT_PRE == type) {
       return parsePrefix(type, builder);
@@ -845,6 +850,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
   IElementType parseParen(IElementType type, PsiBuilder builder)
   {
+    type = builder.getTokenType();
     if (LEFT_PAREN == type)
     {
       return parseList(builder, LEFT_PAREN, RIGHT_PAREN);
@@ -872,6 +878,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
   IElementType parseSexp(IElementType type, PsiBuilder builder)
   {
+    type = builder.getTokenType();
     if (!isParen(type)) {
       return parseNonParen(type, builder);
     } else {
