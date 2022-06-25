@@ -7,9 +7,6 @@ import main.parser.SchemeParser;
 import main.parser.SchemePsiCreator;
 import main.scheme.Scheme;
 
-/**
- * @author Colin Fleming
- */
 public class DefaultScheme implements Scheme
 {
   @Override

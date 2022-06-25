@@ -17,9 +17,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 
-/**
- * @author Colin Fleming
- */
 public class SchemeLexer extends LexerBase
 {
   private CharSequence buffer;

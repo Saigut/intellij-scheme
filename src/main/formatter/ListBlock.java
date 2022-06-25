@@ -19,9 +19,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Colin Fleming
- */
 public class ListBlock extends SchemeBlock
 {
   private final Alignment childAlignment = Alignment.createAlignment();
