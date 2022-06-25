@@ -7,6 +7,8 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiElement;
 import main.parser.AST;
+import main.psi.impl.SchemeFormExport;
+import main.psi.impl.SchemeFormLibrary;
 import org.jetbrains.annotations.NotNull;
 import main.psi.util.SchemePsiUtil;
 
@@ -57,7 +59,7 @@ public class SchemeStructureViewElement implements StructureViewTreeElement, Sor
   @NotNull
   @Override
   public ItemPresentation getPresentation() {
-    ItemPresentation presentation = nameChild.getPresentation();
+    ItemPresentation presentation = element.getPresentation();
     return presentation != null ? presentation : new PresentationData();
   }
 
@@ -66,28 +68,30 @@ public class SchemeStructureViewElement implements StructureViewTreeElement, Sor
   {
     final List<SchemeStructureViewElement> childrenElements = new ArrayList<>();
 
+    if (element instanceof SchemeFormExport) {
+      PsiElement child = SchemePsiUtil.getNormalChildAt(element, 1);
+      if (child == null) {
+        return EMPTY_ARRAY;
+      }
+      while (child != null) {
+        childrenElements.add(new SchemeStructureViewElement((NavigatablePsiElement)child));
+        child = SchemePsiUtil.getPsiNextNonLeafSibling(child);
+      }
+      return childrenElements.toArray(new SchemeStructureViewElement[0]);
+    }
+
     PsiElement child = element.getFirstChild();
     if (child == null) {
       return EMPTY_ARRAY;
     }
-    if (isDeclarationFrom(child)) {
-      PsiElement nameChild = getDeclareNameChild(child);
-      if (nameChild != null) {
-        childrenElements.add(new SchemeStructureViewElement((NavigatablePsiElement)child));
-      }
-    }
-
-    while (true) {
-      child = child.getNextSibling();
-      if (child == null) {
-        break;
-      }
+    while (child != null) {
       if (isDeclarationFrom(child)) {
         PsiElement nameChild = getDeclareNameChild(child);
         if (nameChild != null) {
           childrenElements.add(new SchemeStructureViewElement((NavigatablePsiElement)child));
         }
       }
+      child = child.getNextSibling();
     }
 
     return childrenElements.toArray(new SchemeStructureViewElement[0]);
@@ -98,6 +102,16 @@ public class SchemeStructureViewElement implements StructureViewTreeElement, Sor
   }
 
   private PsiElement getDeclareNameChild(PsiElement element) {
-    return SchemePsiUtil.getNormalChildAt(element, 1);
+    if (element instanceof SchemeFormLibrary) {
+      PsiElement child = SchemePsiUtil.getNormalChildAt(element, 1);
+      if (child == null) {
+        return null;
+      }
+      return SchemePsiUtil.getPsiLastNonLeafChild(child);
+    } else if (element instanceof SchemeFormExport) {
+      return element;
+    } else {
+      return SchemePsiUtil.getNormalChildAt(element, 1);
+    }
   }
 }

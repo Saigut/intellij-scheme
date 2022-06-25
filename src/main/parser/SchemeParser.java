@@ -470,7 +470,7 @@ public class SchemeParser implements PsiParser, SchemeTokens
       }
       String export_str = builder.getTokenText();
       if (export_str != null && export_str.equals("export")) {
-        builder.advanceLexer();
+        markAToken(builder, AST.AST_BASIC_ELE_PROCEDURE);
         helperIgnoreUselessTokens(builder, export_paren_close);
         IElementType next_type = builder.getTokenType();
         while (true) {
