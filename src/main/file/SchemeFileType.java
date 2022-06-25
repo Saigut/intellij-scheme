@@ -12,7 +12,7 @@ public class SchemeFileType extends LanguageFileType
 {
   public static final SchemeFileType SCHEME_FILE_TYPE = new SchemeFileType();
   public static final Language SCHEME_LANGUAGE = SCHEME_FILE_TYPE.getLanguage();
-
+  private static String[] extensions = {"ss", "sls", "scm"};
 
   public SchemeFileType()
   {
@@ -40,5 +40,10 @@ public class SchemeFileType extends LanguageFileType
   public Icon getIcon()
   {
     return SchemeIcons.SCHEME_ICON;
+  }
+
+  public static String[] getExtensions()
+  {
+    return extensions;
   }
 }

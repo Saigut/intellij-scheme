@@ -2,13 +2,17 @@ package main.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
+import main.file.SchemeFileType;
 import main.psi.util.SchemePsiUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -139,6 +143,11 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference
         if (defPsi != null && defPsi.textMatches(this)) {
           return defPsi;
         }
+      } else if (brother instanceof SchemeFormImport) {
+        PsiElement find = findWithFormImport((SchemeFormImport)brother, this);
+        if (find != null) {
+          return find;
+        }
       }
       brother = brother.getPrevSibling();
     }
@@ -171,6 +180,8 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference
           if (find != null) {
             return find;
           }
+        } else if (parent instanceof SchemeFormImport) {
+          return getFilesByName(getProject(), this.getText(), GlobalSearchScope.allScope(getProject()));
         } else {
           if (parent instanceof SchemeFormDefineBase) {
             PsiElement dec = ((SchemeFormDefineBase)parent).getDeclareName();
@@ -198,6 +209,11 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference
           PsiElement defPsi = ((SchemeFormDefineBase)brother).getDeclareName();
           if (defPsi != null && defPsi.textMatches(this)) {
             return defPsi;
+          }
+        } else if (brother instanceof SchemeFormImport) {
+          PsiElement find = findWithFormImport((SchemeFormImport)brother, this);
+          if (find != null) {
+            return find;
           }
         }
         brother = brother.getPrevSibling();
@@ -337,6 +353,49 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference
         }
       }
       defNode = SchemePsiUtil.getNodeNextNonLeafSibling(defNode);
+    }
+    return null;
+  }
+
+  private PsiElement findWithFormImport(SchemeFormImport form, PsiElement toFind) {
+    // imported library name
+    PsiElement child = SchemePsiUtil.getNormalChildAt(form, 1);
+    while (child != null) {
+      // imported library name
+      PsiElement child_child =  SchemePsiUtil.getPsiLastNonLeafChild(child);
+      if (child_child != null) {
+        // imported library file
+        PsiFile file = getFilesByName(getProject(), child_child.getText(), GlobalSearchScope.allScope(getProject()));
+        if (file != null) {
+          // library form in library file
+          PsiElement lib_form = SchemePsiUtil.getNormalChildAt(file, 0);
+          if (lib_form instanceof SchemeFormLibrary) {
+            PsiElement export_form = SchemePsiUtil.getNormalChildAt(lib_form, 2);
+            if (export_form instanceof SchemeFormExport) {
+              PsiElement export_child = SchemePsiUtil.getNormalChildAt(export_form, 1);
+              while (export_child != null) {
+                if (export_child.textMatches(toFind)) {
+                  return export_child;
+                }
+                export_child = SchemePsiUtil.getPsiNextNonLeafSibling(export_child);
+              }
+            }
+          }
+        }
+      }
+      child = SchemePsiUtil.getPsiNextNonLeafSibling(child);
+    }
+    return null;
+  }
+
+  private PsiFile getFilesByName(@NotNull Project project, @NotNull String name, @NotNull GlobalSearchScope scope)
+  {
+    String[] exts = SchemeFileType.getExtensions();
+    for (String ext : exts) {
+      PsiFile[] files = FilenameIndex.getFilesByName(project, name + "." + ext, scope);
+      if (files.length > 0) {
+        return files[0];
+      }
     }
     return null;
   }

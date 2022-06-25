@@ -152,6 +152,15 @@ public class SchemeParser implements PsiParser, SchemeTokens
     return mark_type;
   }
 
+  void helperIgnoreUselessTokens(PsiBuilder builder, IElementType until_token)
+  {
+    IElementType token_type = builder.getTokenType();
+    while (token_type == SchemeTokens.DATUM_COMMENT_PRE) {
+      parseSexp(token_type, builder);
+      token_type = builder.getTokenType();
+    }
+  }
+
   // ret: true, have body; false, have no body.
   boolean helperListAdvance(PsiBuilder builder, IElementType close, int i)
   {
@@ -424,7 +433,70 @@ public class SchemeParser implements PsiParser, SchemeTokens
   IElementType parseFormLibrary(PsiBuilder builder, IElementType close)
   {
     IElementType form_mark_type = AST.AST_FORM_LIBRARY;
-    if (helperListAdvance(builder, close, 3)) {
+
+    // library name
+    IElementType token_type = builder.getTokenType();
+    if (!OPEN_BRACES.contains(token_type)) {
+      markASexp(builder, AST.AST_BAD_ELEMENT);
+    } else {
+      PsiBuilder.Marker list_marker = builder.mark();
+      IElementType name_paren_close = getCloseParen(token_type);
+      builder.advanceLexer();
+      helperIgnoreUselessTokens(builder, name_paren_close);
+      token_type = builder.getTokenType();
+      if (token_type == NAME_LITERAL) {
+        markAToken(builder, AST.AST_BASIC_ELE_SYMBOL_DEFINE);
+      } else {
+        markASexp(builder, AST.AST_BAD_ELEMENT);
+      }
+      eatRemainList(builder, name_paren_close, AST.AST_PLAIN_LIST);
+      list_marker.done(AST.AST_PLAIN_LIST);
+    }
+
+    // library-export
+    token_type = builder.getTokenType();
+    if (!OPEN_BRACES.contains(token_type)) {
+      markASexp(builder, AST.AST_BAD_ELEMENT);
+    } else {
+      PsiBuilder.Marker export_form_marker = builder.mark();
+      IElementType export_paren_close = getCloseParen(token_type);
+      builder.advanceLexer();
+      helperIgnoreUselessTokens(builder, export_paren_close);
+      token_type = builder.getTokenType();
+      if (token_type == null) {
+        eatRemainList(builder, export_paren_close, AST.AST_BAD_ELEMENT);
+        export_form_marker.done(AST.AST_BAD_ELEMENT);
+        return eatRemainList(builder, close, AST.AST_BAD_ELEMENT);
+      }
+      String export_str = builder.getTokenText();
+      if (export_str != null && export_str.equals("export")) {
+        builder.advanceLexer();
+        helperIgnoreUselessTokens(builder, export_paren_close);
+        IElementType next_type = builder.getTokenType();
+        while (true) {
+          if (next_type == null) {
+            eatRemainList(builder, export_paren_close, AST.AST_BAD_ELEMENT);
+            export_form_marker.done(AST.AST_BAD_ELEMENT);
+            return eatRemainList(builder, close, AST.AST_BAD_ELEMENT);
+          }
+          if (next_type == export_paren_close) {
+            export_form_marker.done(eatRemainList(builder, export_paren_close, AST.AST_FORM_EXPORT));
+            break;
+          }
+          if (next_type == NAME_LITERAL) {
+            markAToken(builder, AST.AST_BASIC_ELE_SYMBOL_DEFINE);
+          } else {
+            markASexp(builder, AST.AST_BAD_ELEMENT);
+          }
+          next_type = builder.getTokenType();
+        }
+      } else {
+        eatRemainList(builder, export_paren_close, AST.AST_BAD_ELEMENT);
+        export_form_marker.done(AST.AST_BAD_ELEMENT);
+      }
+    }
+
+    if (helperListAdvance(builder, close, 1)) {
       PsiBuilder.Marker bodyMarker = builder.mark();
       helperEatFormBody(builder, close, bodyMarker);
     }

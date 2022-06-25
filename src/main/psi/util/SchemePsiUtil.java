@@ -37,12 +37,9 @@ public class SchemePsiUtil
       return null;
     }
 
-    IElementType eleType;
     while (true)
     {
-      eleType = child.getNode().getElementType();
-      if (AST.AST_ELEMENTS.contains(eleType))
-      {
+      if (child.getFirstChild() != null) {
         index--;
       }
 
@@ -59,6 +56,30 @@ public class SchemePsiUtil
     }
 
     return child;
+  }
+
+  public static PsiElement getPsiNextNonLeafSibling(PsiElement element)
+  {
+    PsiElement child = element.getNextSibling();
+    while (child != null) {
+      if (child.getFirstChild() != null) {
+        return child;
+      }
+      child = child.getNextSibling();
+    }
+    return null;
+  }
+
+  public static PsiElement getPsiLastNonLeafChild(PsiElement element)
+  {
+    PsiElement child = element.getLastChild();
+    while (child != null) {
+      if (child.getFirstChild() != null) {
+        return child;
+      }
+      child = child.getPrevSibling();
+    }
+    return null;
   }
 
   public static ASTNode getNodeNormalChildAt(ASTNode node, int i)
