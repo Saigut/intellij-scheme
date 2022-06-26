@@ -31,6 +31,12 @@ public class SchemeFormExport extends SchemePsiElementBase
             {
                 return getMe().getIcon(Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
             }
+
+            @Nullable
+            public String getLocationString()
+            {
+                return null;
+            }
         };
     }
 

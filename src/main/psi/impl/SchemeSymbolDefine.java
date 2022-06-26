@@ -50,6 +50,12 @@ public class SchemeSymbolDefine extends SchemePsiElementBase  implements PsiName
       {
         return SchemeSymbolDefine.this.getIcon(Iconable.ICON_FLAG_VISIBILITY | Iconable.ICON_FLAG_READ_STATUS);
       }
+
+      @Nullable
+      public String getLocationString()
+      {
+        return null;
+      }
     };
   }
 
