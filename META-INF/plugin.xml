@@ -3,18 +3,19 @@
   <id>intellij-scheme</id>
   <description>Plugin for supporting Scheme programming language</description>
   <category>Custom Languages</category>
-  <version>0.1.9</version>
+  <version>0.1.10</version>
   <vendor url="https://saigut.com">Tony Saigut</vendor>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.platform</depends>
   <idea-version since-build="103"/>
 
   <change-notes><![CDATA[
-    1. Support recognizing escape characters in string<br>
-    2. Support fold of comment<br>
-    3. Fix and improve lexer<br>
-    4. Fix and improve Indentation<br>
-    5. Fix symbol resolve<br>
+    1. Support resolving local symbols in lambda, let like forms and define forms<br>
+    2. Support resolving symbols imported from library of another file<br>
+    3. Improve structure view<br>
+    4. Improve Indentation<br>
+    5. Support .sls files<br>
+    6. Fix some bugs<br>
     ]]>
   </change-notes>
 
