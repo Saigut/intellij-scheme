@@ -806,9 +806,11 @@ public class SchemeParser implements PsiParser, SchemeTokens
 
     if (DATUM_PREFIXES.contains(type)) {
       if (!isParen(childType)) {
-        PsiBuilder.Marker quote_marker = builder.mark();
+        PsiBuilder.Marker symbol_marker = builder.mark();
+        PsiBuilder.Marker literal_marker = builder.mark();
         parseNonParen(childType, builder);
-        quote_marker.collapse(AST.AST_BASIC_ELE_SYMBOL);
+        literal_marker.collapse(SchemeTokens.NAME_LITERAL);
+        symbol_marker.done(AST.AST_BASIC_ELE_SYMBOL);
       } else {
         parseParen(childType, builder);
       }
