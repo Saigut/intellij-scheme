@@ -2,6 +2,7 @@ package main.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.TextRange;
@@ -396,7 +397,7 @@ public class SchemeSymbol extends SchemePsiElementBase  implements PsiReference
 
   private PsiFile getFilesByName(@NotNull Project project, @NotNull String name, @NotNull GlobalSearchScope scope)
   {
-    String[] exts = SchemeFileType.getExtensions();
+    String[] exts = FileTypeManager.getInstance().getAssociatedExtensions(SchemeFileType.SCHEME_FILE_TYPE);
     for (String ext : exts) {
       PsiFile[] files = FilenameIndex.getFilesByName(project, name + "." + ext, scope);
       if (files.length > 0) {
