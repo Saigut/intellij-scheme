@@ -38,6 +38,8 @@
                                   implementationClass="main.structure.SchemeStructureViewBuilderFactory"/>
     <lang.foldingBuilder language="Scheme"
             implementationClass="main.fold.SchemeFoldingBuilder"/>
+    <lang.namesValidator language="Scheme"
+            implementationClass="main.utils.SchemeNamesValidator"/>
 
     <gotoSymbolContributor implementation="main.gotoclass.SchemeGoToSymbolContributor"/>
     <syntaxHighlighter key="Scheme"
