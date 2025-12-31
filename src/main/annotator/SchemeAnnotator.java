@@ -15,24 +15,30 @@ import static main.lexer.SchemeTokens.COMMENTS;
 
 public class SchemeAnnotator implements Annotator
 {
+  private final SchemeSyntaxHighlighter syntaxHighlighter;
+
+  SchemeAnnotator(SchemeSyntaxHighlighter syntaxHighlighter) {
+    this.syntaxHighlighter = syntaxHighlighter;
+  }
+
   public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder)
   {
     IElementType ele_type = element.getNode().getElementType();
     if (COMMENTS.contains(ele_type)) {
       holder.createInfoAnnotation(element, null)
-              .setTextAttributes(SchemeSyntaxHighlighter.COMMENT);
+              .setTextAttributes(syntaxHighlighter.COMMENT);
     } else if (ele_type == AST.AST_BASIC_ELE_SYMBOL) {
       holder.createInfoAnnotation(element, null)
-              .setTextAttributes(SchemeSyntaxHighlighter.LITERAL);
+              .setTextAttributes(syntaxHighlighter.LITERAL);
     } else if (element instanceof SchemeEleChar) {
       holder.createInfoAnnotation(element, null)
-              .setTextAttributes(SchemeSyntaxHighlighter.CHAR);
+              .setTextAttributes(syntaxHighlighter.CHAR);
     } else if (element instanceof SchemeBadCharacter/* || element instanceof SchemeBadElement*/) {
       holder.createInfoAnnotation(element, null)
-              .setTextAttributes(SchemeSyntaxHighlighter.BAD_CHARACTER);
+              .setTextAttributes(syntaxHighlighter.BAD_CHARACTER);
     } else if (element instanceof SchemeEleString) {
       holder.createInfoAnnotation(element, null)
-              .setTextAttributes(SchemeSyntaxHighlighter.STRING);
+              .setTextAttributes(syntaxHighlighter.STRING);
 
       String eStr = "abtnvfr\"\\\t\r\n";
       String str = element.getText();
@@ -62,7 +68,7 @@ public class SchemeAnnotator implements Annotator
               holder.createInfoAnnotation(new TextRange(
                               startOffset + slashPos,
                               startOffset + idx + 1), null)
-                      .setTextAttributes(SchemeSyntaxHighlighter.STRING_ESCAPE);
+                      .setTextAttributes(syntaxHighlighter.STRING_ESCAPE);
               idx = idx + 1;
             }
           }
@@ -70,7 +76,7 @@ public class SchemeAnnotator implements Annotator
           holder.createInfoAnnotation(new TextRange(
                           startOffset + slashPos,
                           startOffset + slashPos + 2), null)
-                  .setTextAttributes(SchemeSyntaxHighlighter.STRING_ESCAPE);
+                  .setTextAttributes(syntaxHighlighter.STRING_ESCAPE);
           idx = slashPos + 2;
         } else {
           idx = slashPos + 2;

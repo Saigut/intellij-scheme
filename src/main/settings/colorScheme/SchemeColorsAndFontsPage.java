@@ -40,27 +40,31 @@ public class SchemeColorsAndFontsPage implements ColorSettingsPage
     return ATTRS;
   }
 
-  private static final
-  AttributesDescriptor[]
-    ATTRS =
-    new AttributesDescriptor[]{desc(SchemeSyntaxHighlighter.IDENTIFIER_ID, SchemeSyntaxHighlighter.IDENTIFIER),
-                               desc(SchemeSyntaxHighlighter.COMMENT_ID, SchemeSyntaxHighlighter.COMMENT),
+  private final SchemeSyntaxHighlighter syntaxHighlighter;
+  private final AttributesDescriptor[] ATTRS;
+
+  SchemeColorsAndFontsPage(SchemeSyntaxHighlighter syntaxHighlighter) {
+    this.syntaxHighlighter = syntaxHighlighter;
+    this.ATTRS =
+        new AttributesDescriptor[]{desc(SchemeSyntaxHighlighter.IDENTIFIER_ID, syntaxHighlighter.IDENTIFIER),
+            desc(SchemeSyntaxHighlighter.COMMENT_ID, syntaxHighlighter.COMMENT),
 //                               desc(SchemeSyntaxHighlighter.BLOCK_COMMENT_ID, SchemeSyntaxHighlighter.BLOCK_COMMENT),
 //                               desc(SchemeSyntaxHighlighter.DATUM_COMMENT_ID, SchemeSyntaxHighlighter.DATUM_COMMENT),
-                               desc(SchemeSyntaxHighlighter.NUMBER_ID, SchemeSyntaxHighlighter.NUMBER),
-                               desc(SchemeSyntaxHighlighter.STRING_ID, SchemeSyntaxHighlighter.STRING),
-                               desc(SchemeSyntaxHighlighter.BRACES_ID, SchemeSyntaxHighlighter.BRACE),
-                               desc(SchemeSyntaxHighlighter.PAREN_ID, SchemeSyntaxHighlighter.PAREN),
-                               desc(SchemeSyntaxHighlighter.BAD_CHARACTER_ID, SchemeSyntaxHighlighter.BAD_CHARACTER),
-                               desc(SchemeSyntaxHighlighter.CHAR_ID, SchemeSyntaxHighlighter.CHAR),
-                               desc(SchemeSyntaxHighlighter.LITERAL_ID, SchemeSyntaxHighlighter.LITERAL),
-                               desc(SchemeSyntaxHighlighter.KEYWORD_ID, SchemeSyntaxHighlighter.KEYWORD),
-                               desc(SchemeSyntaxHighlighter.PROCEDURE_ID, SchemeSyntaxHighlighter.PROCEDURE),
-                               desc(SchemeSyntaxHighlighter.SPECIAL_ID, SchemeSyntaxHighlighter.SPECIAL),
-                               desc(SchemeSyntaxHighlighter.QUOTED_TEXT_ID, SchemeSyntaxHighlighter.QUOTED_TEXT),
-                               desc(SchemeSyntaxHighlighter.QUOTED_STRING_ID, SchemeSyntaxHighlighter.QUOTED_STRING),
-                               desc(SchemeSyntaxHighlighter.QUOTED_NUMBER_ID, SchemeSyntaxHighlighter.QUOTED_NUMBER),
-    };
+            desc(SchemeSyntaxHighlighter.NUMBER_ID, syntaxHighlighter.NUMBER),
+            desc(SchemeSyntaxHighlighter.STRING_ID, syntaxHighlighter.STRING),
+            desc(SchemeSyntaxHighlighter.BRACES_ID, syntaxHighlighter.BRACE),
+            desc(SchemeSyntaxHighlighter.PAREN_ID, syntaxHighlighter.PAREN),
+            desc(SchemeSyntaxHighlighter.BAD_CHARACTER_ID, syntaxHighlighter.BAD_CHARACTER),
+            desc(SchemeSyntaxHighlighter.CHAR_ID, syntaxHighlighter.CHAR),
+            desc(SchemeSyntaxHighlighter.LITERAL_ID, syntaxHighlighter.LITERAL),
+            desc(SchemeSyntaxHighlighter.KEYWORD_ID, syntaxHighlighter.KEYWORD),
+            desc(SchemeSyntaxHighlighter.PROCEDURE_ID, syntaxHighlighter.PROCEDURE),
+            desc(SchemeSyntaxHighlighter.SPECIAL_ID, syntaxHighlighter.SPECIAL),
+            desc(SchemeSyntaxHighlighter.QUOTED_TEXT_ID, syntaxHighlighter.QUOTED_TEXT),
+            desc(SchemeSyntaxHighlighter.QUOTED_STRING_ID, syntaxHighlighter.QUOTED_STRING),
+            desc(SchemeSyntaxHighlighter.QUOTED_NUMBER_ID, syntaxHighlighter.QUOTED_NUMBER),
+        };
+  }
 
   private static AttributesDescriptor desc(String displayName, TextAttributesKey key)
   {
@@ -118,7 +122,7 @@ public class SchemeColorsAndFontsPage implements ColorSettingsPage
   public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap()
   {
     Map<String, TextAttributesKey> map = new HashMap<String, TextAttributesKey>();
-    map.put("def", SchemeSyntaxHighlighter.IDENTIFIER);
+    map.put("def", syntaxHighlighter.IDENTIFIER);
     return map;
   }
 }
