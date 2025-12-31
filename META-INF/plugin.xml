@@ -3,19 +3,19 @@
   <id>intellij-scheme</id>
   <description>Plugin for supporting Scheme programming language</description>
   <category>Custom Languages</category>
-  <version>0.1.10</version>
+  <version>0.1.11</version>
   <vendor url="https://saigut.com">Tony Saigut</vendor>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.platform</depends>
   <idea-version since-build="201.6668.113"/>
 
   <change-notes><![CDATA[
-    1. Support resolving local symbols in lambda, let like forms and define forms<br>
-    2. Support resolving symbols imported from library of another file<br>
-    3. Improve structure view<br>
-    4. Improve Indentation<br>
-    5. Support .sls files<br>
-    6. Fix some bugs<br>
+    1. Fix hardcoded file extensions<br>
+    2. Fix rename validator<br>
+    3. Support special characters<br>
+    4. Fix compilation error since IU-233.*<br>
+    5. Fix runtime exceptions<br>
+    6. Improve setting page performance<br>
     ]]>
   </change-notes>
 
