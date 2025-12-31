@@ -39,6 +39,7 @@ public class SchemeLexer extends LexerBase
     TAG_BOOLEAN,
     TAG_QUOTE_STRING,
     TAG_SHARP_CHAR,
+    TAG_SHARP_EXCLAMATION,
     TAG_NAME_LITERAL,
     TAG_BAD_CHARACTER,
 
@@ -160,7 +161,12 @@ public class SchemeLexer extends LexerBase
   Parser<?> s_boolean = TERM_BOOLEAN.tokenizer().source()
           .map((a) -> (Tokens.fragment(a, Tag.TAG_BOOLEAN)));
 
-  Parser<?> PAR_LITERALS = Parsers.or(PAR_STRING, s_numbers, s_boolean, s_sharp_char);
+  // Sharp exclamation (#!eof, #!null, etc.)
+  Pattern PT_SHARP_EXCLAMATION = Patterns.sequence(Patterns.string("#!"), PT_NAME_LITERAL);
+  Parser<?> s_sharp_exclamation = PT_SHARP_EXCLAMATION.toScanner("sharp exclamation").source()
+          .map((a) -> (Tokens.fragment(a, Tag.TAG_SHARP_EXCLAMATION)));
+
+  Parser<?> PAR_LITERALS = Parsers.or(PAR_STRING, s_numbers, s_boolean, s_sharp_exclamation, s_sharp_char);
 
   /**
    * Some built-in elements
@@ -411,6 +417,11 @@ public class SchemeLexer extends LexerBase
       case TAG_BOOLEAN:
         type = SchemeTokens.BOOLEAN_LITERAL;
         break;
+
+      case TAG_SHARP_EXCLAMATION: {
+        type = SchemeTokens.CHAR_LITERAL;
+        break;
+      }
 
       case TAG_QUOTE_STRING:
         type = SchemeTokens.STRING_LITERAL;
