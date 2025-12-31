@@ -3,15 +3,10 @@ package main.settings.codeStyle;
 import com.intellij.application.options.IndentOptionsEditor;
 import com.intellij.application.options.SmartIndentOptionsEditor;
 import com.intellij.lang.Language;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.codeStyle.*;
 import org.jetbrains.annotations.NotNull;
 import main.SchemeLanguage;
-
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import main.utils.SchemeResourceUtil;
 
 
 public class SchemeLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
@@ -47,39 +42,30 @@ public class SchemeLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSe
 
     @Override
     public String getCodeSample(@NotNull SettingsType settingsType) {
-        byte[] contentBytes = null;
-
-        URL fileUrl = getClass().getClassLoader().getResource("sample-code.scm");
-        VirtualFile virtualFile = VfsUtil.findFileByURL(fileUrl);
-        if (virtualFile != null) {
-            try {
-                contentBytes = virtualFile.contentsToByteArray();
-            } catch (IOException ignored) {
-            }
+        String content = SchemeResourceUtil.readResourceAsString("sample-code.scm");
+        if (content != null) {
+            return content;
         }
 
-        if (contentBytes != null) {
-            return new String(contentBytes, StandardCharsets.UTF_8);
-        } else {
-            return "(f f)\n" +
-                    "\n" +
-                    "((lambda (f) x) (lambda (f) x))\n" +
-                    "\n" +
-                    "(define Y (lambda (f) (f f)))\n" +
-                    "\n" +
-                    "((lambda (f) (lambda (x) ((f f) (g x))))\n" +
-                    "  (lambda (f) (lambda (x) ((f f) (g x)))))\n" +
-                    " \n" +
-                    "((lambda (g)\n" +
-                    "    ((lambda (f) (lambda (x) ((f f) (g x))))\n" +
-                    "      (lambda (f) (lambda (x) ((f f) (g x))))))\n" +
-                    "  cdr)\n" +
-                    "\n" +
-                    "((lambda (g)\n" +
-                    "   ((lambda (f) (f f))\n" +
-                    "     (lambda (f) (lambda (x) ((f f) (g x))))))\n" +
-                    "  g)";
-        }
+        // Fallback to default code sample
+        return "(f f)\n" +
+                "\n" +
+                "((lambda (f) x) (lambda (f) x))\n" +
+                "\n" +
+                "(define Y (lambda (f) (f f)))\n" +
+                "\n" +
+                "((lambda (f) (lambda (x) ((f f) (g x))))\n" +
+                "  (lambda (f) (lambda (x) ((f f) (g x)))))\n" +
+                " \n" +
+                "((lambda (g)\n" +
+                "    ((lambda (f) (lambda (x) ((f f) (g x))))\n" +
+                "      (lambda (f) (lambda (x) ((f f) (g x))))))\n" +
+                "  cdr)\n" +
+                "\n" +
+                "((lambda (g)\n" +
+                "   ((lambda (f) (f f))\n" +
+                "     (lambda (f) (lambda (x) ((f f) (g x))))))\n" +
+                "  g)";
     }
 
     @Override

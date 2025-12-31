@@ -5,18 +5,14 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import main.SchemeIcons;
 import main.highlighter.SchemeSyntaxHighlighter;
+import main.utils.SchemeResourceUtil;
 
 import javax.swing.Icon;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,35 +83,26 @@ public class SchemeColorsAndFontsPage implements ColorSettingsPage
   @NotNull
   public String getDemoText()
   {
-    byte[] contentBytes = null;
-
-    URL fileUrl = getClass().getClassLoader().getResource("sample-code.scm");
-    VirtualFile virtualFile = VfsUtil.findFileByURL(fileUrl);
-    if (virtualFile != null) {
-      try {
-        contentBytes = virtualFile.contentsToByteArray();
-      } catch (IOException ignored) {
-      }
+    String content = SchemeResourceUtil.readResourceAsString("sample-code.scm");
+    if (content != null) {
+      return content;
     }
 
-    if (contentBytes != null) {
-      return new String(contentBytes, StandardCharsets.UTF_8);
-    } else {
-      return ";; Test highlighting\n" +
-              "\n" +
-              "(define string \"Some string\")\n" +
-              "\n" +
-              "(define quoted '(my quoted 3 items \"with quoted string\"))\n" +
-              "\n" +
-              "(define char #\\c)\n" +
-              "\n" +
-              "(define special #!eof)\n" +
-              "\n" +
-              "(let ((x '(1 3 5 7 9)))\n" +
-              "  (do ((x x (cdr x))\n" +
-              "       (sum 0 (+ sum (car x))))\n" +
-              "      ((null? x) sum)))";
-    }
+    // Fallback to default demo text
+    return ";; Test highlighting\n" +
+            "\n" +
+            "(define string \"Some string\")\n" +
+            "\n" +
+            "(define quoted '(my quoted 3 items \"with quoted string\"))\n" +
+            "\n" +
+            "(define char #\\c)\n" +
+            "\n" +
+            "(define special #!eof)\n" +
+            "\n" +
+            "(let ((x '(1 3 5 7 9)))\n" +
+            "  (do ((x x (cdr x))\n" +
+            "       (sum 0 (+ sum (car x))))\n" +
+            "      ((null? x) sum)))";
   }
 
   @Nullable
