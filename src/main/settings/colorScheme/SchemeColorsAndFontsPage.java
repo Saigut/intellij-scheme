@@ -43,8 +43,8 @@ public class SchemeColorsAndFontsPage implements ColorSettingsPage
   private final SchemeSyntaxHighlighter syntaxHighlighter;
   private final AttributesDescriptor[] ATTRS;
 
-  SchemeColorsAndFontsPage(SchemeSyntaxHighlighter syntaxHighlighter) {
-    this.syntaxHighlighter = syntaxHighlighter;
+  public SchemeColorsAndFontsPage() {
+    this.syntaxHighlighter = new SchemeSyntaxHighlighter();
     this.ATTRS =
         new AttributesDescriptor[]{desc(SchemeSyntaxHighlighter.IDENTIFIER_ID, syntaxHighlighter.IDENTIFIER),
             desc(SchemeSyntaxHighlighter.COMMENT_ID, syntaxHighlighter.COMMENT),

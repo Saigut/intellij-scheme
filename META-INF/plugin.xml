@@ -7,7 +7,7 @@
   <vendor url="https://saigut.com">Tony Saigut</vendor>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.platform</depends>
-  <idea-version since-build="103"/>
+  <idea-version since-build="201.6668.113"/>
 
   <change-notes><![CDATA[
     1. Support resolving local symbols in lambda, let like forms and define forms<br>
